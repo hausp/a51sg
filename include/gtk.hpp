@@ -5,6 +5,7 @@
 #define GTK_HPP
 
 #include <gtk/gtk.h>
+#include <functional>
 #include <iostream>
 #include <vector>
 
@@ -21,12 +22,14 @@ namespace gtk {
     
     void set_entry_max_length(const GtkWidget*, int);
 
-    void mount_box_at_start(const GtkWidget*, const std::vector<GtkWidget*>, const std::vector<bool> = {},
-                   std::vector<bool> = {}, const std::vector<int> = {});
-    void mount_box_at_end(const GtkWidget*, std::vector<GtkWidget*>, const std::vector<bool> = {},
-                   std::vector<bool> = {}, const std::vector<int> = {});
-    void mount_box_at_start(const GtkWidget*, const std::vector<GtkWidget*>, bool = false, bool = false, int = 0);
-    void mount_box_at_end(const GtkWidget*, const std::vector<GtkWidget*>, bool = false, bool = false, int = 0);
+    void mount_box_at_start(const GtkWidget*, const std::vector<GtkWidget*>&, const std::vector<bool>& = {},
+                   const std::vector<bool>& = {}, const std::vector<int>& = {});
+    void mount_box_at_end(const GtkWidget*, std::vector<GtkWidget*>&, const std::vector<bool>& = {},
+                   const std::vector<bool>& = {}, const std::vector<int>& = {});
+    void mount_box_at_start(const GtkWidget*, const std::vector<GtkWidget*>&, bool = false, bool = false, int = 0);
+    void mount_box_at_end(const GtkWidget*, const std::vector<GtkWidget*>&, bool = false, bool = false, int = 0);
+    void mount_box(const std::vector<GtkWidget*>&, const std::vector<bool>&, const std::vector<bool>&,
+                   const std::vector<int>&, const std::function<void(GtkWidget*, bool, bool, int)>&);
 	void main();
 	void quit();
 }
