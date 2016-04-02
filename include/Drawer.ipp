@@ -56,14 +56,14 @@ void Drawer<D>::moveHorizontal(const int direction) {
 }
 
 template<unsigned D>
-void Drawer<D>::removeShape(const long index) {
+void Drawer<D>::removeShape(const unsigned long index) {
     if (index < displayFile.size()) {
         displayFile.erase(displayFile.begin() + index);
     }
 }
 
 template<unsigned D>
-void Drawer<D>::translate(const long index, const double dx, const double dy) {
+void Drawer<D>::translate(const unsigned long index, const double dx, const double dy) {
     if (index < displayFile.size()) {
         displayFile[index]->transform(translationMatrix(dx, dy));
         drawAll();
@@ -71,7 +71,7 @@ void Drawer<D>::translate(const long index, const double dx, const double dy) {
 }
 
 template<unsigned D>
-void Drawer<D>::scale(const long index, const double sx, const double sy) {
+void Drawer<D>::scale(const unsigned long index, const double sx, const double sy) {
     if (index < displayFile.size()) {
         auto& shape = displayFile[index];
         Point<D> center = shape->center();
@@ -84,7 +84,7 @@ void Drawer<D>::scale(const long index, const double sx, const double sy) {
 }
 
 template<unsigned D>
-void Drawer<D>::rotate(const long index, const double angle, const int type, const std::vector<std::string>& entries) {
+void Drawer<D>::rotate(const unsigned long index, const double angle, const int type, const std::vector<std::string>& entries) {
     if (index < displayFile.size()) {
         auto& shape = displayFile[index];
         Point<D> axis;

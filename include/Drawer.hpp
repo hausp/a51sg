@@ -28,10 +28,10 @@ class Drawer {
     virtual void drawAxis() = 0;
     void moveVertical(const int);
     void moveHorizontal(const int);
-    void removeShape(const long);
-    void translate(const long, const double, const double);
-    void scale(const long, const double, const double);
-    void rotate(const long, const double, const int, const std::vector<std::string>&);
+    void removeShape(const unsigned long);
+    void translate(const unsigned long, const double, const double);
+    void scale(const unsigned long, const double, const double);
+    void rotate(const unsigned long, const double, const int, const std::vector<std::string>&);
     Matrix<D+1,D+1> translationMatrix(const double, const double);
     Matrix<D+1,D+1> scalingMatrix(const double, const double);
     Matrix<D+1,D+1> rotationMatrix(const double);

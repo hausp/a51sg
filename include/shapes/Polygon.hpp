@@ -35,7 +35,7 @@ class Polygon : public Drawable<D> {
 
     Polygon(const std::vector<Point<D>>& points)
     : Drawable<D>("", DrawableType::Polygon) {
-        for (int i = 0; i < points.size()-1; i++) {
+        for (unsigned i = 0; i < points.size()-1; i++) {
             lines.push_back(Line<D>(points[i], points[i+1]));
         }
         lines.push_back(Line<D>(points.back(), points.front()));

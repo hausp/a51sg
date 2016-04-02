@@ -16,7 +16,7 @@ void Drawer2D::draw(const Line2D& ln) const {
 
 void Drawer2D::draw(const Polygon2D& p) const {
     Point2D pv;
-    for (int i = 0; i < p.numberOfPoints(); i++ ) {
+    for (unsigned i = 0; i < p.numberOfPoints(); i++ ) {
         pv = toViewport(p[i]);
         cairo::line_to(pv[0], pv[1]);
     }
