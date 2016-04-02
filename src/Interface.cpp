@@ -22,7 +22,7 @@ void Interface::build() {
     g_signal_connect(window, "delete-event", G_CALLBACK(signals::close), NULL);
     gtk_container_set_border_width(GTK_CONTAINER(window), 10);
 
-    GtkWidget* outerbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+    GtkWidget* outerbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 15);
     gtk_container_add(GTK_CONTAINER(window), outerbox);
 
     buildSidebar(outerbox);
@@ -31,10 +31,11 @@ void Interface::build() {
 
 void Interface::buildSidebar(const GtkWidget* outerbox) {
     GtkWidget* sidebox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_widget_set_margin_top(sidebox, 5);
     gtk_box_pack_start(GTK_BOX(outerbox), sidebox, false, false, 0);
 
     GtkWidget* listFrame = gtk_frame_new("Objects list");
-    gtk_frame_set_label_align(GTK_FRAME(listFrame), 0.5, 0.5);
+    gtk_frame_set_label_align(GTK_FRAME(listFrame), 0.5, 1);
     gtk_frame_set_shadow_type(GTK_FRAME(listFrame), GTK_SHADOW_OUT);
     gtk_box_pack_start(GTK_BOX(sidebox), listFrame, false, false, 0);
 
@@ -42,6 +43,7 @@ void Interface::buildSidebar(const GtkWidget* outerbox) {
     GtkWidget *scwin = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_min_content_width(GTK_SCROLLED_WINDOW(scwin), 200);
     gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scwin), 300);
+    gtk_widget_set_margin_top(scwin, 3);
     gtk_container_add(GTK_CONTAINER(scwin), objList);
     gtk_container_add(GTK_CONTAINER(listFrame), scwin);
 
@@ -57,13 +59,9 @@ void Interface::buildSidebar(const GtkWidget* outerbox) {
     gtk_grid_set_column_homogeneous(GTK_GRID(objgrid), true);
     gtk_container_add(GTK_CONTAINER(objFrame), objgrid);
 
-    GtkWidget* pointButton = gtk_button_new_with_label("Point");
-    GtkWidget* lineButton = gtk_button_new_with_label("Line");
-    GtkWidget* polygonButton = gtk_button_new_with_label("Polygon");
-    
-    g_signal_connect(pointButton, "clicked", G_CALLBACK(signals::point_pressed), NULL);
-    g_signal_connect(lineButton, "clicked", G_CALLBACK(signals::line_pressed), NULL);
-    g_signal_connect(polygonButton, "clicked", G_CALLBACK(signals::polygon_pressed), NULL);
+    GtkWidget* pointButton = gtk::new_button("Point", NULL, signals::point_pressed);
+    GtkWidget* lineButton = gtk::new_button("Line", NULL, signals::line_pressed);
+    GtkWidget* polygonButton = gtk::new_button("Polygon", NULL, signals::polygon_pressed);
 
     gtk_grid_attach(GTK_GRID(objgrid), pointButton, 0, 0, 2, 1);
     gtk_grid_attach(GTK_GRID(objgrid), lineButton, 2, 0, 2, 1);
@@ -86,20 +84,14 @@ void Interface::buildSidebar(const GtkWidget* outerbox) {
     gtk_container_set_border_width(GTK_CONTAINER(navGrid), 3);
     gtk_container_add(GTK_CONTAINER(navFrame), navGrid);
 
-    GtkWidget* upButton = gtk_button_new_with_label("\u25B2");
-    g_signal_connect(upButton, "clicked", G_CALLBACK(signals::up), NULL);
+    GtkWidget* upButton    = gtk::new_button("\u25B2", NULL, signals::up);
+    GtkWidget* leftButton  = gtk::new_button("\u25C0", NULL, signals::left);
+    GtkWidget* rightButton = gtk::new_button("\u25B6", NULL, signals::right);
+    GtkWidget* downButton  = gtk::new_button("\u25BC", NULL, signals::down);
+
     gtk_grid_attach(GTK_GRID(navGrid), upButton, 1, 0, 1, 1);
-
-    GtkWidget* leftButton = gtk_button_new_with_label("\u25C0");
-    g_signal_connect(leftButton, "clicked", G_CALLBACK(signals::left), NULL);
     gtk_grid_attach(GTK_GRID(navGrid), leftButton, 0, 1, 1, 1);
-
-    GtkWidget* rightButton = gtk_button_new_with_label("\u25B6");
-    g_signal_connect(rightButton, "clicked", G_CALLBACK(signals::right), NULL);
     gtk_grid_attach(GTK_GRID(navGrid), rightButton, 3, 1, 1, 1);
-
-    GtkWidget* downButton = gtk_button_new_with_label("\u25BC");
-    g_signal_connect(downButton, "clicked", G_CALLBACK(signals::down), NULL);
     gtk_grid_attach(GTK_GRID(navGrid), downButton, 1, 2, 1, 1);
 
     GtkWidget* zoomFrame = gtk_frame_new("Zoom");
@@ -140,10 +132,12 @@ void Interface::buildSidebar(const GtkWidget* outerbox) {
 
 void Interface::buildMainbar(const GtkWidget* outerbox) {
     GtkWidget* centerbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+    gtk_widget_set_margin_top(centerbox, 5);
     gtk_box_pack_start(GTK_BOX(outerbox), centerbox, false, false, 0);
 
     canvas = gtk_drawing_area_new();
-    gtk_widget_set_size_request(canvas, 800, 600);
+    gtk_widget_set_size_request(canvas, 600, 600);
+    gtk_box_pack_start(GTK_BOX(centerbox), gtk_label_new("viewport"), false, false, 0);
     gtk_box_pack_start(GTK_BOX(centerbox), canvas, false, false, 0);
 
     g_signal_connect(canvas, "configure-event", G_CALLBACK(signals::configure_event), NULL);
