@@ -295,22 +295,20 @@ void Interface::buildRotationWindow() {
     dialog                 = gtk::new_dialog(window, "Rotate object", 10);
     GtkWidget* mainbox     = gtk_box_new(GTK_ORIENTATION_VERTICAL, 3);
     GtkWidget* buttonbox   = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
-    GtkWidget* line1       = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 3);
-    GtkWidget* line2       = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 3);
-    GtkWidget* line3       = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 3);
-    GtkWidget* line4       = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 3);
     GtkWidget* angle       = gtk_entry_new();
-    
+    const unsigned numRows = 4;
+    std::vector<GtkWidget*> rows(numRows);
+
     gtk_container_add(GTK_CONTAINER(dialog), mainbox);
-    gtk_box_pack_start(GTK_BOX(mainbox), line1, true, false, 0);
-    gtk_box_pack_start(GTK_BOX(mainbox), line2, true, false, 0);
-    gtk_box_pack_start(GTK_BOX(mainbox), line3, true, false, 0);
-    gtk_box_pack_start(GTK_BOX(mainbox), line4, true, false, 0);
+    for (unsigned i = 0; i < numRows; i++) {
+        rows[i] = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 3);
+        gtk_box_pack_start(GTK_BOX(mainbox), rows[i], true, false, 0);
+    }
     gtk_box_pack_end(GTK_BOX(mainbox), buttonbox, false, false, 0);
     
     gtk::set_entry_max_length(angle, 5);
-    gtk_box_pack_start(GTK_BOX(line1), gtk_label_new("Angle:"), false, false, 0);
-    gtk_box_pack_start(GTK_BOX(line1), angle, true, false, 0);
+    gtk_box_pack_start(GTK_BOX(rows[0]), gtk_label_new("Angle:"), false, false, 0);
+    gtk_box_pack_start(GTK_BOX(rows[0]), angle, true, false, 0);
 
     GtkWidget* r1 = gtk_radio_button_new_with_label(NULL, "object center");
     GtkWidget* r2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(r1), "world center");
@@ -329,13 +327,13 @@ void Interface::buildRotationWindow() {
     gtk::set_entry_max_length(i2, 5);
     gtk_widget_set_sensitive(i1, false);
     gtk_widget_set_sensitive(i2, false);
-    gtk_box_pack_start(GTK_BOX(line2), r1, true, false, 0);
-    gtk_box_pack_start(GTK_BOX(line2), r2, true, false, 0);
-    gtk_box_pack_start(GTK_BOX(line3), r3, true, false, 0);
-    gtk_box_pack_start(GTK_BOX(line4), gtk_label_new("X:"), true, false, 0);
-    gtk_box_pack_start(GTK_BOX(line4), i1, true, false, 0);
-    gtk_box_pack_start(GTK_BOX(line4), gtk_label_new("Y:"), true, false, 0);
-    gtk_box_pack_start(GTK_BOX(line4), i2, true, false, 0);
+    gtk_box_pack_start(GTK_BOX(rows[1]), r1, true, false, 0);
+    gtk_box_pack_start(GTK_BOX(rows[1]), r2, true, false, 0);
+    gtk_box_pack_start(GTK_BOX(rows[2]), r3, true, false, 0);
+    gtk_box_pack_start(GTK_BOX(rows[3]), gtk_label_new("X:"), true, false, 0);
+    gtk_box_pack_start(GTK_BOX(rows[3]), i1, true, false, 0);
+    gtk_box_pack_start(GTK_BOX(rows[3]), gtk_label_new("Y:"), true, false, 0);
+    gtk_box_pack_start(GTK_BOX(rows[3]), i2, true, false, 0);
 
     for (auto radio : radioButtons) {
         g_signal_connect(radio, "toggled", G_CALLBACK(signals::update_entries), NULL);
