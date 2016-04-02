@@ -36,7 +36,7 @@ void Drawer<D>::addShape(Drawable<D>* d) {
 }
 
 template<unsigned D>
-bool Drawer<D>::drawAll() {
+void Drawer<D>::drawAll() {
     cairo::clear();
     for (auto shape : displayFile) {
         shape->draw(*this);

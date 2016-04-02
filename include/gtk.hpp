@@ -6,6 +6,7 @@
 
 #include <gtk/gtk.h>
 #include <iostream>
+#include <vector>
 
 namespace gtk {
 	void init(int*, char***);
@@ -20,10 +21,14 @@ namespace gtk {
     
     void set_entry_max_length(const GtkWidget*, int);
 
+    void mount_box_at_start(GtkWidget*, std::vector<GtkWidget*>, std::vector<bool> = {},
+                   std::vector<bool> = {}, std::vector<int> = {});
+    void mount_box_at_end(GtkWidget*, std::vector<GtkWidget*>, std::vector<bool> = {},
+                   std::vector<bool> = {}, std::vector<int> = {});
+
 	void main();
 	void quit();
 }
-
     
 template<typename T>
 GtkWidget* gtk::new_button(const char* name, GtkWidget* parent, void (*action)(T), T data) {

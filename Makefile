@@ -3,7 +3,7 @@
 CXX       :=gcc
 LDLIBS    :=-lstdc++ -lm
 LDFLAGS   :=
-CXXFLAGS  :=`pkg-config --cflags gtk+-3.0` `pkg-config --libs gtk+-3.0` -std=c++11
+CXXFLAGS  :=`pkg-config --cflags gtk+-3.0` `pkg-config --libs gtk+-3.0` -std=c++11 -Wall
 # Source directory
 SRCDIR    :=src
 # Headers directory

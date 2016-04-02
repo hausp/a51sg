@@ -24,7 +24,7 @@ class Drawer {
     virtual void draw(const Point<D>&) const = 0;
     virtual void draw(const Line<D>&) const = 0;
     virtual void draw(const Polygon<D>&) const = 0;
-    bool drawAll();
+    void drawAll();
     virtual void drawAxis() = 0;
     void moveVertical(const int);
     void moveHorizontal(const int);
