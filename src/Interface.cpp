@@ -371,19 +371,19 @@ void Interface::showPopupMenu(GtkWidget* objList, GdkEventButton* event, gpointe
     if (GTK_IS_LIST_BOX_ROW(selected_row)) {
         index = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(selected_row));
 
-        GtkWidget* item1 = gtk_menu_item_new_with_label("Remover objeto");
+        GtkWidget* item1 = gtk_menu_item_new_with_label("Remove object");
         g_signal_connect_swapped(item1, "activate", G_CALLBACK(signals::remove_object),(gpointer)index);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item1);
 
-        GtkWidget* item2 = gtk_menu_item_new_with_label("Mover objeto");
+        GtkWidget* item2 = gtk_menu_item_new_with_label("Translate object");
         g_signal_connect_swapped(item2, "activate", G_CALLBACK(signals::translate_object),(gpointer)index);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item2); 
 
-        GtkWidget* item3 = gtk_menu_item_new_with_label("Escalonar objeto");
+        GtkWidget* item3 = gtk_menu_item_new_with_label("Scale object");
         g_signal_connect_swapped(item3, "activate", G_CALLBACK(signals::scale_object),(gpointer)index);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item3);
 
-        GtkWidget* item4 = gtk_menu_item_new_with_label("Girar objeto");
+        GtkWidget* item4 = gtk_menu_item_new_with_label("Rotate object");
         g_signal_connect_swapped(item4, "activate", G_CALLBACK(signals::rotate_object),(gpointer)index);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item4);
 
@@ -392,6 +392,13 @@ void Interface::showPopupMenu(GtkWidget* objList, GdkEventButton* event, gpointe
         (event != NULL) ? event->button : 0,
         gdk_event_get_time((GdkEvent*) event));
     }
+}
+
+void Interface::addShape(const std::string& name) {
+    GtkWidget* label = gtk_label_new(name.c_str());
+    gtk_label_set_xalign(GTK_LABEL(label), 0);
+    gtk_widget_show(label);
+    gtk_list_box_insert(GTK_LIST_BOX(objList), label, -1);
 }
 
 void Interface::removeShape(long index) {

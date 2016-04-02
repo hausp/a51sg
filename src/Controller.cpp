@@ -78,7 +78,7 @@ void Controller::createPoint() {
     if (name != "") {
         Point2D* p = new Point2D(name, stoi(entries[0]), stoi(entries[1]));
         drawer.addShape(p);
-        interface.addShape(p);
+        interface.addShape(p->getFormattedName());
         interface.closeDialog();
         drawer.drawAll();
         interface.queueDraw();
@@ -99,7 +99,7 @@ void Controller::createLine() {
         Point2D p2(stoi(entries[2]), stoi(entries[3]));
         Line2D* line = new Line2D(name, p1, p2);
         drawer.addShape(line);
-        interface.addShape(line);
+        interface.addShape(line->getFormattedName());
         interface.closeDialog();
         drawer.drawAll();
         interface.queueDraw();
@@ -123,7 +123,7 @@ void Controller::createPolygon() {
         Polygon2D* polygon = new Polygon2D(polygonPoints);
         polygon->setName(name);
         drawer.addShape(polygon);
-        interface.addShape(polygon);
+        interface.addShape(polygon->getFormattedName());
         interface.closeDialog();
         drawer.drawAll();
         interface.queueDraw();

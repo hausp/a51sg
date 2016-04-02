@@ -4,6 +4,7 @@
 #ifndef DRAWABLE_HPP
 #define DRAWABLE_HPP
 
+#include <map>
 #include <string>
 #include "Matrix.hpp"
 
@@ -19,6 +20,15 @@ enum class DrawableType {
     Undefined
 };
 
+namespace {
+    std::map<DrawableType, std::string> types = {
+    {DrawableType::Point, "Point"},
+    {DrawableType::Line, "Line"},
+    {DrawableType::Polygon, "Polygon"},
+    {DrawableType::Undefined, "Undefined"}};
+}
+
+
 template<unsigned D>
 class Drawable {
  public:
@@ -33,6 +43,9 @@ class Drawable {
 
     const std::string& getName() const { return name; }
     const DrawableType getType() const { return type; }
+    std::string getFormattedName() const {
+        return types[type] + "(" + name + ")";
+    }
 
     void setName(const std::string& name) { this->name = name; }
  

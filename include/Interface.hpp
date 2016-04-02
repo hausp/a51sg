@@ -5,16 +5,7 @@
 #define INTERFACE_HPP
 
 #include <gtk/gtk.h>
-#include <map>
 #include "Drawable.hpp"
-
-namespace {
-	std::map<DrawableType, std::string> types = {
-    {DrawableType::Point, "Ponto"},
-    {DrawableType::Line, "Linha"},
-    {DrawableType::Polygon, "Polígono"},
-    {DrawableType::Undefined, "Indefinido"}};
-}
 
 class Interface {
 private:
@@ -73,14 +64,7 @@ public:
 	void updateEntries();
 	void closeDialog();
 
-
-	template<unsigned D>
-	void addShape(Drawable<D>* d) {
-	    GtkWidget* label = gtk_label_new((types[d->getType()] + "(" + d->getName() + ")").c_str());
-	    gtk_label_set_xalign(GTK_LABEL(label), 0);
-	    gtk_widget_show(label);
-	    gtk_list_box_insert(GTK_LIST_BOX(objList), label, -1);
-	}
+	void addShape(const std::string& name);
 	void removeShape(long);
 
 	void showPopupMenu(GtkWidget*, GdkEventButton*, gpointer);
