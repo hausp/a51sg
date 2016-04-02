@@ -21,11 +21,12 @@ namespace gtk {
     
     void set_entry_max_length(const GtkWidget*, int);
 
-    void mount_box_at_start(GtkWidget*, std::vector<GtkWidget*>, std::vector<bool> = {},
-                   std::vector<bool> = {}, std::vector<int> = {});
-    void mount_box_at_end(GtkWidget*, std::vector<GtkWidget*>, std::vector<bool> = {},
-                   std::vector<bool> = {}, std::vector<int> = {});
-
+    void mount_box_at_start(const GtkWidget*, const std::vector<GtkWidget*>, const std::vector<bool> = {},
+                   std::vector<bool> = {}, const std::vector<int> = {});
+    void mount_box_at_end(const GtkWidget*, std::vector<GtkWidget*>, const std::vector<bool> = {},
+                   std::vector<bool> = {}, const std::vector<int> = {});
+    void mount_box_at_start(const GtkWidget*, const std::vector<GtkWidget*>, bool = false, bool = false, int = 0);
+    void mount_box_at_end(const GtkWidget*, const std::vector<GtkWidget*>, bool = false, bool = false, int = 0);
 	void main();
 	void quit();
 }

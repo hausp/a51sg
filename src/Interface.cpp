@@ -327,7 +327,7 @@ void Interface::buildRotationWindow() {
     gtk::set_entry_max_length(i2, 5);
     gtk_widget_set_sensitive(i1, false);
     gtk_widget_set_sensitive(i2, false);
-    gtk::mount_box_at_start(rows[1], {r1, r2}, {true, true});
+    gtk::mount_box_at_start(rows[1], {r1, r2}, true);
     // gtk_box_pack_start(GTK_BOX(rows[1]), r1, true, false, 0);
     // gtk_box_pack_start(GTK_BOX(rows[1]), r2, true, false, 0);
     gtk_box_pack_start(GTK_BOX(rows[2]), r3, true, false, 0);

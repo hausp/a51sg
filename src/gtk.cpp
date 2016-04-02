@@ -49,8 +49,8 @@ namespace gtk {
         gtk_entry_set_max_width_chars(GTK_ENTRY(entry), length);
     }
 
-    void mount_box_at_start(GtkWidget* box, std::vector<GtkWidget*> widgets, std::vector<bool> allocs,
-                   std::vector<bool> expands, std::vector<int> offsets) {
+    void mount_box_at_start(const GtkWidget* box, const std::vector<GtkWidget*> widgets, const std::vector<bool> allocs,
+                   const std::vector<bool> expands, const std::vector<int> offsets) {
         bool alloc, expand;
         int offset;
         for (unsigned i = 0; i < widgets.size(); i++) {
@@ -61,14 +61,31 @@ namespace gtk {
         }
     }
 
-    void mount_box_at_end(GtkWidget* box, std::vector<GtkWidget*> widgets, std::vector<bool> allocs,
-                   std::vector<bool> expands, std::vector<int> offsets) {
+    void mount_box_at_start(const GtkWidget* box, const std::vector<GtkWidget*> widgets, 
+                            bool alloc, bool expand, int offset) {
+        mount_box_at_start(box, widgets, std::vector<bool>(widgets.size(), alloc),
+                           std::vector<bool>(widgets.size(), expand),
+                           std::vector<int>(widgets.size(), offset));
+    }
+
+    void mount_box_at_end(const GtkWidget* box, const std::vector<GtkWidget*> widgets, const std::vector<bool> allocs,
+                   const std::vector<bool> expands, const std::vector<int> offsets) {
+        bool alloc, expand;
+        int offset;
         for (unsigned i = 0; i < widgets.size(); i++) {
-            
+            alloc  = i < allocs.size() && allocs[i];
+            expand = i < expands.size() && expands[i];
+            offset = i < offsets.size() ? offsets[i] : 0;
+            gtk_box_pack_end(GTK_BOX(box), widgets[i], alloc, expand, offset);
         }
     }
 
-
+    void mount_box_at_end(const GtkWidget* box, const std::vector<GtkWidget*> widgets, 
+                            bool alloc, bool expand, int offset) {
+        mount_box_at_end(box, widgets, std::vector<bool>(widgets.size(), alloc),
+                           std::vector<bool>(widgets.size(), expand),
+                           std::vector<int>(widgets.size(), offset));
+    }
 
     void quit() {
         gtk_main_quit();
