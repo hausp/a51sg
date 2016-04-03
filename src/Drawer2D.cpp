@@ -3,8 +3,6 @@
 
 #include "Drawer2D.hpp"
 
-Drawer2D::Drawer2D(const int width, const int height) : Drawer<2>(width, height) {}
-
 void Drawer2D::draw(const Point2D& p) const {
     Point2D pv = toViewport(p);
     cairo::point(pv[0], pv[1]);

@@ -11,7 +11,7 @@ using Polygon2D = Polygon<2>;
 
 class Drawer2D : public Drawer<2> {
  public:
-    Drawer2D(const int, const int);
+    using Drawer<2>::Drawer;
 
     void draw(const Point2D&) const;
     void draw(const Line2D&) const;
