@@ -8,8 +8,20 @@
 #include <functional>
 #include <iostream>
 #include <vector>
+#include <tuple>
 
 namespace gtk {
+    struct box_pack {
+        box_pack(GtkWidget* w, bool a, bool e = false, int o = false)
+        : widget(w), alloc(a), expand(e), offset(o) { }
+        box_pack(GtkWidget* w, int o = 0)
+        : widget(w), alloc(false), expand(false), offset(o) { }
+        GtkWidget* widget;
+        bool alloc;
+        bool expand;
+        int offset;
+    };
+
 	void init(int*, char***);
 	void queue_draw(GtkWidget*);
 
@@ -22,14 +34,10 @@ namespace gtk {
     
     void set_entry_max_length(const GtkWidget*, int);
 
-    void mount_box_at_start(const GtkWidget*, const std::vector<GtkWidget*>&, const std::vector<bool>& = {},
-                   const std::vector<bool>& = {}, const std::vector<int>& = {});
-    void mount_box_at_end(const GtkWidget*, std::vector<GtkWidget*>&, const std::vector<bool>& = {},
-                   const std::vector<bool>& = {}, const std::vector<int>& = {});
-    void mount_box_at_start(const GtkWidget*, const std::vector<GtkWidget*>&, bool = false, bool = false, int = 0);
-    void mount_box_at_end(const GtkWidget*, const std::vector<GtkWidget*>&, bool = false, bool = false, int = 0);
-    void mount_box(const std::vector<GtkWidget*>&, const std::vector<bool>&, const std::vector<bool>&,
-                   const std::vector<int>&, const std::function<void(GtkWidget*, bool, bool, int)>&);
+    void box_push_back(const GtkWidget*, const std::vector<box_pack>&);
+    void box_push_front(const GtkWidget*, const std::vector<box_pack>&);
+    void box_push(const std::vector<box_pack>&,
+                   const std::function<void(GtkWidget*, bool, bool, int)>&);
 	void main();
 	void quit();
 }
