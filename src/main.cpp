@@ -12,7 +12,7 @@
 
 int main(int argc, char** argv) {
  	// Init GTK+ with command line options
-    gtk::init(&argc, &argv);
+    gtk::init(argc, argv);
 
     // Graphical Interface - managing ugly buttons and boxes
     Interface gui;
@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
     Controller controller(gui, drawer);
 
     // Set controller to receive GTK+ signals
-    signals::set_receiver(&controller);
+    signals::set_receiver(controller);
 	
     // Build graphical environment
     gui.build();

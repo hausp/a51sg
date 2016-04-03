@@ -4,8 +4,8 @@
 #include "gtk.hpp"
 
 namespace gtk {
-    void init(int* argc, char*** argv) {
-        gtk_init(argc, argv);
+    void init(int argc, char** argv) {
+        gtk_init(&argc, &argv);
     }
 
     void main() {

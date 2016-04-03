@@ -305,7 +305,7 @@ void Interface::buildRotationWindow() {
 }
 
 void Interface::updateEntries() {
-    unsigned selected = getSelectedRadio();
+    auto selected = getSelectedRadio();
     for (unsigned i = 0; i < entries.size() - 1; i++) {
         gtk_widget_set_sensitive(entries[i], selected == 2);
     }

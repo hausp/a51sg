@@ -20,7 +20,7 @@ namespace signals {
     void zoom_out();
 
     // Set signals receiver
-    void set_receiver(Controller*);
+    void set_receiver(Controller&);
     
     // Shapes stuff signals
     void point_pressed();

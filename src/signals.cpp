@@ -45,8 +45,8 @@ namespace signals {
     }
 
 // -------------------------- Set signal receiver -------------------------- //
-    void set_receiver(Controller* c) {
-        receiver = c;
+    void set_receiver(Controller& c) {
+        receiver = &c;
     }
 
 // ------------------------- Shapes stuff signals -------------------------- //

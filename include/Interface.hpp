@@ -44,7 +44,7 @@ public:
 		}
 		return radioList;
 	}*/
-	const unsigned getSelectedRadio() const {
+	const int getSelectedRadio() const {
 	    for (unsigned i = 0; i < radioButtons.size(); i++) {
 	        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioButtons[i]))) {
 	        	return i;

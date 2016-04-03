@@ -22,7 +22,7 @@ namespace gtk {
         int offset;
     };
 
-	void init(int*, char***);
+	void init(int, char**);
 	void queue_draw(GtkWidget*);
 
     GtkWidget* new_window(const char*, int = 0);

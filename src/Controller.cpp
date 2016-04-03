@@ -39,7 +39,6 @@ void Controller::setZoom() {
     std::string z = gtk_entry_get_text(GTK_ENTRY(zoomLevel));
     std::regex numeric("^\\d+");
     if (!std::regex_match(z, numeric)) return;
-    std::cout << stoi(z) << std::endl;
     drawer.setZoom(stoi(z)/100.0);
 }
 
