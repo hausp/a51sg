@@ -20,6 +20,17 @@ namespace gtk {
         return window;
     }
 
+    GtkWidget* new_scrolled_window(GtkAdjustment* hadj, GtkAdjustment* vadj, 
+                                   const GtkShadowType& shadow, int xmin,
+                                   int ymin, int bwidth) {
+        GtkWidget* scwin = gtk_scrolled_window_new(hadj, vadj);
+        gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scwin), shadow);
+        gtk_scrolled_window_set_min_content_width(GTK_SCROLLED_WINDOW(scwin), xmin);
+        gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scwin), ymin);
+        gtk_container_set_border_width(GTK_CONTAINER(scwin), bwidth);
+        return scwin;
+    }
+
     GtkWidget* new_dialog(const GtkWidget* parent, const char* name, int bwidth) {
         GtkWidget* dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         gtk_window_set_title(GTK_WINDOW(dialog), name);
@@ -31,6 +42,21 @@ namespace gtk {
         return dialog;
     }
 
+    GtkWidget* new_frame(const char* name, float xalign, float yalign, int bwidth) {
+        GtkWidget* frame = gtk_frame_new(name);
+        gtk_frame_set_label_align(GTK_FRAME(frame), xalign, yalign);
+        gtk_container_set_border_width(GTK_CONTAINER(frame), bwidth);
+        return frame;
+    }
+
+    GtkWidget* new_entry(const std::string& name, float align, int max) {
+        GtkWidget* entry = gtk_entry_new();
+        gtk_entry_set_text(GTK_ENTRY(entry), name.c_str());
+        gtk_entry_set_alignment(GTK_ENTRY(entry), align);
+        set_entry_max_length(entry, max);
+        return entry;
+    }
+
     GtkWidget* new_button(const char* name, GtkWidget* parent, void (*action)()) {
         GtkWidget* button = gtk_button_new_with_label(name);
         if (parent) {
@@ -40,6 +66,24 @@ namespace gtk {
             g_signal_connect(button, "clicked", G_CALLBACK(action), NULL);
         }
         return button;
+    }
+
+    GtkWidget* new_box(const GtkOrientation& orientation, int spacing,
+                       bool homogeneous, int bwidth) {
+        GtkWidget* box = gtk_box_new(orientation, spacing);
+        gtk_box_set_homogeneous(GTK_BOX(box), homogeneous);
+        gtk_container_set_border_width(GTK_CONTAINER(box), bwidth);
+        return box;
+    }
+
+    GtkWidget* new_grid(int rspacing, int cspacing, bool rh, bool ch, int bwidth) {
+        GtkWidget* grid = gtk_grid_new();
+        gtk_grid_set_row_spacing(GTK_GRID(grid), rspacing);
+        gtk_grid_set_column_spacing(GTK_GRID(grid), cspacing);
+        gtk_grid_set_row_homogeneous(GTK_GRID(grid), rh);
+        gtk_grid_set_column_homogeneous(GTK_GRID(grid), ch);
+        gtk_container_set_border_width(GTK_CONTAINER(grid), bwidth);
+        return grid;
     }
 
     void set_entry_max_length(const GtkWidget* entry, int length) {

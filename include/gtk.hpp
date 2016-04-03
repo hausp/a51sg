@@ -10,6 +10,7 @@
 #include <vector>
 #include <tuple>
 
+
 namespace gtk {
     struct box_pack {
         box_pack(GtkWidget* w, bool a, bool e = false, int o = false)
@@ -24,16 +25,20 @@ namespace gtk {
 
 	void init(int, char**);
 	void queue_draw(GtkWidget*);
-
     GtkWidget* new_window(const char*, int = 0);
+    GtkWidget* new_scrolled_window(GtkAdjustment* = NULL, GtkAdjustment* = NULL, 
+                                   const GtkShadowType& = GTK_SHADOW_IN, int = 0,
+                                   int = 0, int = 0);
     GtkWidget* new_dialog(const GtkWidget*, const char*, int = 0);
-
+    GtkWidget* new_frame(const char*, float = 0, float = 0.5, int = 0);
+    GtkWidget* new_entry(const std::string& = "", float = 0, int = 0);
+    GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)() = NULL);
+    GtkWidget* new_box(const GtkOrientation& = GTK_ORIENTATION_HORIZONTAL, int = 0,
+                       bool = false, int = 0);
+    GtkWidget* new_grid(int = 1, int = 1, bool = false, bool = false, int = 0);
     template<typename T>
     GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)(T) = NULL, T = NULL);
-    GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)() = NULL);
-    
     void set_entry_max_length(const GtkWidget*, int);
-
     void box_push_back(const GtkWidget*, const std::vector<box_pack>&);
     void box_push_front(const GtkWidget*, const std::vector<box_pack>&);
     void box_push(const std::vector<box_pack>&,
