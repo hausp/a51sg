@@ -183,12 +183,7 @@ void Interface::buildCreationWindow(const char* name, int points, int m, void (*
     gtk_container_add(GTK_CONTAINER(dialog), mainbox);
 
     gtk::box_push_back(mainbox, {{namebox}, {scwin, true}, {buttonbox, 3}});
-    
     gtk::box_push_back(namebox, {{gtk_label_new("Name:")}, {shapeName, true, true}});
-
-    gtk_box_pack_start(GTK_BOX(mainbox), namebox, false, false, 0);
-    gtk_box_pack_start(GTK_BOX(mainbox), scwin, true, false, 0);
-    gtk_box_pack_start(GTK_BOX(mainbox), buttonbox, false, false, 3);
 
     // Buttons group
     gtk_button_box_set_layout(GTK_BUTTON_BOX(buttonbox), GTK_BUTTONBOX_EXPAND);
@@ -200,7 +195,6 @@ void Interface::buildCreationWindow(const char* name, int points, int m, void (*
     gtk_container_add(GTK_CONTAINER(scwin), pointbox);
     entries.clear();
 
-    
     if (points > 1) frameName += " 1";
 
     for (int i = 0; i < points; i++) {
@@ -213,12 +207,11 @@ void Interface::buildCreationWindow(const char* name, int points, int m, void (*
         gtk_box_pack_start(GTK_BOX(pointbox), frames.back(), false, false, 0);
         gtk_container_add(GTK_CONTAINER(frames.back()), pointboxes.back());
 
-        for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
             entries.push_back(gtk_entry_new());
             gtk::set_entry_max_length(entries.back(), 5);
-            gtk::box_push_back(pointboxes.back(), {{gtk_label_new(labels[i])},
+            gtk::box_push_back(pointboxes.back(), {{gtk_label_new(labels[j])},
                                                         {entries.back(), true, true, 5}});
-            entries.push_back(gtk_entry_new());
         }
         frameName = "Point " + std::to_string(i+2);
     }
@@ -291,20 +284,14 @@ void Interface::buildRotationWindow() {
     GtkWidget* r3 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(r1), "arbitrary point");
     GtkWidget* i1 = gtk_entry_new();
     GtkWidget* i2 = gtk_entry_new();
-    radioButtons.clear();
-    radioButtons.push_back(r1);
-    radioButtons.push_back(r2);
-    radioButtons.push_back(r3);
-    entries.clear();
-    entries.push_back(i1);
-    entries.push_back(i2);
-    entries.push_back(angle);
+    radioButtons.assign({r1, r2, r3});
+    entries.assign({i1, i2, angle});
     gtk::set_entry_max_length(i1, 5);
     gtk::set_entry_max_length(i2, 5);
     gtk_widget_set_sensitive(i1, false);
     gtk_widget_set_sensitive(i2, false);
     gtk::box_push_back(rows[1], {{r1, true}, {r2, true}});
-    gtk_box_pack_start(GTK_BOX(rows[2]), r3, true, false, 0);
+    gtk::box_push_back(rows[2], {{r3, true}});
     gtk::box_push_back(rows[3], {{gtk_label_new("X:"), true}, {i1, true},
                                       {gtk_label_new("Y:"), true}, {i2, true}});
 

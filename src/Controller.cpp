@@ -69,6 +69,7 @@ void Controller::vertexOk() {
 
 void Controller::createPoint() {
     auto entries = interface.getEntries();
+    std::cout << entries.size() << std::endl;
     std::string name = interface.getShapeName();
     std::regex numeric("^\\d+");
 
