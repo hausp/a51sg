@@ -49,11 +49,11 @@ namespace gtk {
         return frame;
     }
 
-    GtkWidget* new_entry(const std::string& name, float align, int max) {
+    GtkWidget* new_entry(const std::string& name, float align, int max, int mshow) {
         GtkWidget* entry = gtk_entry_new();
         gtk_entry_set_text(GTK_ENTRY(entry), name.c_str());
         gtk_entry_set_alignment(GTK_ENTRY(entry), align);
-        set_entry_max_length(entry, max);
+        set_entry_max_length(entry, max, mshow);
         return entry;
     }
 
@@ -86,10 +86,10 @@ namespace gtk {
         return grid;
     }
 
-    void set_entry_max_length(const GtkWidget* entry, int length) {
+    void set_entry_max_length(const GtkWidget* entry, int length, int show) {
         gtk_entry_set_max_length(GTK_ENTRY(entry), length);
-        gtk_entry_set_width_chars(GTK_ENTRY(entry), length);
-        gtk_entry_set_max_width_chars(GTK_ENTRY(entry), length);
+        gtk_entry_set_width_chars(GTK_ENTRY(entry), show);
+        gtk_entry_set_max_width_chars(GTK_ENTRY(entry), show);
     }
 
     void box_push_back(const GtkWidget* box, const std::vector<box_pack>& packets) {

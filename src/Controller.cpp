@@ -68,7 +68,6 @@ void Controller::vertexOk() {
 
 void Controller::createPoint() {
     auto entries = interface.getEntries();
-    std::cout << entries.size() << std::endl;
     std::string name = interface.getShapeName();
     std::regex numeric("^\\d+");
 
@@ -80,7 +79,7 @@ void Controller::createPoint() {
         drawer.addShape(p);
         interface.addShape(p->getFormattedName());
         interface.closeDialog();
-        drawer.drawAll();
+        drawer.draw(*p);
         interface.queueDraw();
     }
 }
@@ -101,7 +100,7 @@ void Controller::createLine() {
         drawer.addShape(line);
         interface.addShape(line->getFormattedName());
         interface.closeDialog();
-        drawer.drawAll();
+        drawer.draw(*line);
         interface.queueDraw();
     }
 }
@@ -125,7 +124,7 @@ void Controller::createPolygon() {
         drawer.addShape(polygon);
         interface.addShape(polygon->getFormattedName());
         interface.closeDialog();
-        drawer.drawAll();
+        drawer.draw(*polygon);
         interface.queueDraw();
     }
 }

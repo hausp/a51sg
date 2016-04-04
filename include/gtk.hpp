@@ -39,11 +39,11 @@ namespace gtk {
 	void queue_draw(GtkWidget*);
     GtkWidget* new_window(const char*, int = 0);
     GtkWidget* new_scrolled_window(GtkAdjustment* = NULL, GtkAdjustment* = NULL, 
-                                   const GtkShadowType& = GTK_SHADOW_IN, int = 0,
+                                   const GtkShadowType& = GTK_SHADOW_NONE, int = 0,
                                    int = 0, int = 0);
     GtkWidget* new_dialog(const GtkWidget*, const char*, int = 0);
     GtkWidget* new_frame(const char*, float = 0, float = 0.5, int = 0);
-    GtkWidget* new_entry(const std::string& = "", float = 0, int = 0);
+    GtkWidget* new_entry(const std::string& = "", float = 0, int = 0, int = 50);
     GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)() = NULL);
     GtkWidget* new_box(const GtkOrientation& = GTK_ORIENTATION_HORIZONTAL, int = 0,
                        bool = false, int = 0);
@@ -52,7 +52,7 @@ namespace gtk {
     GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)(T) = NULL, T = NULL);
     template<typename... Args>
     std::vector<GtkWidget*> new_radio_group(const std::string&, const Args... args);
-    void set_entry_max_length(const GtkWidget*, int);
+    void set_entry_max_length(const GtkWidget*, int, int = 50);
     void box_push_back(const GtkWidget*, const std::vector<box_pack>&);
     void box_push_front(const GtkWidget*, const std::vector<box_pack>&);
     void box_push(const std::vector<box_pack>&,
