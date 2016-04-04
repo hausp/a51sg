@@ -50,6 +50,7 @@ class Drawer {
     double defaultWidth;
     double defaultHeight;
     double zoomRate = 0.05;
+    double currentZoom = 1;
     int moveSpeed = 10;
 };
 

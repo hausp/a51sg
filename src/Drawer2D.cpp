@@ -1,6 +1,7 @@
 /* created by Ghabriel Nunes<ghabriel.nunes@gmail.com> 
    and Marleson Graf<aszdrick@gmail.com> [2016] */
 
+#include <cmath>
 #include "Drawer2D.hpp"
 
 void Drawer2D::draw(const Point2D& p) const {

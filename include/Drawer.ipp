@@ -13,9 +13,9 @@
 template<unsigned D>
 Drawer<D>::Drawer(const int width, const int height) 
 : defaultWidth(width), defaultHeight(height) {
-    window = std::make_pair(new Point<D>(0,0), 
+    window = std::make_pair(new Point<D>(0,0),
                 new Point<D>(defaultWidth, defaultHeight));
-    viewport = std::make_pair(new Point<D>(0,0), 
+    viewport = std::make_pair(new Point<D>(0,0),
                 new Point<D>(defaultWidth, defaultHeight));
 }
 
@@ -138,10 +138,14 @@ void Drawer<D>::setViewport(Point<2>* v1, Point<2>* v2) {
 
 template<unsigned D>
 void Drawer<D>::zoom(const int d) {
-    (*window.first)[0] += d * zoomRate/2 * defaultWidth;
-    (*window.first)[1] += d * zoomRate/2 * defaultHeight;
-    (*window.second)[0] -= d * zoomRate/2 * defaultWidth;
-    (*window.second)[1] -= d * zoomRate/2 * defaultHeight;
+    if (currentZoom + d * zoomRate > 0) {
+        currentZoom += d * zoomRate;
+        double factor = 1 / (2 * currentZoom);
+        (*window.first)[0] = defaultWidth * (0.5 - factor);
+        (*window.first)[1] = defaultHeight * (0.5 - factor);
+        (*window.second)[0] = defaultWidth * (0.5 + factor);
+        (*window.second)[1] = defaultHeight * (0.5 + factor);
+    }
 }
 
 template<unsigned D>
