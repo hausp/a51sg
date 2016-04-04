@@ -8,8 +8,20 @@
 #include <functional>
 #include <iostream>
 #include <vector>
-#include <tuple>
 
+namespace {
+    std::vector<GtkWidget*> new_radio_group_aux(std::vector<GtkWidget*>& list) {
+        (void)new_radio_group_aux;
+        return list;
+    }
+
+    template<typename... Args>
+    std::vector<GtkWidget*> new_radio_group_aux(std::vector<GtkWidget*>& list, const std::string& text, Args... args) {
+        list.push_back(gtk_radio_button_new_with_label_from_widget(
+            GTK_RADIO_BUTTON(list.front()), text.c_str()));
+        return new_radio_group_aux(list, args...);
+    }
+}
 
 namespace gtk {
     struct box_pack {
@@ -38,11 +50,15 @@ namespace gtk {
     GtkWidget* new_grid(int = 1, int = 1, bool = false, bool = false, int = 0);
     template<typename T>
     GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)(T) = NULL, T = NULL);
+    template<typename... Args>
+    std::vector<GtkWidget*> new_radio_group(const std::string&, const Args... args);
     void set_entry_max_length(const GtkWidget*, int);
     void box_push_back(const GtkWidget*, const std::vector<box_pack>&);
     void box_push_front(const GtkWidget*, const std::vector<box_pack>&);
     void box_push(const std::vector<box_pack>&,
                    const std::function<void(GtkWidget*, bool, bool, int)>&);
+    template<typename T>
+    void menu_push(GtkWidget*, const std::string&, void (*)(gpointer) = NULL, T = NULL);
 	void main();
 	void quit();
 }
@@ -59,5 +75,19 @@ GtkWidget* gtk::new_button(const char* name, GtkWidget* parent, void (*action)(T
     return button;
 }
 
+template<typename... Args>
+std::vector<GtkWidget*> gtk::new_radio_group(const std::string& text, const Args... args) {
+    std::vector<GtkWidget*> list;
+    list.reserve(sizeof...(Args) + 1);
+    list.push_back(gtk_radio_button_new_with_label(NULL, text.c_str()));
+    return new_radio_group_aux(list, args...);
+}
+
+template<typename T>
+void gtk::menu_push(GtkWidget* menu, const std::string& text, void (*fn)(gpointer), T data) {
+    GtkWidget* item = gtk_menu_item_new_with_label(text.c_str());
+    g_signal_connect_swapped(item, "activate", G_CALLBACK(fn),(gpointer)data);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+}
 
 #endif /* GTK_HPP */

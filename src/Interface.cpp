@@ -80,7 +80,7 @@ void Interface::buildMainbar(const GtkWidget* outerbox) {
     auto centerbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 3);
     canvas = gtk_drawing_area_new();
     gtk_widget_set_size_request(canvas, 600, 600);
-    gtk_box_pack_start(GTK_BOX(outerbox), centerbox, false, false, 0);
+    gtk::box_push_back(outerbox, {{centerbox}});
     gtk::box_push_back(centerbox, {{gtk_label_new("viewport")}, {canvas}});
     g_signal_connect(canvas, "configure-event", G_CALLBACK(signals::configure_event), NULL);
     g_signal_connect(canvas, "draw", G_CALLBACK(signals::draw), NULL);
@@ -189,8 +189,7 @@ void Interface::buildPointWindow(const GtkWidget* parent, const std::string titl
     const char* labelY = std::string("Y " + label + ":").c_str();
     
     gtk_container_add(GTK_CONTAINER(dialog), mainbox);
-    gtk_box_pack_start(GTK_BOX(mainbox), entriesGrid, true, false, 0);
-    gtk_box_pack_end(GTK_BOX(mainbox), buttonbox, false, false, 0);
+    gtk::box_push_back(mainbox, {{entriesGrid, true}, {buttonbox}});
     
     gtk_grid_set_row_homogeneous(GTK_GRID(entriesGrid), true);
     entries.clear();
@@ -236,19 +235,16 @@ void Interface::buildRotationWindow() {
     gtk::set_entry_max_length(angle, 5);
     gtk::box_push_back(rows[0], {{gtk_label_new("Angle:")}, {angle, true}});
 
-    GtkWidget* r1 = gtk_radio_button_new_with_label(NULL, "object center");
-    GtkWidget* r2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(r1), "world center");
-    GtkWidget* r3 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(r1), "arbitrary point");
+    radioButtons = gtk::new_radio_group("object center", "world center", "arbitrary point");
     GtkWidget* i1 = gtk_entry_new();
     GtkWidget* i2 = gtk_entry_new();
-    radioButtons.assign({r1, r2, r3});
     entries.assign({i1, i2, angle});
     gtk::set_entry_max_length(i1, 5);
     gtk::set_entry_max_length(i2, 5);
     gtk_widget_set_sensitive(i1, false);
     gtk_widget_set_sensitive(i2, false);
-    gtk::box_push_back(rows[1], {{r1, true}, {r2, true}});
-    gtk::box_push_back(rows[2], {{r3, true}});
+    gtk::box_push_back(rows[1], {{radioButtons[0], true}, {radioButtons[1], true}});
+    gtk::box_push_back(rows[2], {{radioButtons[2], true}});
     gtk::box_push_back(rows[3], {{gtk_label_new("X:"), true}, {i1, true},
                                       {gtk_label_new("Y:"), true}, {i2, true}});
 
@@ -273,28 +269,17 @@ void Interface::closeDialog() {
 }
 
 void Interface::showPopupMenu(GtkWidget* objList, GdkEventButton* event, gpointer data) {
-    GtkWidget* menu = gtk_menu_new();
     GtkListBoxRow* selected_row = gtk_list_box_get_selected_row(GTK_LIST_BOX(objList));
     long index = -1;
 
     if (GTK_IS_LIST_BOX_ROW(selected_row)) {
         index = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(selected_row));
 
-        GtkWidget* item1 = gtk_menu_item_new_with_label("Remove object");
-        g_signal_connect_swapped(item1, "activate", G_CALLBACK(signals::remove_object),(gpointer)index);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item1);
-
-        GtkWidget* item2 = gtk_menu_item_new_with_label("Translate object");
-        g_signal_connect_swapped(item2, "activate", G_CALLBACK(signals::translate_object),(gpointer)index);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item2); 
-
-        GtkWidget* item3 = gtk_menu_item_new_with_label("Scale object");
-        g_signal_connect_swapped(item3, "activate", G_CALLBACK(signals::scale_object),(gpointer)index);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item3);
-
-        GtkWidget* item4 = gtk_menu_item_new_with_label("Rotate object");
-        g_signal_connect_swapped(item4, "activate", G_CALLBACK(signals::rotate_object),(gpointer)index);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item4);
+        GtkWidget* menu = gtk_menu_new();
+        gtk::menu_push(menu, "Remove object", signals::remove_object, index);
+        gtk::menu_push(menu, "Translate object", signals::translate_object, index);
+        gtk::menu_push(menu, "Scale object", signals::scale_object, index);
+        gtk::menu_push(menu, "Rotate object", signals::rotate_object, index);
 
         gtk_widget_show_all(menu);
         gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,
