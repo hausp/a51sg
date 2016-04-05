@@ -40,9 +40,9 @@ void Interface::buildSidebar(const GtkWidget* outerbox) {
     auto set       = gtk::new_button("Set", NULL, signals::set_zoom);
     auto zoomIn    = gtk::new_button("+", NULL, signals::zoom_in);
     auto zoomOut   = gtk::new_button("-", NULL, signals::zoom_out);
-    auto point     = gtk::new_button("Point", NULL, signals::point_pressed);
-    auto line      = gtk::new_button("Line", NULL, signals::line_pressed);
-    auto polygon   = gtk::new_button("Polygon", NULL, signals::polygon_pressed);
+    auto point     = gtk::new_button("_Point", NULL, signals::point_pressed);
+    auto line      = gtk::new_button("_Line", NULL, signals::line_pressed);
+    auto polygon   = gtk::new_button("P_olygon", NULL, signals::polygon_pressed);
     auto up        = gtk::new_button("\u25B2", NULL, signals::up);
     auto left      = gtk::new_button("\u25C0", NULL, signals::left);
     auto right     = gtk::new_button("\u25B6", NULL, signals::right);
@@ -52,7 +52,7 @@ void Interface::buildSidebar(const GtkWidget* outerbox) {
     auto percent   = gtk_label_new("%");
 
     g_signal_connect(objList, "popup-menu", G_CALLBACK(signals::object_options), NULL);
-    g_signal_connect(objList, "row-selected", G_CALLBACK(signals::row_selected), NULL);
+    //g_signal_connect(objList, "row-selected", G_CALLBACK(signals::row_selected), NULL);
     g_signal_connect(objList, "button-press-event", G_CALLBACK(signals::object_click), NULL);
     
     gtk_container_add(GTK_CONTAINER(scwin), objList);

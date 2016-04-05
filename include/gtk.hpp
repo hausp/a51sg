@@ -67,7 +67,7 @@ namespace gtk {
     
 template<typename T>
 GtkWidget* gtk::new_button(const char* name, GtkWidget* parent, void (*action)(T), T data) {
-    GtkWidget* button = gtk_button_new_with_label(name);
+    GtkWidget* button = gtk_button_new_with_mnemonic(name);
     if (parent) {
         gtk_container_add(GTK_CONTAINER(parent), button);
     }

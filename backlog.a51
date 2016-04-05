@@ -1,7 +1,8 @@
 Area51 backlog
 
-#1 - Casting dos tipos nos sinais;
-#2 - Mudar o tipo de lista <opt>;
+#1 - Implementar proxima entrega;
+#2 - Implementar class window <opt>;
 #3 - Implementar mnemonics;
-#4 - Implementar class window <opt>;
+#4 - Casting dos tipos nos sinais;
+#5 - Mudar o tipo de lista <opt>;
 
