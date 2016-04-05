@@ -52,6 +52,7 @@ void Interface::buildSidebar(const GtkWidget* outerbox) {
     auto percent   = gtk_label_new("%");
 
     g_signal_connect(objList, "popup-menu", G_CALLBACK(signals::object_options), NULL);
+    g_signal_connect(objList, "row-selected", G_CALLBACK(signals::row_selected), NULL);
     g_signal_connect(objList, "button-press-event", G_CALLBACK(signals::object_click), NULL);
     
     gtk_container_add(GTK_CONTAINER(scwin), objList);
