@@ -254,9 +254,9 @@ void Interface::showObjectOptions(GtkWidget* objList, GdkEventButton* event) {
     }
 
     if (row) {
-        if (!gtk_list_box_row_is_selected(row)) {
+        //if (!gtk_list_box_row_is_selected(row)) {
             gtk_list_box_select_row(GTK_LIST_BOX(objList), row);
-        }
+        //}
 
         long index = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
 
