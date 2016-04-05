@@ -266,10 +266,10 @@ void Interface::showObjectOptions(GtkWidget* objList, GdkEventButton* event) {
         long index = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
 
         auto menu = gtk_menu_new();
-        gtk::menu_push(menu, "Remove object", signals::remove_object, index);
         gtk::menu_push(menu, "Translate object", signals::translate_object, index);
         gtk::menu_push(menu, "Scale object", signals::scale_object, index);
         gtk::menu_push(menu, "Rotate object", signals::rotate_object, index);
+        gtk::menu_push(menu, "Remove object", signals::remove_object, index);
 
         gtk_widget_show_all(menu);
         gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,
