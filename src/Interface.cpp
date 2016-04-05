@@ -179,16 +179,16 @@ void Interface::buildPointWindow(const GtkWidget* parent, const std::string titl
     auto buttonbox     = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
     auto xbox          = gtk::new_box(NULL, GTK_ORIENTATION_HORIZONTAL);
     auto ybox          = gtk::new_box(NULL, GTK_ORIENTATION_HORIZONTAL);
-    const char* labelX = std::string("X " + label + ":").c_str();
-    const char* labelY = std::string("Y " + label + ":").c_str();
+    auto labelX        = "X " + label + ":";
+    auto labelY        = "Y " + label + ":";
 
     gtk::box_push_back(mainbox, {{xbox}, {ybox}, {buttonbox}});
 
     entries.clear();
     entries.push_back(gtk::new_entry("", 0, 5, 5));
-    gtk::box_push_back(xbox, {{gtk_label_new(labelX)}, {entries.back(), true, true}});
+    gtk::box_push_back(xbox, {{gtk_label_new(labelX.c_str())}, {entries.back(), true, true}});
     entries.push_back(gtk::new_entry("", 0, 5, 5));
-    gtk::box_push_back(ybox, {{gtk_label_new(labelY)}, {entries.back(), true, true}});
+    gtk::box_push_back(ybox, {{gtk_label_new(labelY.c_str())}, {entries.back(), true, true}});
 
     gtk::new_button("Ok", buttonbox, ok);
     gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
