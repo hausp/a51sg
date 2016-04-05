@@ -27,7 +27,7 @@ void Interface::build() {
 
 void Interface::buildSidebar(const GtkWidget* outerbox) {
     auto sidebox   = gtk::new_box(NULL, GTK_ORIENTATION_VERTICAL, 3);
-    auto scwin     = gtk::new_scrolled_window(NULL, NULL, GTK_SHADOW_IN, 200, 300);
+    auto scwin     = gtk::new_scrolled_window(NULL, NULL, GTK_SHADOW_IN, 200, 200);
     auto objFrame  = gtk::new_frame("Create Object", 0.5);
     auto winFrame  = gtk::new_frame("Window", 0.5);
     auto navFrame  = gtk::new_frame("Navigation", 0.5);
@@ -76,7 +76,7 @@ void Interface::buildSidebar(const GtkWidget* outerbox) {
 void Interface::buildMainbar(const GtkWidget* outerbox) {
     auto centerbox = gtk::new_box(NULL, GTK_ORIENTATION_VERTICAL, 3);
     canvas = gtk_drawing_area_new();
-    gtk_widget_set_size_request(canvas, 600, 600);
+    gtk_widget_set_size_request(canvas, 500, 500);
     gtk::box_push_back(outerbox, {{centerbox}});
     gtk::box_push_back(centerbox, {{gtk_label_new("viewport")}, {canvas}});
     g_signal_connect(canvas, "configure-event", G_CALLBACK(signals::configure_event), NULL);

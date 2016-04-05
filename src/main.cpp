@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 
     // Drawer - the cool stuff goes here
     // Default values to window - length(600), height(600)
-    Drawer2D drawer(600, 600);
+    Drawer2D drawer(500, 500);
     
     // Controller - being God
     Controller controller(gui, drawer);
