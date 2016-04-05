@@ -40,8 +40,8 @@ class Controller {
 	void finishRotation();
 
 	void updateEntries();
-	bool buttonPress(GtkWidget*, GdkEventButton*, gpointer);
-	void showPopupMenu(GtkWidget*, GdkEventButton*, gpointer);
+	bool objectClick(GtkWidget*, GdkEventButton*);
+	void objectOptions(GtkWidget*, GdkEventButton*);
 	void vertexOk();
 
 	// Widget events

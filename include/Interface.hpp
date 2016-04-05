@@ -68,7 +68,7 @@ public:
 	void addShape(const std::string& name);
 	void removeShape(long);
 
-	void showPopupMenu(GtkWidget*, GdkEventButton*, gpointer);
+	void showObjectOptions(GtkWidget*, GdkEventButton*);
 	void queueDraw();
 	void show();
 };

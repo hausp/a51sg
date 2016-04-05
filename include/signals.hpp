@@ -39,8 +39,8 @@ namespace signals {
     void rotate_object(gpointer);
     void finish_rotation();
     void update_entries();
-    bool button_press(GtkWidget*, GdkEventButton*, gpointer);
-    void popup_menu(GtkWidget*, GdkEventButton*, gpointer);
+    bool object_click(GtkWidget*, GdkEventButton*);
+    void object_options(GtkWidget*, GdkEventButton*);
 
     // Widget event signals
     bool configure_event(GtkWidget*, GdkEventConfigure*, gpointer);

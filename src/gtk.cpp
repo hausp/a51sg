@@ -68,21 +68,28 @@ namespace gtk {
         return button;
     }
 
-    GtkWidget* new_box(const GtkOrientation& orientation, int spacing,
-                       bool homogeneous, int bwidth) {
+    GtkWidget* new_box(const GtkWidget* parent, const GtkOrientation& orientation, 
+                       int spacing, bool homogeneous, int bwidth) {
         GtkWidget* box = gtk_box_new(orientation, spacing);
         gtk_box_set_homogeneous(GTK_BOX(box), homogeneous);
         gtk_container_set_border_width(GTK_CONTAINER(box), bwidth);
+        if (parent) {
+            gtk_container_add(GTK_CONTAINER(parent), box);
+        }
         return box;
     }
 
-    GtkWidget* new_grid(int rspacing, int cspacing, bool rh, bool ch, int bwidth) {
+    GtkWidget* new_grid(const GtkWidget* parent, int rspacing, int cspacing,
+                        bool rh, bool ch, int bwidth) {
         GtkWidget* grid = gtk_grid_new();
         gtk_grid_set_row_spacing(GTK_GRID(grid), rspacing);
         gtk_grid_set_column_spacing(GTK_GRID(grid), cspacing);
         gtk_grid_set_row_homogeneous(GTK_GRID(grid), rh);
         gtk_grid_set_column_homogeneous(GTK_GRID(grid), ch);
         gtk_container_set_border_width(GTK_CONTAINER(grid), bwidth);
+        if (parent) {
+            gtk_container_add(GTK_CONTAINER(parent), grid);
+        }
         return grid;
     }
 

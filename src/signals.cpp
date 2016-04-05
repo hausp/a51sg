@@ -114,12 +114,12 @@ namespace signals {
         receiver->updateEntries();
     }
 
-    bool button_press(GtkWidget* widget, GdkEventButton* e, gpointer data) {
-        return receiver->buttonPress(widget, e, data);
+    bool object_click(GtkWidget* widget, GdkEventButton* e) {
+        return receiver->objectClick(widget, e);
     }
 
-    void popup_menu(GtkWidget* widget, GdkEventButton* event, gpointer data) {
-        receiver->showPopupMenu(widget, event, data);
+    void object_options(GtkWidget* widget, GdkEventButton* event) {
+        receiver->objectOptions(widget, event);
     }
 
 // -------------------------- Widget event signals --------------------------- //

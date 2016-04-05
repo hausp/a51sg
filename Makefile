@@ -12,23 +12,35 @@ HDRDIR    :=include
 BUILDIR   :=build
 # Binaries directory
 BINDIR    :=bin
+# Examples directory
+TESTDIR   :=tests
+# Main file
+MAIN      :=main
 #Include flag
 INCLUDE   :=-I$(HDRDIR) -I$(HDRDIR)/shapes
 # Sources
 SRC       :=$(shell find $(SRCDIR) -name '*.cpp')
+# Test(s) source(s)
+TESTSRC   :=$(shell find $(TESTDIR) -name '*.cpp')
 # Dependencies
-DEP       :=$(SRC:.cpp=.d) 
+DEP       :=$(SRC:.cpp=.d) $(TESTSRC:.cpp=.d)
 # Objects
 OBJ       :=$(patsubst $(SRCDIR)/%.cpp,$(BUILDIR)/%.o,$(SRC))
+# Pure objects, without main
+PUREOBJ   :=$(filter-out $(BUILDIR)/$(MAIN).o,$(OBJ))
+# Test(s) object(s)
+TESTOBJ     :=$(patsubst %.cpp,$(BUILDIR)/%.o,$(TESTSRC))
 # Program executable
 EXEC      :=$(BINDIR)/shapes
+# Test(s) executable(s)
+TESTS     :=$(patsubst $(TESTDIR)/%.cpp,$(BINDIR)/%,$(TESTSRC))
 
-.PHONY: all makedir clean clean_all
+.PHONY: all makedir tests clean clean_all
 
 all: makedir $(EXEC)
 
 $(EXEC): $(OBJ)
-	@echo "[linking] $(EXEC)"
+	@echo "[linking] $@"
 	@$(CXX) $(OBJ) -o $@ $(LDLIBS) $(LDFLAGS) $(CXXFLAGS)
 
 $(BUILDIR)/%.o: $(SRCDIR)/%.cpp
@@ -48,6 +60,21 @@ $(BINDIR) $(BUILDIR):
 $(SRCDIR)/%.d: $(SRCDIR)/%.cpp
 	@echo "[makedep] $< -> .d"
 	@$(CXX) -MM -MP -MT "$(BUILDIR)/$*.o $@" -MF "$@" $< $(INCLUDE) $(CXXFLAGS)
+
+tests: makedir $(TESTS)
+
+$(TESTS): $(PUREOBJ) $(TESTOBJ)
+	@echo "[linking] $@"
+	@$(CXX) $(PUREOBJ) $(BUILDIR)/$(TESTDIR)/$(@F).o -o $@ $(LDLIBS) $(LDFLAGS) $(CXXFLAGS)
+
+$(BUILDIR)/%.o: %.cpp
+	@echo "[  $(CXX)  ] $< -> .o"
+	@mkdir -p $(BUILDIR)/$(*D)
+	@$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+$(TESTDIR)/%.d: $(TESTDIR)/%.cpp
+	@echo "[makedep] $< -> .d"
+	@$(CXX) -MM -MP -MT "$(BUILDIR)/$(TESTDIR)$*.o $@" -MF "$@" $< $(INCLUDE) $(CXXFLAGS)
 
 # Only remove object files
 clean:

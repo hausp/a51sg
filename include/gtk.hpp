@@ -45,9 +45,11 @@ namespace gtk {
     GtkWidget* new_frame(const char*, float = 0, float = 0.5, int = 0);
     GtkWidget* new_entry(const std::string& = "", float = 0, int = 0, int = 50);
     GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)() = NULL);
-    GtkWidget* new_box(const GtkOrientation& = GTK_ORIENTATION_HORIZONTAL, int = 0,
-                       bool = false, int = 0);
-    GtkWidget* new_grid(int = 1, int = 1, bool = false, bool = false, int = 0);
+    GtkWidget* new_box(const GtkWidget* = NULL, 
+                       const GtkOrientation& = GTK_ORIENTATION_HORIZONTAL,
+                       int = 0, bool = false, int = 0);
+    GtkWidget* new_grid(const GtkWidget* = NULL, int = 1, int = 1, bool = false,
+                        bool = false, int = 0);
     template<typename T>
     GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)(T) = NULL, T = NULL);
     template<typename... Args>

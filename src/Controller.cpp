@@ -203,24 +203,19 @@ void Controller::updateEntries() {
     interface.updateEntries();
 }
 
-bool Controller::buttonPress(GtkWidget* objList,
-                             GdkEventButton* event,
-                             gpointer data) {
+bool Controller::objectClick(GtkWidget* row, GdkEventButton* event) {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-        showPopupMenu(objList, event, data);
+        objectOptions(row, event);
         return true;
     }
     return false;
 }
 
-void Controller::showPopupMenu(GtkWidget* objList,
-                               GdkEventButton* event,
-                               gpointer data) {
-    return interface.showPopupMenu(objList, event, data);
+void Controller::objectOptions(GtkWidget* row, GdkEventButton* event) {
+    return interface.showObjectOptions(row, event);
 }
 
 // ----------------------------- Widget events ----------------------------- //
-
 
 bool Controller::configure_event(GtkWidget* widget,
                                  GdkEventConfigure* event,
