@@ -122,6 +122,10 @@ namespace signals {
         receiver->objectOptions(widget, event);
     }
 
+    void row_selected(GtkListBox* list, GtkListBoxRow* row) {
+        receiver->rowSelected(list, row);
+    }
+
 // -------------------------- Widget event signals --------------------------- //
     bool configure_event(GtkWidget* widget,
                          GdkEventConfigure* event,

@@ -5,6 +5,8 @@
 #define CAIRO_HPP
 
 #include <gtk/gtk.h>
+#include <tuple>
+#include "types.hpp"
 
 namespace cairo {
     void clear();
@@ -16,7 +18,8 @@ namespace cairo {
     void move_to(const double, const double);
     void point(const double, const double);
     void rectangle(const double, const double, const double, const double);
-    void set_color(int, int, int);
+    void set_color(double, double, double, double = 1);
+    void set_color(const color_t&);
     void stroke();
     bool update(GtkWidget*);
 }

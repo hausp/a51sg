@@ -43,6 +43,7 @@ class Controller {
 	bool objectClick(GtkWidget*, GdkEventButton*);
 	void objectOptions(GtkWidget*, GdkEventButton*);
 	void vertexOk();
+	void rowSelected(GtkListBox*, GtkListBoxRow*);
 
 	// Widget events
 	bool configure_event(GtkWidget*, GdkEventConfigure*, gpointer);

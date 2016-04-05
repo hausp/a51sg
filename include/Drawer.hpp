@@ -35,6 +35,7 @@ class Drawer {
     Matrix<D+1,D+1> translationMatrix(const double, const double);
     Matrix<D+1,D+1> scalingMatrix(const double, const double);
     Matrix<D+1,D+1> rotationMatrix(const double);
+    void highlightObject(const long);
 
     void setZoom(const double);
     void setViewport(Point<2>*, Point<2>*);
@@ -47,6 +48,7 @@ class Drawer {
 
  private:
     std::vector<Drawable<D>*> displayFile;
+    long highlighted = -1;
     double defaultWidth;
     double defaultHeight;
     double zoomRate = 0.05;

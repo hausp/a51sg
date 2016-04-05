@@ -39,6 +39,7 @@ namespace cairo {
     }
 
     void line_to(const double x, const double y) {
+        cairo_set_line_width(cr, 2);
         cairo_line_to(cr, x, y);
     }
 
@@ -61,8 +62,14 @@ namespace cairo {
         cairo_rectangle(cr, x, y, l, h);
     }
 
-    void set_color(int r, int g, int b) {
-        cairo_set_source_rgb(cr, r, g, b);
+    void set_color(double r, double g, double b, double a) {
+        cairo_set_source_rgba(cr, r / 255, g / 255, b / 255, a);
+    }
+
+    void set_color(const color_t& color) {
+        double r, g, b, a;
+        std::tie(r, g, b, a) = color;
+        set_color(r, g, b, a);
     }
 
     void stroke() {

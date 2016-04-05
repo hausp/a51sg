@@ -41,6 +41,7 @@ namespace signals {
     void update_entries();
     bool object_click(GtkWidget*, GdkEventButton*);
     void object_options(GtkWidget*, GdkEventButton*);
+    void row_selected(GtkListBox*, GtkListBoxRow*);
 
     // Widget event signals
     bool configure_event(GtkWidget*, GdkEventConfigure*, gpointer);

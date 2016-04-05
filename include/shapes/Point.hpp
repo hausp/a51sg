@@ -13,7 +13,6 @@
 template<unsigned D>
 class Point : public Drawable<D> {
  public:
-
     Point() : Drawable<D>("", DrawableType::Point) { 
         for (unsigned i = 0; i < D; i++) {
             coordinates.push_back(0);

@@ -127,6 +127,15 @@ Matrix<D+1,D+1> Drawer<D>::rotationMatrix(const double angle) {
 }
 
 template<unsigned D>
+void Drawer<D>::highlightObject(const long index) {
+    if (highlighted != -1) {
+        displayFile[highlighted]->setColor(0, 0, 0);
+    }
+    displayFile[index]->setColor(48, 160, 255);
+    highlighted = index;
+}
+
+template<unsigned D>
 void Drawer<D>::setZoom(const double rate) {
     zoomRate = rate;
 }

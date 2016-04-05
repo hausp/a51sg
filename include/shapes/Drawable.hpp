@@ -6,7 +6,9 @@
 
 #include <map>
 #include <string>
+#include <tuple>
 #include "Matrix.hpp"
+#include "types.hpp"
 
 template<unsigned D>
 class Drawer;
@@ -32,6 +34,17 @@ namespace {
 template<unsigned D>
 class Drawable {
  public:
+    void setColor(const color_t& _color) {
+        color = _color;
+    }
+
+    void setColor(unsigned r, unsigned g, unsigned b, unsigned a = 1) {
+        color = std::make_tuple(r, g, b, a);
+    }
+
+    const color_t& getColor() const {
+        return color;
+    }
 
     //Drawable() {}
 
@@ -52,10 +65,11 @@ class Drawable {
  protected:
     Drawable(const std::string& name, 
         DrawableType type = DrawableType::Undefined) 
-        : name(name), type(type) { }
+        : name(name), type(type), color(std::make_tuple(0, 0, 0, 1)) { }
  private:
     std::string name;
     DrawableType type;
+    color_t color;
 };
 
 #endif /* DRAWABLE_HPP */

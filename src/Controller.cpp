@@ -203,16 +203,25 @@ void Controller::updateEntries() {
     interface.updateEntries();
 }
 
-bool Controller::objectClick(GtkWidget* row, GdkEventButton* event) {
+bool Controller::objectClick(GtkWidget* list, GdkEventButton* event) {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-        objectOptions(row, event);
+        objectOptions(list, event);
         return true;
     }
     return false;
 }
 
-void Controller::objectOptions(GtkWidget* row, GdkEventButton* event) {
-    return interface.showObjectOptions(row, event);
+void Controller::objectOptions(GtkWidget* list, GdkEventButton* event) {
+    return interface.showObjectOptions(list, event);
+}
+
+void Controller::rowSelected(GtkListBox* list, GtkListBoxRow* row) {
+    if (row) {
+        long index = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
+        drawer.highlightObject(index);
+        drawer.drawAll();
+        interface.queueDraw();
+    }
 }
 
 // ----------------------------- Widget events ----------------------------- //

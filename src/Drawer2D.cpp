@@ -5,15 +5,22 @@
 #include "Drawer2D.hpp"
 
 void Drawer2D::draw(const Point2D& p) const {
+    cairo::set_color(p.getColor());
     Point2D pv = toViewport(p);
     cairo::point(pv[0], pv[1]);
 }
 
 void Drawer2D::draw(const Line2D& ln) const {
-    draw(Polygon2D(ln[0], ln[1]));
+    cairo::set_color(ln.getColor());
+    auto p1 = toViewport(ln[0]);
+    auto p2 = toViewport(ln[1]);
+    cairo::move_to(p1[0], p1[1]);
+    cairo::line_to(p2[0], p2[1]);
+    cairo::stroke();
 }
 
 void Drawer2D::draw(const Polygon2D& p) const {
+    cairo::set_color(p.getColor());
     Point2D pv;
     for (unsigned i = 0; i < p.numberOfPoints(); i++ ) {
         pv = toViewport(p[i]);
