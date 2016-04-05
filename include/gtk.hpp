@@ -50,6 +50,8 @@ namespace gtk {
                        int = 0, bool = false, int = 0);
     GtkWidget* new_grid(const GtkWidget* = NULL, int = 1, int = 1, bool = false,
                         bool = false, int = 0);
+    GtkWidget* new_button_box(const GtkOrientation& = GTK_ORIENTATION_HORIZONTAL,
+                              bool = true, int = 0);
     template<typename T>
     GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)(T) = NULL, T = NULL);
     template<typename... Args>

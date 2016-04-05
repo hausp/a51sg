@@ -93,6 +93,14 @@ namespace gtk {
         return grid;
     }
 
+    GtkWidget* new_button_box(const GtkOrientation& orientation,
+                              bool homogeneous, int spacing) {
+        auto buttonbox = gtk_button_box_new(orientation);
+        gtk_box_set_homogeneous(GTK_BOX(buttonbox), homogeneous);
+        gtk_box_set_spacing(GTK_BOX(buttonbox), spacing);
+        return buttonbox;
+    }
+
     void set_entry_max_length(const GtkWidget* entry, int length, int show) {
         gtk_entry_set_max_length(GTK_ENTRY(entry), length);
         gtk_entry_set_width_chars(GTK_ENTRY(entry), show);
