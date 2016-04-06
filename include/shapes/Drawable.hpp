@@ -8,7 +8,7 @@
 #include <string>
 #include <tuple>
 #include "Matrix.hpp"
-#include "types.hpp"
+#include "utils.hpp"
 
 template<unsigned D>
 class Drawer;

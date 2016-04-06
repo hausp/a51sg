@@ -6,7 +6,7 @@
 
 #include <gtk/gtk.h>
 #include <tuple>
-#include "types.hpp"
+#include "utils.hpp"
 
 namespace cairo {
     void clear();
