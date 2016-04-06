@@ -6,6 +6,7 @@
 
 #include <gtk/gtk.h>
 #include "Drawable.hpp"
+#include "utils.hpp"
 
 class Interface {
 private:

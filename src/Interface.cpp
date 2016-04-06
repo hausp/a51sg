@@ -4,7 +4,6 @@
 #include "Interface.hpp"
 
 #include <iostream>
-#include <regex>
 #include <string>
 #include "gtk.hpp"
 #include "signals.hpp"
@@ -95,8 +94,7 @@ void Interface::buildLineWindow() {
 void Interface::buildPolygonWindow() {
     std::string value = gtk_entry_get_text(GTK_ENTRY(numVertices));
     int n = 0;
-    std::regex numeric("^\\d+");
-    if (std::regex_match(value, numeric)) {            
+    if (utils::regex_match(value, "^\\d+")) {
         n = stoi(value);
     }
     if (n < 3) return;
@@ -254,9 +252,15 @@ void Interface::showObjectOptions(GtkWidget* objList, GdkEventButton* event) {
     }
 
     if (row) {
-        //if (!gtk_list_box_row_is_selected(row)) {
+        #if RECENT_COMPILER
+        if (!gtk_list_box_row_is_selected(row)) {
+        #endif
+
             gtk_list_box_select_row(GTK_LIST_BOX(objList), row);
-        //}
+
+        #if RECENT_COMPILER
+        }
+        #endif
 
         long index = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
 

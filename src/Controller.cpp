@@ -4,13 +4,11 @@
 #include "Controller.hpp"
 
 #include <iostream>
-#include <regex>
-
-#include "gtk.hpp"
 #include "cairo.hpp"
-#include "Interface.hpp"
+#include "gtk.hpp"
 #include "Drawer.hpp"
 #include "Drawer2D.hpp"
+#include "Interface.hpp"
 #include "Point.hpp"
 #include "Line.hpp"
 #include "Polygon.hpp"
@@ -69,11 +67,10 @@ void Controller::vertexOk() {
 void Controller::createPoint() {
     auto entries = interface.getEntries();
     std::string name = interface.getShapeName();
-    // std::regex numeric("^\\d+");
 
-    // for (auto entry : entries) {
-    //     if (!std::regex_match(entry, numeric)) return;
-    // }
+    for (auto entry : entries) {
+        if (!utils::regex_match(entry, "^\\d+")) return;
+    }
 
     if (name != "") {
         Point2D* p = new Point2D(name, stoi(entries[0]), stoi(entries[1]));
@@ -88,11 +85,10 @@ void Controller::createPoint() {
 void Controller::createLine() {
     auto entries = interface.getEntries();
     std::string name = interface.getShapeName();
-    // std::regex numeric("^\\d+");
 
-    // for (auto entry : entries) {
-    //     if (!std::regex_match(entry, numeric)) return;
-    // }
+    for (auto entry : entries) {
+        if (!utils::regex_match(entry, "^\\d+")) return;
+    }
 
     if (name != "") {
         Point2D p1(stoi(entries[0]), stoi(entries[1]));
@@ -109,11 +105,10 @@ void Controller::createLine() {
 void Controller::createPolygon() {
     auto entries = interface.getEntries();
     std::string name = interface.getShapeName();
-    // std::regex numeric("^\\d+");
 
-    // for (auto entry : entries) {
-    //     if (!std::regex_match(entry, numeric)) return;
-    // }
+    for (auto entry : entries) {
+        if (!utils::regex_match(entry, "^\\d+")) return;
+    }
 
     if (name != "") {
         std::vector<Point<2>> polygonPoints;
@@ -144,11 +139,10 @@ void Controller::translateObject(long index) {
 
 void Controller::finishTranslation() {
     auto entries = interface.getEntries();
-    // std::regex numeric("^(\\+|-)?\\d+");
 
-    // for (auto entry : entries) {
-    //     if (!std::regex_match(entry, numeric)) return;
-    // }
+    for (auto entry : entries) {
+        if (!utils::regex_match(entry, "^(\\+|-)?\\d+")) return;
+    }
 
     drawer.translate(currentIndex, stod(entries[0]), stod(entries[1]));
     interface.closeDialog();
@@ -163,11 +157,10 @@ void Controller::scaleObject(long index) {
 
 void Controller::finishScaling() {
     auto entries = interface.getEntries();
-    // std::regex numeric("^\\d+(\\.\\d+)?");
 
-    // for (auto entry : entries) {
-    //     if (!std::regex_match(entry, numeric)) return;
-    // }
+    for (auto entry : entries) {
+        if (!utils::regex_match(entry, "^\\d+(\\.\\d+)?")) return;
+    }
 
     drawer.scale(currentIndex, stod(entries[0]), stod(entries[1]));
     interface.closeDialog();
@@ -182,15 +175,13 @@ void Controller::rotateObject(long index) {
 
 void Controller::finishRotation() {
     auto entries = interface.getEntries();
-    // std::regex numeric("^(\\+|-)?\\d+(\\.\\d+)?");
+    auto type = interface.getSelectedRadio();
 
-    int type = interface.getSelectedRadio();
-
-    // int i = entries.size();
-    // while (--i >= 0) {
-    //     if (!std::regex_match(entries[i], numeric)) return;
-    //     if (type != 2) break;
-    // }
+    int i = entries.size();
+    while (--i >= 0) {
+        if (!utils::regex_match(entries[i], "^(\\+|-)?\\d+(\\.\\d+)?")) return;
+        if (type != 2) break;
+    }
 
     double angle = stod(entries.back());
     entries.pop_back();

@@ -2,6 +2,7 @@
    and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 #include "gtk.hpp"
+#include "utils.hpp"
 
 namespace gtk {
     void init(int argc, char** argv) {
@@ -104,7 +105,9 @@ namespace gtk {
     void set_entry_max_length(const GtkWidget* entry, int length, int show) {
         gtk_entry_set_max_length(GTK_ENTRY(entry), length);
         gtk_entry_set_width_chars(GTK_ENTRY(entry), show);
-        //gtk_entry_set_max_width_chars(GTK_ENTRY(entry), show);
+        #if RECENT_COMPILER
+        gtk_entry_set_max_width_chars(GTK_ENTRY(entry), show);
+        #endif
     }
 
     void box_push_back(const GtkWidget* box, const std::vector<box_pack>& packets) {
