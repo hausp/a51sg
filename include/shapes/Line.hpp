@@ -17,20 +17,20 @@ class Line : public Drawable<D> {
 
     Line(const Line& line) : Drawable<D>("", DrawableType::Line) {
         for (auto p : line) {
-            points.push_back(p);
+            pointList.push_back(p);
         }
     }
 
     Line(const std::string& name, const Point<D>& p1, const Point<D>& p2)
     : Drawable<D>(name, DrawableType::Line) {
-        points.push_back(p1);
-        points.push_back(p2);
+        pointList.push_back(p1);
+        pointList.push_back(p2);
     }
 
     Line(const Point<D>& p1, const Point<D>& p2) 
     : Drawable<D>("", DrawableType::Line) {
-        points.push_back(p1);
-        points.push_back(p2);
+        pointList.push_back(p1);
+        pointList.push_back(p2);
     }
 
     ~Line() {}
@@ -45,35 +45,39 @@ class Line : public Drawable<D> {
     }
 
     Point<D> center() const override {
-        return (points[0] + points[1]) / 2;
+        return (pointList[0] + pointList[1]) / 2;
+    }
+
+    std::vector<Point<D>> points() const override {
+        return pointList;
     }
 
     Point<D>& operator[](size_t index) {
-        return points[index];
+        return pointList[index];
     }
 
     const Point<D>& operator[](size_t index) const {
-        return points[index];
+        return pointList[index];
     }
 
     typename std::vector<Point<D>>::iterator begin() { 
-        return points.begin();
+        return pointList.begin();
     }
 
     typename std::vector<Point<D>>::const_iterator begin() const {
-        return points.cbegin();
+        return pointList.cbegin();
     }
 
     typename std::vector<Point<D>>::iterator end() {
-        return points.end();
+        return pointList.end();
     }
 
     typename std::vector<Point<D>>::const_iterator end() const {
-        return points.cend();
+        return pointList.cend();
     }
 
  private:
-    std::vector<Point<D>> points;
+    std::vector<Point<D>> pointList;
 };
 
 #endif /* LINE_HPP */

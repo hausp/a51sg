@@ -61,6 +61,14 @@ class Polygon : public Drawable<D> {
         return r / numberOfPoints();
     }
 
+    std::vector<Point<D>> points() const override {
+        std::vector<Point<D>> list;
+        for (auto& line : lines) {
+            list.push_back(line[0]);
+        }
+        return list;
+    }
+
     const size_t numberOfPoints() const {
         return lines.size();
     }

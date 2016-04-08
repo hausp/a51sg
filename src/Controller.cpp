@@ -8,13 +8,16 @@
 #include "gtk.hpp"
 #include "Drawer.hpp"
 #include "Drawer2D.hpp"
+#include "FileManager.hpp"
 #include "Interface.hpp"
 #include "Point.hpp"
 #include "Line.hpp"
 #include "Polygon.hpp"
 
 Controller::Controller(Interface& interface, Drawer2D& drawer) 
-: interface(interface), drawer(drawer) { }
+: interface(interface), drawer(drawer) {
+    fileManager = std::shared_ptr<FileManager>(new FileManager());
+}
 
 Controller::~Controller() { }
 
@@ -278,11 +281,18 @@ void Controller::saveFileDialog() {
 }
 
 void Controller::openFile(const std::string& filename) {
-    std::cout << filename << std::endl;
+    auto displayFile = fileManager->fromObj2D(filename);
+    for (auto shape : displayFile) {
+        interface.addShape(shape->getFormattedName());
+    }
+    drawer.swap(displayFile);
+    drawer.drawAll();
 }
 
 void Controller::saveFile(const std::string& filename) {
-    std::cout << filename << std::endl;
+    auto content = fileManager->toObj(drawer.getDisplayFile());
+    std::ofstream output(filename);
+    output << content << std::endl;
 }
 
 bool Controller::configure_event(GtkWidget* widget,

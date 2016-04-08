@@ -55,6 +55,10 @@ class Point : public Drawable<D> {
         return *this;
     }
 
+    std::vector<Point<D>> points() const override {
+        return {*this};
+    }
+
     const size_t dimension() const {
         return coordinates.size();
     }
@@ -65,6 +69,15 @@ class Point : public Drawable<D> {
     
     const double& operator[](size_t index) const {
         return coordinates[index];
+    }
+
+    bool operator==(const Point<D>& p) {
+        for (unsigned i = 0; i < D; i++) {
+            if ((*this)[i] != p[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     Point<D>& operator+=(const Point<D>& p) {

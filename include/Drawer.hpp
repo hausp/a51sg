@@ -21,6 +21,9 @@ class Drawer {
     ~Drawer();
 
     void addShape(Drawable<D>*);
+    void swap(const std::vector<Drawable<D>*>&);
+    const std::vector<Drawable<D>*>& getDisplayFile();
+
     virtual void draw(const Point<D>&) const = 0;
     virtual void draw(const Line<D>&) const = 0;
     virtual void draw(const Polygon<D>&) const = 0;

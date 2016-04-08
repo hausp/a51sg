@@ -5,10 +5,12 @@
 #define CONTROLLER_HPP
 
 #include <gtk/gtk.h>
+#include <memory>
 #include <string>
 #include <vector>
 
 class Drawer2D;
+class FileManager;
 class Interface;
 template<unsigned D>
 class Point;
@@ -58,6 +60,7 @@ class Controller {
  private:
  	Interface& interface;
  	Drawer2D& drawer;
+ 	std::shared_ptr<FileManager> fileManager;
  	long currentIndex;
 };
 

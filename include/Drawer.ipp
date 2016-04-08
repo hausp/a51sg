@@ -36,6 +36,16 @@ void Drawer<D>::addShape(Drawable<D>* d) {
 }
 
 template<unsigned D>
+void Drawer<D>::swap(const std::vector<Drawable<D>*>& newDisplayFile) {
+    displayFile = newDisplayFile;
+}
+
+template<unsigned D>
+const std::vector<Drawable<D>*>& Drawer<D>::getDisplayFile() {
+    return displayFile;
+}
+
+template<unsigned D>
 void Drawer<D>::drawAll() {
     cairo::clear();
     for (auto shape : displayFile) {
