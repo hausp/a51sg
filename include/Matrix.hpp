@@ -10,8 +10,8 @@
 template<unsigned R = 3, unsigned C = 3>
 class Matrix {
 public:
-    template<typename ...Args>
-    /*Matrix(typename std::enable_if<sizeof...(Args)+1 == R, const std::initializer_list<double>&>::type c,
+    /*template<typename ...Args>
+    Matrix(typename std::enable_if<sizeof...(Args)+1 == R, const std::initializer_list<double>&>::type c,
           const Args... args) {
         init(c, args...);
     }*/

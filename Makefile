@@ -1,9 +1,9 @@
 # Created by aszdrick graf <aszdrick@gmail.com>
 # Compiler
 CXX       :=gcc
-LDLIBS    :=-lstdc++ -lm
+LDLIBS    :=-lstdc++ -lm `pkg-config --libs gtk+-3.0`
 LDFLAGS   :=
-CXXFLAGS  :=`pkg-config --cflags gtk+-3.0` `pkg-config --libs gtk+-3.0` -std=c++11 -Wall
+CXXFLAGS  :=`pkg-config --cflags gtk+-3.0` -std=c++11 -Wall
 # Source directory
 SRCDIR    :=src
 # Headers directory
@@ -12,7 +12,7 @@ HDRDIR    :=include
 BUILDIR   :=build
 # Binaries directory
 BINDIR    :=bin
-# Examples directory
+# Tests directory
 TESTDIR   :=tests
 # Main file
 MAIN      :=main
@@ -41,7 +41,7 @@ all: makedir $(EXEC)
 
 $(EXEC): $(OBJ)
 	@echo "[linking] $@"
-	@$(CXX) $(OBJ) -o $@ $(LDLIBS) $(LDFLAGS) $(CXXFLAGS)
+	@$(CXX) $(OBJ) -o $@ $(LDLIBS) $(LDFLAGS)
 
 $(BUILDIR)/%.o: $(SRCDIR)/%.cpp
 	@echo "[  $(CXX)  ] $< -> .o"
@@ -65,7 +65,7 @@ tests: makedir $(TESTS)
 
 $(TESTS): $(PUREOBJ) $(TESTOBJ)
 	@echo "[linking] $@"
-	@$(CXX) $(PUREOBJ) $(BUILDIR)/$(TESTDIR)/$(@F).o -o $@ $(LDLIBS) $(LDFLAGS) $(CXXFLAGS)
+	@$(CXX) $(PUREOBJ) $(BUILDIR)/$(TESTDIR)/$(@F).o -o $@ $(LDLIBS) $(LDFLAGS)
 
 $(BUILDIR)/%.o: %.cpp
 	@echo "[  $(CXX)  ] $< -> .o"

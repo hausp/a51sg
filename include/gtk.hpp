@@ -42,6 +42,8 @@ namespace gtk {
                                    const GtkShadowType& = GTK_SHADOW_NONE, int = 0,
                                    int = 0, int = 0);
     GtkWidget* new_dialog(const GtkWidget*, const char*, int = 0);
+//    template<typename... Args>
+//    GtkWidget* new_dialog(const char*, GtkWindow* = NULL, bool = true, Args...);
     GtkWidget* new_frame(const char*, float = 0, float = 0.5, int = 0);
     GtkWidget* new_entry(const std::string& = "", float = 0, int = 0, int = 50);
     GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)() = NULL);
@@ -52,6 +54,8 @@ namespace gtk {
                         bool = false, int = 0);
     GtkWidget* new_button_box(const GtkOrientation& = GTK_ORIENTATION_HORIZONTAL,
                               bool = true, int = 0);
+//    template<typename... Args>
+//    void add_button(GtkDialog*, const char*, gint = GTK_RESPONSE_NONE, Args...);
     template<typename T>
     GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)(T) = NULL, T = NULL);
     template<typename... Args>
@@ -63,9 +67,27 @@ namespace gtk {
                    const std::function<void(GtkWidget*, bool, bool, int)>&);
     template<typename T>
     void menu_push(GtkWidget*, const std::string&, void (*)(gpointer) = NULL, T = NULL);
+    void set_margins(GtkWidget*, int = 0, int = 0, int = 0, int = 0);
 	void main();
 	void quit();
 }
+
+// template<typename... Args>
+// GtkWidget* gtk::new_dialog(const char* name, GtkWindow* parent, bool modal, Args... args) {
+//     auto dialog = gtk_dialog_new();
+//     gtk_window_set_title(GTK_WINDOW(dialog), name);
+//     gtk_window_set_modal(GTK_WINDOW(dialog), modal);
+//     gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
+//     add_button(GTK_DIALOG(dialog), args...);
+//     return dialog;
+// }
+
+
+// template<typename... Args>
+// void gtk::add_button(GtkDialog* dialog, const char* name, gint response, Args... args) {
+//    gtk_dialog_add_button(dialog, name, response);
+//    add_button(dialog, name, args...);
+// }
     
 template<typename T>
 GtkWidget* gtk::new_button(const char* name, GtkWidget* parent, void (*action)(T), T data) {

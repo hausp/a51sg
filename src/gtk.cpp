@@ -129,6 +129,13 @@ namespace gtk {
         }
     }
 
+    void set_margins(GtkWidget* widget, int left, int top, int right, int bottom) {
+        gtk_widget_set_margin_start(widget, left);
+        gtk_widget_set_margin_top(widget, top);
+        gtk_widget_set_margin_end(widget, right);
+        gtk_widget_set_margin_bottom(widget, bottom);
+    }
+
     void quit() {
         gtk_main_quit();
     }

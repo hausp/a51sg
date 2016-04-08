@@ -150,8 +150,8 @@ void Drawer<D>::zoom(const int d) {
     if (currentZoom + d * zoomRate > 0) {
         currentZoom += d * zoomRate;
         double factor = 1 / (2 * currentZoom);
-        Point<D> delta(defaultWidth * factor, defaultHeight * factor);
-        Point<D> center = (*window.first + *window.second) / 2;
+        Point<2> delta(defaultWidth * factor, defaultHeight * factor);
+        Point<2> center = (*window.first + *window.second) / 2;
         *window.first = center - delta;
         *window.second = center + delta;
     }

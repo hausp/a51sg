@@ -21,7 +21,8 @@ void Interface::build() {
     auto mainbox = gtk::new_box(window, GTK_ORIENTATION_VERTICAL);
     buildMenubar(mainbox);
 
-    auto outerbox = gtk::new_box(mainbox, GTK_ORIENTATION_HORIZONTAL, 15, false, 10);
+    auto outerbox = gtk::new_box(mainbox, GTK_ORIENTATION_HORIZONTAL, 10);
+    gtk::set_margins(outerbox, 10, 0, 10, 10);
     buildSidebar(outerbox);
     buildMainbar(outerbox);
 }
