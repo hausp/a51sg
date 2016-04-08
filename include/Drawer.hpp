@@ -23,6 +23,7 @@ class Drawer {
     void addShape(Drawable<D>*);
     void swap(const std::vector<Drawable<D>*>&);
     const std::vector<Drawable<D>*>& getDisplayFile();
+    void clearDisplayFile();
 
     virtual void draw(const Point<D>&) const = 0;
     virtual void draw(const Line<D>&) const = 0;

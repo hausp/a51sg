@@ -30,18 +30,10 @@ void Interface::build() {
 void Interface::buildMenubar(const GtkWidget* box) {
     GtkWidget* menubar;
     auto menus = gtk::new_menubar(menubar, "_File", "_Objects");
-    auto open = gtk_menu_item_new_with_mnemonic("_Open");
-    auto save = gtk_menu_item_new_with_mnemonic("_Save");
-    auto fileMenu = gtk_menu_new();
-
     gtk::box_push_back(box, {{menubar}});
-
-    gtk_menu_item_set_submenu(GTK_MENU_ITEM(menus[0]), fileMenu);
-    gtk_menu_shell_append(GTK_MENU_SHELL(fileMenu), open);
-    gtk_menu_shell_append(GTK_MENU_SHELL(fileMenu), save);
-
-    g_signal_connect(GTK_MENU_ITEM(open), "activate", G_CALLBACK(signals::open_file_dialog), NULL);
-    g_signal_connect(GTK_MENU_ITEM(save), "activate", G_CALLBACK(signals::save_file_dialog), NULL);
+    gtk::new_submenu(menus[0], {{"_Open", signals::open_file_dialog},
+                               {"_Save", signals::save_file_dialog}});
+    gtk::new_submenu(menus[1], {{"_Clear", signals::clear_objects}});
 }
 
 void Interface::buildSidebar(const GtkWidget* outerbox) {
@@ -307,6 +299,16 @@ void Interface::addShape(const std::string& name) {
 void Interface::removeShape(long index) {
     auto selected_row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(objList), index);
     gtk_container_remove(GTK_CONTAINER(objList), GTK_WIDGET(selected_row));
+}
+
+void Interface::clearObjects(unsigned long numChildren) {
+    while (--numChildren) {
+        auto row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(objList), 0);
+        if (!GTK_IS_WIDGET(row)) {
+            return;
+        }
+        gtk_container_remove(GTK_CONTAINER(objList), GTK_WIDGET(row));        
+    }
 }
 
 void Interface::buildFileDialog(const GtkFileChooserAction& action,

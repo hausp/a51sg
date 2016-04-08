@@ -46,6 +46,11 @@ const std::vector<Drawable<D>*>& Drawer<D>::getDisplayFile() {
 }
 
 template<unsigned D>
+void Drawer<D>::clearDisplayFile() {
+    displayFile.clear();
+}
+
+template<unsigned D>
 void Drawer<D>::drawAll() {
     cairo::clear();
     for (auto shape : displayFile) {

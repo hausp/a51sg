@@ -143,6 +143,10 @@ namespace signals {
         receiver->saveFile(filename);
     }
 
+    void clear_objects() {
+        receiver->clearObjects();
+    }
+
     bool configure_event(GtkWidget* widget,
                          GdkEventConfigure* event,
                          gpointer data) {

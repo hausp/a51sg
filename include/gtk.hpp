@@ -20,7 +20,8 @@ namespace {
     }
 
     template<typename... Args>
-    std::vector<GtkWidget*> new_radio_group_aux(std::vector<GtkWidget*>& list, const std::string& text, Args... args) {
+    std::vector<GtkWidget*> new_radio_group_aux(std::vector<GtkWidget*>& list,
+                                                const std::string& text, Args... args) {
         list.push_back(gtk_radio_button_new_with_label_from_widget(
             GTK_RADIO_BUTTON(list.front()), text.c_str()));
         return new_radio_group_aux(list, args...);
@@ -47,6 +48,8 @@ namespace gtk {
         bool expand;
         int offset;
     };
+
+    using menu_item_pack = std::pair<const char*, void (*)()>;
 
 	void init(int, char**);
 	void queue_draw(GtkWidget*);
@@ -80,7 +83,8 @@ namespace gtk {
                    const std::function<void(GtkWidget*, bool, bool, int)>&);
     template<typename T>
     void menu_push(GtkWidget*, const std::string&, void (*)(gpointer) = NULL, T = NULL);
-    template<typename ...Args>
+    void new_submenu(GtkWidget* parent, const std::initializer_list<menu_item_pack>& args);
+    template<typename... Args>
     std::vector<GtkWidget*> new_menubar(GtkWidget*&, const char*, Args...);
     void set_margins(GtkWidget*, int = 0, int = 0, int = 0, int = 0);
 	void main();

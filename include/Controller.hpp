@@ -53,6 +53,7 @@ class Controller {
 	void saveFileDialog();
 	void openFile(const std::string&);
 	void saveFile(const std::string&);
+	void clearObjects();
 	bool configure_event(GtkWidget*, GdkEventConfigure*, gpointer);
 	void draw(GtkWidget*, cairo_t*, gpointer);
 	void quit();

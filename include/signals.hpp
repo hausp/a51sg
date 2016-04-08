@@ -49,6 +49,7 @@ namespace signals {
     void save_file_dialog();
     void open_file(const std::string&);
     void save_file(const std::string&);
+    void clear_objects();
     bool configure_event(GtkWidget*, GdkEventConfigure*, gpointer);
     void draw(GtkWidget*, cairo_t*, gpointer);
     void close();

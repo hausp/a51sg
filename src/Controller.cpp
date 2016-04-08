@@ -287,12 +287,20 @@ void Controller::openFile(const std::string& filename) {
     }
     drawer.swap(displayFile);
     drawer.drawAll();
+    interface.queueDraw();
 }
 
 void Controller::saveFile(const std::string& filename) {
     auto content = fileManager->toObj(drawer.getDisplayFile());
     std::ofstream output(filename);
     output << content << std::endl;
+}
+
+void Controller::clearObjects() {
+    drawer.clearDisplayFile();
+    interface.clearObjects(drawer.getDisplayFile().size());
+    drawer.drawAll();
+    interface.queueDraw();
 }
 
 bool Controller::configure_event(GtkWidget* widget,
