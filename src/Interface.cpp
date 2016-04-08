@@ -28,17 +28,17 @@ void Interface::build() {
 }
 
 void Interface::buildMenubar(const GtkWidget* box) {
-    GtkWidget* menubar = gtk_menu_bar_new();
-    GtkWidget* fileMenu = gtk_menu_new();
-    GtkWidget* file = gtk_menu_item_new_with_mnemonic("_File");
-    GtkWidget* open = gtk_menu_item_new_with_mnemonic("_Open");
-    GtkWidget* save = gtk_menu_item_new_with_mnemonic("_Save");
+    GtkWidget* menubar;
+    auto menus = gtk::new_menubar(menubar, "_File", "_Objects");
+    auto open = gtk_menu_item_new_with_mnemonic("_Open");
+    auto save = gtk_menu_item_new_with_mnemonic("_Save");
+    auto fileMenu = gtk_menu_new();
 
-    gtk_menu_item_set_submenu(GTK_MENU_ITEM(file), fileMenu);
+    gtk::box_push_back(box, {{menubar}});
+
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(menus[0]), fileMenu);
     gtk_menu_shell_append(GTK_MENU_SHELL(fileMenu), open);
     gtk_menu_shell_append(GTK_MENU_SHELL(fileMenu), save);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menubar), file);
-    gtk::box_push_back(box, {{menubar}});
 
     g_signal_connect(GTK_MENU_ITEM(open), "activate", G_CALLBACK(signals::open_file_dialog), NULL);
     g_signal_connect(GTK_MENU_ITEM(save), "activate", G_CALLBACK(signals::save_file_dialog), NULL);

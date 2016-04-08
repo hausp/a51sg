@@ -15,11 +15,24 @@ namespace {
         return list;
     }
 
+    void add_menus(const GtkWidget* menubar, std::vector<GtkWidget*> menus) {
+        (void)add_menus;
+    }
+
     template<typename... Args>
     std::vector<GtkWidget*> new_radio_group_aux(std::vector<GtkWidget*>& list, const std::string& text, Args... args) {
         list.push_back(gtk_radio_button_new_with_label_from_widget(
             GTK_RADIO_BUTTON(list.front()), text.c_str()));
         return new_radio_group_aux(list, args...);
+    }
+
+    template<typename... Args>
+    void add_menus(const GtkWidget* menubar, std::vector<GtkWidget*>& menus,
+                   const char* name, Args... args) {
+        auto menuitem = gtk_menu_item_new_with_mnemonic(name);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menubar), menuitem);
+        menus.push_back(menuitem);
+        add_menus(menubar, menus, args...);
     }
 }
 
@@ -67,6 +80,8 @@ namespace gtk {
                    const std::function<void(GtkWidget*, bool, bool, int)>&);
     template<typename T>
     void menu_push(GtkWidget*, const std::string&, void (*)(gpointer) = NULL, T = NULL);
+    template<typename ...Args>
+    std::vector<GtkWidget*> new_menubar(GtkWidget*&, const char*, Args...);
     void set_margins(GtkWidget*, int = 0, int = 0, int = 0, int = 0);
 	void main();
 	void quit();
@@ -111,9 +126,17 @@ std::vector<GtkWidget*> gtk::new_radio_group(const std::string& text, const Args
 
 template<typename T>
 void gtk::menu_push(GtkWidget* menu, const std::string& text, void (*fn)(gpointer), T data) {
-    GtkWidget* item = gtk_menu_item_new_with_label(text.c_str());
+    GtkWidget* item = gtk_menu_item_new_with_mnemonic(text.c_str());
     g_signal_connect_swapped(item, "activate", G_CALLBACK(fn),(gpointer)data);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+}
+
+template<typename ...Args>
+std::vector<GtkWidget*> gtk::new_menubar(GtkWidget*& menubar, const char* name, Args... args) {
+    menubar = gtk_menu_bar_new();
+    std::vector<GtkWidget*> menus;
+    add_menus(menubar, menus, name, args...);
+    return menus;
 }
 
 #endif /* GTK_HPP */
