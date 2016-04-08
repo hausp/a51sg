@@ -297,8 +297,8 @@ void Controller::saveFile(const std::string& filename) {
 }
 
 void Controller::clearObjects() {
-    drawer.clearDisplayFile();
     interface.clearObjects(drawer.getDisplayFile().size());
+    drawer.clearDisplayFile();
     drawer.drawAll();
     interface.queueDraw();
 }

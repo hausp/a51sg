@@ -301,12 +301,9 @@ void Interface::removeShape(long index) {
     gtk_container_remove(GTK_CONTAINER(objList), GTK_WIDGET(selected_row));
 }
 
-void Interface::clearObjects(unsigned long numChildren) {
-    while (--numChildren) {
+void Interface::clearObjects(long numChildren) {
+    while (--numChildren >= 0) {
         auto row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(objList), 0);
-        if (!GTK_IS_WIDGET(row)) {
-            return;
-        }
         gtk_container_remove(GTK_CONTAINER(objList), GTK_WIDGET(row));        
     }
 }

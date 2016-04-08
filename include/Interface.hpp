@@ -69,7 +69,7 @@ public:
 
 	void addShape(const std::string& name);
 	void removeShape(long);
-	void clearObjects(unsigned long);
+	void clearObjects(long);
 
 	void buildFileDialog(const GtkFileChooserAction&, const std::string&,
                          const std::string&, void (*)(const std::string&));
