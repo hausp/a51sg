@@ -21,6 +21,7 @@ private:
 	GtkWidget* numVertices;
 	GtkWidget* zoomLevel;
 
+	void buildMenubar(const GtkWidget*);
 	void buildSidebar(const GtkWidget*);
 	void buildMainbar(const GtkWidget*);
 	void buildCreationWindow(const char*, int, int, void (*)());
@@ -68,6 +69,11 @@ public:
 
 	void addShape(const std::string& name);
 	void removeShape(long);
+
+	void buildFileDialog(const GtkFileChooserAction&, const std::string&,
+                         const std::string&, void (*)(const std::string&));
+	void openFileDialog();
+	void saveFileDialog();
 
 	void showObjectOptions(GtkWidget*, GdkEventButton*);
 	void queueDraw();

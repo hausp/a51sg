@@ -4,8 +4,9 @@
 #ifndef CONTROLLER_HPP
 #define CONTROLLER_HPP
 
-#include <vector>
 #include <gtk/gtk.h>
+#include <string>
+#include <vector>
 
 class Drawer2D;
 class Interface;
@@ -46,6 +47,10 @@ class Controller {
 	void rowSelected(GtkListBox*, GtkListBoxRow*);
 
 	// Widget events
+	void openFileDialog();
+	void saveFileDialog();
+	void openFile(const std::string&);
+	void saveFile(const std::string&);
 	bool configure_event(GtkWidget*, GdkEventConfigure*, gpointer);
 	void draw(GtkWidget*, cairo_t*, gpointer);
 	void quit();

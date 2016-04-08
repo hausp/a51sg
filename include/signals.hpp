@@ -5,6 +5,7 @@
 #define SIGNAL_HPP
 
 #include <gtk/gtk.h>
+#include <string>
 
 class Controller;
 
@@ -44,6 +45,10 @@ namespace signals {
     void row_selected(GtkListBox*, GtkListBoxRow*);
 
     // Widget event signals
+    void open_file_dialog();
+    void save_file_dialog();
+    void open_file(const std::string&);
+    void save_file(const std::string&);
     bool configure_event(GtkWidget*, GdkEventConfigure*, gpointer);
     void draw(GtkWidget*, cairo_t*, gpointer);
     void close();

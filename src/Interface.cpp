@@ -11,17 +11,36 @@
 Interface::Interface() { }
 
 void Interface::build() {
-    window = gtk::new_window("Area51 - Interactive Graphical System", 10);
+    window = gtk::new_window("Area51 - Interactive Graphical System");
 
     // Workaround for i3's inconveniency
     gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_DIALOG);
 
     g_signal_connect(window, "delete-event", G_CALLBACK(signals::close), NULL);
 
-    auto outerbox = gtk::new_box(window, GTK_ORIENTATION_HORIZONTAL, 15);
+    auto mainbox = gtk::new_box(window, GTK_ORIENTATION_VERTICAL);
+    buildMenubar(mainbox);
 
+    auto outerbox = gtk::new_box(mainbox, GTK_ORIENTATION_HORIZONTAL, 15, false, 10);
     buildSidebar(outerbox);
     buildMainbar(outerbox);
+}
+
+void Interface::buildMenubar(const GtkWidget* box) {
+    GtkWidget* menubar = gtk_menu_bar_new();
+    GtkWidget* fileMenu = gtk_menu_new();
+    GtkWidget* file = gtk_menu_item_new_with_mnemonic("_File");
+    GtkWidget* open = gtk_menu_item_new_with_mnemonic("_Open");
+    GtkWidget* save = gtk_menu_item_new_with_mnemonic("_Save");
+
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(file), fileMenu);
+    gtk_menu_shell_append(GTK_MENU_SHELL(fileMenu), open);
+    gtk_menu_shell_append(GTK_MENU_SHELL(fileMenu), save);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menubar), file);
+    gtk::box_push_back(box, {{menubar}});
+
+    g_signal_connect(GTK_MENU_ITEM(open), "activate", G_CALLBACK(signals::open_file_dialog), NULL);
+    g_signal_connect(GTK_MENU_ITEM(save), "activate", G_CALLBACK(signals::save_file_dialog), NULL);
 }
 
 void Interface::buildSidebar(const GtkWidget* outerbox) {
@@ -287,6 +306,35 @@ void Interface::addShape(const std::string& name) {
 void Interface::removeShape(long index) {
     auto selected_row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(objList), index);
     gtk_container_remove(GTK_CONTAINER(objList), GTK_WIDGET(selected_row));
+}
+
+void Interface::buildFileDialog(const GtkFileChooserAction& action,
+                                const std::string& title,
+                                const std::string& okLabel,
+                                void (*ok)(const std::string&)) {
+    auto dialog = gtk_file_chooser_dialog_new(title.c_str(), GTK_WINDOW(window),
+        action, "Cancel", GTK_RESPONSE_CANCEL, okLabel.c_str(), GTK_RESPONSE_ACCEPT, NULL);
+
+    if (action == GTK_FILE_CHOOSER_ACTION_SAVE) {
+        gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), true);
+    }
+    
+    auto response = gtk_dialog_run(GTK_DIALOG(dialog));
+    if (response == GTK_RESPONSE_ACCEPT) {
+        char* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        ok(filename);
+        g_free(filename);
+    }
+
+    gtk_widget_destroy(dialog);    
+}
+
+void Interface::openFileDialog() {
+    buildFileDialog(GTK_FILE_CHOOSER_ACTION_OPEN, "Open File", "Open", signals::open_file);
+}
+
+void Interface::saveFileDialog() {
+    buildFileDialog(GTK_FILE_CHOOSER_ACTION_SAVE, "Save File", "Save", signals::save_file);
 }
 
 void Interface::queueDraw() {

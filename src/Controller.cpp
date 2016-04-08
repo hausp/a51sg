@@ -73,7 +73,16 @@ void Controller::createPoint() {
     }
 
     if (name != "") {
-        Point2D* p = new Point2D(name, stoi(entries[0]), stoi(entries[1]));
+        Point2D* p;
+        #if !RECENT_COMPILER
+        try {
+        #endif
+            p = new Point2D(name, stoi(entries[0]), stoi(entries[1]));
+        #if !RECENT_COMPILER
+        } catch(...) {
+            return;
+        }
+        #endif
         drawer.addShape(p);
         interface.addShape(p->getFormattedName());
         interface.closeDialog();
@@ -91,8 +100,17 @@ void Controller::createLine() {
     }
 
     if (name != "") {
-        Point2D p1(stoi(entries[0]), stoi(entries[1]));
-        Point2D p2(stoi(entries[2]), stoi(entries[3]));
+        Point2D p1, p2;
+        #if !RECENT_COMPILER
+        try {
+        #endif
+            p1 = Point2D(stoi(entries[0]), stoi(entries[1]));
+            p2 = Point2D(stoi(entries[2]), stoi(entries[3]));
+        #if !RECENT_COMPILER
+        } catch(...) {
+            return;
+        }
+        #endif
         Line2D* line = new Line2D(name, p1, p2);
         drawer.addShape(line);
         interface.addShape(line->getFormattedName());
@@ -112,9 +130,17 @@ void Controller::createPolygon() {
 
     if (name != "") {
         std::vector<Point<2>> polygonPoints;
+        #if !RECENT_COMPILER
+        try {
+        #endif
         for (unsigned i = 0; i < entries.size() - 1; i += 2) {
             polygonPoints.push_back(Point2D(stoi(entries[i]), stoi(entries[i + 1])));
         }
+        #if !RECENT_COMPILER
+        } catch(...) {
+            return;
+        }
+        #endif
         Polygon2D* polygon = new Polygon2D(polygonPoints);
         polygon->setName(name);
         drawer.addShape(polygon);
@@ -144,7 +170,15 @@ void Controller::finishTranslation() {
         if (!utils::regex_match(entry, "^(\\+|-)?\\d+")) return;
     }
 
-    drawer.translate(currentIndex, stod(entries[0]), stod(entries[1]));
+    #if !RECENT_COMPILER
+    try {
+    #endif
+        drawer.translate(currentIndex, stod(entries[0]), stod(entries[1]));
+    #if !RECENT_COMPILER
+    } catch(...) {
+        return;
+    }
+    #endif
     interface.closeDialog();
     drawer.drawAll();
     interface.queueDraw();
@@ -162,7 +196,15 @@ void Controller::finishScaling() {
         if (!utils::regex_match(entry, "^\\d+(\\.\\d+)?")) return;
     }
 
-    drawer.scale(currentIndex, stod(entries[0]), stod(entries[1]));
+    #if !RECENT_COMPILER
+    try {
+    #endif
+        drawer.scale(currentIndex, stod(entries[0]), stod(entries[1]));
+    #if !RECENT_COMPILER
+    } catch(...) {
+        return;
+    }
+    #endif
     interface.closeDialog();
     drawer.drawAll();
     interface.queueDraw();
@@ -183,7 +225,16 @@ void Controller::finishRotation() {
         if (type != 2) break;
     }
 
-    double angle = stod(entries.back());
+    double angle;
+    #if !RECENT_COMPILER
+    try {
+    #endif
+        angle = stod(entries.back());
+    #if !RECENT_COMPILER
+    } catch(...) {
+        return;
+    }
+    #endif
     entries.pop_back();
     drawer.rotate(currentIndex, angle, type, entries);
     interface.closeDialog();
@@ -217,6 +268,22 @@ void Controller::rowSelected(GtkListBox* list, GtkListBoxRow* row) {
 }
 
 // ----------------------------- Widget events ----------------------------- //
+
+void Controller::openFileDialog() {
+    interface.openFileDialog();
+}
+
+void Controller::saveFileDialog() {
+    interface.saveFileDialog();
+}
+
+void Controller::openFile(const std::string& filename) {
+    std::cout << filename << std::endl;
+}
+
+void Controller::saveFile(const std::string& filename) {
+    std::cout << filename << std::endl;
+}
 
 bool Controller::configure_event(GtkWidget* widget,
                                  GdkEventConfigure* event,

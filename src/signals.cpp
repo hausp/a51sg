@@ -127,6 +127,22 @@ namespace signals {
     }
 
 // -------------------------- Widget event signals --------------------------- //
+    void open_file_dialog() {
+        receiver->openFileDialog();
+    }
+
+    void save_file_dialog() {
+        receiver->saveFileDialog();
+    }
+
+    void open_file(const std::string& filename) {
+        receiver->openFile(filename);
+    }
+
+    void save_file(const std::string& filename) {
+        receiver->saveFile(filename);
+    }
+
     bool configure_event(GtkWidget* widget,
                          GdkEventConfigure* event,
                          gpointer data) {
