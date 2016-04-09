@@ -129,16 +129,6 @@ namespace gtk {
         }
     }
 
-    void new_submenu(GtkWidget* parent, const std::initializer_list<menu_item_pack>& args) {
-        auto container = gtk_menu_new();
-        gtk_menu_item_set_submenu(GTK_MENU_ITEM(parent), container);
-        for (auto pair : args) {
-            auto item = gtk_menu_item_new_with_mnemonic(pair.first);
-            gtk_menu_shell_append(GTK_MENU_SHELL(container), item);
-            g_signal_connect(GTK_MENU_ITEM(item), "activate", G_CALLBACK(pair.second), NULL);
-        }
-    }
-
     void set_margins(GtkWidget* widget, int left, int top, int right, int bottom) {
         gtk_widget_set_margin_start(widget, left);
         gtk_widget_set_margin_top(widget, top);

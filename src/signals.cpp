@@ -78,13 +78,13 @@ namespace signals {
         receiver->vertexOk();
     }
 
-    void remove_object(gpointer index) {
-        long i = (long)index;
+    void remove_object(long index) {
+        long i = index;
         receiver->removeObject(i);
     }
 
-    void translate_object(gpointer index) {
-        long i = (long)index;
+    void translate_object(long index) {
+        long i = index;
         receiver->translateObject(i);
     }
 
@@ -92,8 +92,8 @@ namespace signals {
         receiver->finishTranslation();
     }
 
-    void scale_object(gpointer index) {
-        long i = (long)index;
+    void scale_object(long index) {
+        long i = index;
         receiver->scaleObject(i);
     }
 
@@ -101,8 +101,8 @@ namespace signals {
         receiver->finishScaling();
     }
 
-    void rotate_object(gpointer index) {
-        long i = (long)index;
+    void rotate_object(long index) {
+        long i = index;
         receiver->rotateObject(i);
     }
 

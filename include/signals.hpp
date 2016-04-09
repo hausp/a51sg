@@ -32,12 +32,12 @@ namespace signals {
     void polygon_ok();
     void vertex_ok();
 
-    void remove_object(gpointer);
-    void translate_object(gpointer);
+    void remove_object(long);
+    void translate_object(long);
     void finish_translation();
-    void scale_object(gpointer);
+    void scale_object(long);
     void finish_scaling();
-    void rotate_object(gpointer);
+    void rotate_object(long);
     void finish_rotation();
     void update_entries();
     bool object_click(GtkWidget*, GdkEventButton*);

@@ -28,12 +28,12 @@ void Interface::build() {
 }
 
 void Interface::buildMenubar(const GtkWidget* box) {
-    GtkWidget* menubar;
-    auto menus = gtk::new_menubar(menubar, "_File", "_Objects");
+    std::vector<GtkWidget*> menus;
+    auto menubar = gtk::new_menubar(menus, "_File", "_Objects");
     gtk::box_push_back(box, {{menubar}});
-    gtk::new_submenu(menus[0], {{"_Open", signals::open_file_dialog},
-                               {"_Save", signals::save_file_dialog}});
-    gtk::new_submenu(menus[1], {{"_Clear", signals::clear_objects}});
+    gtk::new_submenu(menus[0], "_Open", signals::open_file_dialog,
+                                "_Save", signals::save_file_dialog);
+    gtk::new_submenu(menus[1], "_Clear", signals::clear_objects);
 }
 
 void Interface::buildSidebar(const GtkWidget* outerbox) {
