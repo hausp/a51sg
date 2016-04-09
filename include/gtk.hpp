@@ -59,7 +59,7 @@ namespace gtk {
     void set_entry_max_length(const GtkWidget*, int, int = 50);
 
     template<typename... Args>
-    void box_push_back(const GtkWidget*, Args... args);
+    void box_push_back(const GtkWidget*, Args...);
 
     void box_push_back(const GtkWidget*, const std::vector<box_pack>&);
 
@@ -85,6 +85,41 @@ namespace gtk {
 }
 
 namespace {
+    void _box_push_back(const GtkWidget*) { (void)_box_push_back; }
+
+    template<typename... Args>
+    void _box_push_back(const GtkWidget* box, GtkWidget* child, bool alloc,
+                       bool extend, int offset, Args... args) {
+        gtk_box_pack_start(GTK_BOX(box), child, alloc, extend, offset);
+        _box_push_back(box, args...);
+    }
+
+    template<typename... Args>
+    void _box_push_back(const GtkWidget* box, GtkWidget* child, bool alloc,
+                       bool extend, Args... args) {
+        gtk_box_pack_start(GTK_BOX(box), child, alloc, extend, 0);
+        _box_push_back(box, args...);
+    }
+
+    template<typename... Args>
+    void _box_push_back(const GtkWidget* box, GtkWidget* child, bool alloc,
+                       Args... args) {
+        gtk_box_pack_start(GTK_BOX(box), child, alloc, false, 0);
+        _box_push_back(box, args...);
+    }
+
+    template<typename... Args>
+    void _box_push_back(const GtkWidget* box, GtkWidget* child, Args... args) {
+        gtk_box_pack_start(GTK_BOX(box), child, false, false, 0);
+        _box_push_back(box, args...);
+    }
+
+    template<typename... Args>
+    void _box_push_back(const GtkWidget* box, GtkWidget* child, int offset,
+                        Args... args) {
+        gtk_box_pack_start(GTK_BOX(box), child, false, false, offset);
+        _box_push_back(box, args...);
+    }
 
     std::vector<GtkWidget*> add_radio_buttons(std::vector<GtkWidget*>& list) {
         (void)add_radio_buttons;
@@ -146,9 +181,10 @@ namespace {
 // }
 
 template<typename... Args>
-void gtk::box_push_back(const GtkWidget*, Args... args) {
-
+void gtk::box_push_back(const GtkWidget* parent, Args... args) {
+    _box_push_back(parent, args...);
 }
+
 
 template<typename T>
 GtkWidget* gtk::new_button(const char* name, GtkWidget* parent, void (*action)(T), T data) {

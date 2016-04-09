@@ -68,11 +68,14 @@ void Interface::buildSidebar(const GtkWidget* outerbox) {
     
     gtk_container_add(GTK_CONTAINER(scwin), objList);
 
-    gtk::box_push_back(outerbox, {{sidebox}});
-    gtk::box_push_back(winbox, {{navFrame}, {zoomFrame}});
-    gtk::box_push_back(sidebox, {{objLabel}, {scwin}, {objFrame}, {winFrame}});
-    gtk::box_push_back(zoombox, {{zoomIn, true, true}, {zoomOut, true, true}, 
-                                 {zoomLevel}, {percent, 3}, {set, true, true}});
+    gtk::box_push_back(outerbox, sidebox);
+    gtk::box_push_back(winbox, navFrame, zoomFrame);
+    gtk::box_push_back(sidebox, objLabel, scwin, objFrame, winFrame);
+    gtk::box_push_back(zoombox, zoomIn, true, true, 
+                                zoomOut, true, true,
+                                zoomLevel,
+                                percent, 3, 
+                                set, true, true);
 
     gtk_grid_attach(GTK_GRID(objgrid), point, 0, 0, 2, 1);
     gtk_grid_attach(GTK_GRID(objgrid), line, 2, 0, 2, 1);

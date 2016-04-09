@@ -79,13 +79,11 @@ namespace signals {
     }
 
     void remove_object(long index) {
-        long i = index;
-        receiver->removeObject(i);
+        receiver->removeObject(index);
     }
 
     void translate_object(long index) {
-        long i = index;
-        receiver->translateObject(i);
+        receiver->translateObject(index);
     }
 
     void finish_translation() {
@@ -102,8 +100,7 @@ namespace signals {
     }
 
     void rotate_object(long index) {
-        long i = index;
-        receiver->rotateObject(i);
+        receiver->rotateObject(index);
     }
 
     void finish_rotation() {
