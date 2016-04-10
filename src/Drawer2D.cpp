@@ -4,26 +4,29 @@
 #include <cmath>
 #include "Drawer2D.hpp"
 
-void Drawer2D::draw(const Point2D& p) const {
+Drawer2D::Drawer2D(int width, int height) 
+: Drawer<2>(width, height) { }
+
+void Drawer2D::draw(Point2D& p) {
     cairo::set_color(p.getColor());
-    Point2D pv = toViewport(p);
+    Point2D pv = window.toViewport(viewport, p);
     cairo::point(pv[0], pv[1]);
 }
 
-void Drawer2D::draw(const Line2D& ln) const {
+void Drawer2D::draw(Line2D& ln) {
     cairo::set_color(ln.getColor());
-    auto p1 = toViewport(ln[0]);
-    auto p2 = toViewport(ln[1]);
+    auto p1 = window.toViewport(viewport, ln[0]);
+    auto p2 = window.toViewport(viewport, ln[1]);
     cairo::move_to(p1[0], p1[1]);
     cairo::line_to(p2[0], p2[1]);
     cairo::stroke();
 }
 
-void Drawer2D::draw(const Polygon2D& p) const {
+void Drawer2D::draw(Polygon2D& p) {
     cairo::set_color(p.getColor());
     Point2D pv;
     for (unsigned i = 0; i < p.numberOfPoints(); i++ ) {
-        pv = toViewport(p[i]);
+        pv = window.toViewport(viewport, p[i]);
         cairo::line_to(pv[0], pv[1]);
     }
     cairo::close_path();
@@ -31,22 +34,10 @@ void Drawer2D::draw(const Polygon2D& p) const {
 }
 
 void Drawer2D::drawAxis() {
-    Line2D x(Point2D(0, (*viewport.second)[1]/2), 
-             Point2D((*viewport.second)[0], (*viewport.second)[1]/2));
-    Line2D y(Point2D((*viewport.second)[0]/2, 0), 
-             Point2D((*viewport.second)[0]/2, (*viewport.second)[1]));
+    Line2D x(Point2D(0, viewport.second[1]/2), 
+             Point2D(viewport.second[0], viewport.second[1]/2));
+    Line2D y(Point2D(viewport.second[0]/2, 0), 
+             Point2D(viewport.second[0]/2, viewport.second[1]));
     draw(x);
     draw(y);
-}
-
-Point2D Drawer2D::toViewport(const Point2D& p) const {
-    double x = (p[0] - (*window.first)[0])
-               / ((*window.second)[0] - (*window.first)[0])
-               * ((*viewport.second)[0] - (*viewport.first)[0])
-               + (*viewport.first)[0];
-    double y = (1 - (p[1] - (*window.first)[1])
-               / ((*window.second)[1] - (*window.first)[1]))
-               * ((*viewport.second)[1] - (*viewport.first)[1])
-               + (*viewport.first)[1];
-    return Point2D(x, y);
 }

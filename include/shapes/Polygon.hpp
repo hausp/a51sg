@@ -41,8 +41,6 @@ class Polygon : public Drawable<D> {
         lines.push_back(Line<D>(points.back(), points.front()));
     }
 
-    ~Polygon() {}
-
     void draw(Drawer<D>& drawer) override {
         drawer.draw(*this);
     }

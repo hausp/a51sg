@@ -9,76 +9,85 @@
 #include "utils.hpp"
 
 class Interface {
-private:
-	GtkWidget* window;
-	GtkWidget* dialog;
-	GtkWidget* canvas;
-	GtkWidget* objList;
 
-	std::vector<GtkWidget*> entries;
-	std::vector<GtkWidget*> radioButtons;
-	GtkWidget* shapeName;
-	GtkWidget* numVertices;
-	GtkWidget* zoomLevel;
+ public:
+    Interface();
 
-	void buildMenubar(const GtkWidget*);
-	void buildSidebar(const GtkWidget*);
-	void buildMainbar(const GtkWidget*);
-	void buildCreationWindow(const char*, int, int, void (*)());
-	void buildPointWindow(const GtkWidget*, const std::string, const std::string, void (*)());
+    const char* getShapeName() const {
+        return gtk_entry_get_text(GTK_ENTRY(shapeName));
+    }
 
-public:
-	Interface();
+    GtkWidget* getZoomLevel() const {
+        return zoomLevel;
+    }
 
-	const char* getShapeName() const { return gtk_entry_get_text(GTK_ENTRY(shapeName)); }
-	GtkWidget* getZoomLevel() const { return zoomLevel; }
-	const std::vector<std::string> getEntries() const {
-		std::vector<std::string> sentries;
-		for (auto g : entries) {
-			sentries.push_back(gtk_entry_get_text(GTK_ENTRY(g)));
-		}
-		return sentries;
-	}
-	/*const std::vector<bool> getRadioButtons() const {
-		std::vector<bool> radioList;
-		for (auto r : radioButtons) {
-			radioList.push_back(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(r)));
-		}
-		return radioList;
-	}*/
-	const int getSelectedRadio() const {
-	    for (unsigned i = 0; i < radioButtons.size(); i++) {
-	        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioButtons[i]))) {
-	        	return i;
-	        }
-	    }
-	    return -1;
-	}
+    const std::vector<std::string> getEntries() const {
+        std::vector<std::string> sentries;
+        for (auto g : entries) {
+            sentries.push_back(gtk_entry_get_text(GTK_ENTRY(g)));
+        }
+        return sentries;
+    }
+
+    /*const std::vector<bool> getRadioButtons() const {
+        std::vector<bool> radioList;
+        for (auto r : radioButtons) {
+            radioList.push_back(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(r)));
+        }
+        return radioList;
+    }*/
+    const int getSelectedRadio() const {
+        for (unsigned i = 0; i < radioButtons.size(); i++) {
+            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioButtons[i]))) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
 
-	void build();
-	void buildPointWindow();
-	void buildLineWindow();
-	void buildPolygonWindow();
-	void buildVertexWindow();
-	void buildTranslationWindow();
-	void buildScalingWindow();
-	void buildRotationWindow();
-	void updateEntries();
-	void closeDialog();
+    void build();
+    void buildPointWindow();
+    void buildLineWindow();
+    void buildPolygonWindow();
+    void buildVertexWindow();
+    void buildTranslationWindow();
+    void buildScalingWindow();
+    void buildRotationWindow();
+    void updateEntries();
+    void closeDialog();
 
-	void addShape(const std::string& name);
-	void removeShape(long);
-	void clearObjects(long);
+    void addShape(const std::string& name);
+    void removeShape(const long);
+    void clearObjects(long);
 
-	void buildFileDialog(const GtkFileChooserAction&, const std::string&,
+    void buildFileDialog(const GtkFileChooserAction&, const std::string&,
                          const std::string&, void (*)(const std::string&));
-	void openFileDialog();
-	void saveFileDialog();
+    void openFileDialog();
+    void saveFileDialog();
 
-	void showObjectOptions(GtkWidget*, GdkEventButton*);
-	void queueDraw();
-	void show();
+    void showObjectOptions(GtkWidget* const, GdkEventButton*);
+    void queueDraw();
+    void show();
+
+ private:
+    GtkWidget* window;
+    GtkWidget* dialog;
+    GtkWidget* canvas;
+    GtkWidget* objList;
+
+    std::vector<GtkWidget*> entries;
+    std::vector<GtkWidget*> radioButtons;
+    GtkWidget* shapeName;
+    GtkWidget* numVertices;
+    GtkWidget* zoomLevel;
+
+    void buildMenubar(GtkWidget* const);
+    void buildSidebar(GtkWidget* const);
+    void buildMainbar(GtkWidget* const);
+    void buildCreationWindow(const char*, int, int, void (*)());
+    void buildPointWindow(GtkWidget* const, const std::string,
+                          const std::string, void (*)());
 };
 
 #endif /* INTERFACE_HPP */

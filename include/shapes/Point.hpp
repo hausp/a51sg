@@ -4,174 +4,96 @@
 #ifndef POINT_HPP
 #define POINT_HPP
 
+#include <array>
 #include <vector>
-
 #include "Drawable.hpp"
-#include "Drawer.hpp"
-#include "Matrix.hpp"
+
+template<unsigned R, unsigned C>
+class Matrix;
 
 template<unsigned D>
 class Point : public Drawable<D> {
  public:
-    Point() : Drawable<D>("", DrawableType::Point) { 
-        for (unsigned i = 0; i < D; i++) {
-            coordinates.push_back(0);
-        }
-    }
+    Point();
 
-    Point(const Point& point) : Drawable<D>("", DrawableType::Point) {
-        for (auto c : point) {
-            coordinates.push_back(c);
-        }
-    }
+    Point(const double);
+
+    Point(const Point& point);
 
     template<typename ...Args>
     Point(typename std::enable_if<sizeof...(Args)+1 == D,
           const double>::type c,
-          const Args... args) 
-    : Drawable<D>(std::string(""), DrawableType::Point) {
-        init(c, args...);
-    }
+          const Args... args);
 
     template<typename ...Args>
     Point(const std::string& name,
           typename std::enable_if<sizeof...(Args)+1 == D,
           const double>::type c,
-          Args... args) : Drawable<D>(name, DrawableType::Point) {
-        init(c, args...);
-    }
+          Args... args);
 
-    ~Point() {}
+    ~Point();
 
-    void draw(Drawer<D>& drawer) override {
-        drawer.draw(*this);
-    }
+    void draw(Drawer<D>& drawer) override;
 
-    void transform(const Matrix<D+1,D+1>& matrix) override {
-        *this *= matrix;
-    }
+    void transform(const Matrix<D+1,D+1>& matrix) override;
 
-    Point<D> center() const override {
-        return *this;
-    }
+    Point<D> center() const override;
 
-    std::vector<Point<D>> points() const override {
-        return {*this};
-    }
+    Point<D>& ndc();
 
-    const size_t dimension() const {
-        return coordinates.size();
-    }
+    std::vector<Point<D>> points() const override;
 
-    double& operator[](size_t index) {
-        return coordinates[index];
-    }
+    const size_t dimension() const;
+
+    double& operator[](size_t index);
     
-    const double& operator[](size_t index) const {
-        return coordinates[index];
-    }
+    const double& operator[](size_t index) const;
 
-    bool operator==(const Point<D>& p) {
-        for (unsigned i = 0; i < D; i++) {
-            if ((*this)[i] != p[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
+    bool operator==(const Point<D>& p);
 
-    Point<D>& operator+=(const Point<D>& p) {
-        for (unsigned i = 0; i < D; i++) {
-            (*this)[i] += p[i];
-        }
-        return *this;
-    }
+    Point<D>& operator+=(const Point<D>& p);
 
-    Point<D>& operator-=(const Point<D>& p) {
-        for (unsigned i = 0; i < D; i++) {
-            (*this)[i] -= p[i];
-        }
-        return *this;
-    }
+    Point<D>& operator-=(const Point<D>& p);
 
-    Point<D>& operator*=(const double v) {
-        for (unsigned i = 0; i < D; i++) {
-            (*this)[i] *= v;
-        }
-        return *this;
-    }
+    Point<D>& operator*=(const double v);
 
-    Point<D>& operator/=(const double v) {
-        for (unsigned i = 0; i < D; i++) {
-            (*this)[i] /= v;
-        }
-        return *this;
-    }
+    Point<D>& operator/=(const double v);
 
-    Point<D> operator+(const Point<D>& p) const {
-        Point<D> r = *this;
-        return r += p;
-    }
+    Point<D> operator+(const Point<D>& p) const;
 
-    Point<D> operator-(const Point<D>& p) const {
-        Point<D> r = *this;
-        return r -= p;
-    }
+    Point<D> operator-(const Point<D>& p) const;
 
-    Point<D> operator*(const double v) const {
-        Point<D> r = *this;
-        return r *= v;
-    }
+    Point<D> operator*(const double v) const;
 
-    Point<D> operator/(const double v) const {
-        Point<D> r = *this;
-        return r /= v;
-    }
+    Point<D> operator/(const double v) const;
 
-    typename std::vector<double>::iterator begin() {
-        return coordinates.begin();
-    }
+    typename std::vector<double>::iterator begin();
 
-    typename std::vector<double>::const_iterator begin() const {
-        return coordinates.cbegin();
-    }
+    typename std::vector<double>::const_iterator begin() const;
 
-    typename std::vector<double>::iterator end() {
-        return coordinates.end();
-    }
+    typename std::vector<double>::iterator end();
     
-    typename std::vector<double>::const_iterator end() const {
-        return coordinates.cend();
-    }
+    typename std::vector<double>::const_iterator end() const;
+
+    std::array<double, D> toArray();
 
  private:
-    std::vector<double> coordinates;
+    std::array<double, D> coordinates;
+    Point<D>* normalized_point = NULL;
 
     template<typename ...Args>
-    void init(const double c, const Args... args) {
-        coordinates.push_back(c);
-        init(args...);
-    }
-    void init() {}
+    void init(unsigned pos, const double c, const Args... args);
+    void init(unsigned);
 };
 
-template<unsigned R, unsigned C>
-inline Matrix<1,R+1> operator*(const Point<R>& p, const Matrix<R+1,C>& m) {
-    Matrix<1,R+1> r;
-    for (unsigned i = 0; i < R + 1; i++) {
-        double value = (i < R) ? p[i] : 1;
-        r[0][i] = value;
-    }
-    return r * m;
-}
+
 
 template<unsigned R, unsigned C>
-inline Point<R>& operator*=(Point<R>& p, const Matrix<R+1,C>& m) {
-    Matrix<1,R+1> r = p * m;
-    for (unsigned i = 0; i < R; i++) {
-        p[i] = r[0][i];
-    }
-    return p;
-}
+Matrix<1,R+1> operator*(const Point<R>& p, const Matrix<R+1,C>& m);
+
+template<unsigned R, unsigned C>
+Point<R>& operator*=(Point<R>& p, const Matrix<R+1,C>& m);
+
+#include "Point.ipp"
 
 #endif /* POINT_HPP */

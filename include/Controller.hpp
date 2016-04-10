@@ -21,10 +21,10 @@ class Controller {
  	~Controller();
 
 	// Window Navigation
-	void moveVertical(int);
-	void moveHorizontal(int);
+	void moveVertical(const int);
+	void moveHorizontal(const int);
 	void setZoom();
-	void zoom(int);
+	void zoom(const int);
 	
 	// Shapes stuff
 	void pointPressed();
@@ -34,19 +34,19 @@ class Controller {
 	void createLine();
 	void createPolygon();
 
-	void removeObject(long index);
-	void translateObject(long index);
+	void removeObject(const long index);
+	void translateObject(const long index);
 	void finishTranslation();
-	void scaleObject(long index);
+	void scaleObject(const long index);
 	void finishScaling();
-	void rotateObject(long index);
+	void rotateObject(const long index);
 	void finishRotation();
 
 	void updateEntries();
-	bool objectClick(GtkWidget*, GdkEventButton*);
-	void objectOptions(GtkWidget*, GdkEventButton*);
+	bool objectClick(GtkWidget* const, GdkEventButton* const);
+	void objectOptions(GtkWidget* const, GdkEventButton* const);
 	void vertexOk();
-	void rowSelected(GtkListBox*, GtkListBoxRow*);
+	void rowSelected(GtkListBox* const, GtkListBoxRow* const);
 
 	// Widget events
 	void openFileDialog();
@@ -54,8 +54,8 @@ class Controller {
 	void openFile(const std::string&);
 	void saveFile(const std::string&);
 	void clearObjects();
-	bool configure_event(GtkWidget*, GdkEventConfigure*, gpointer);
-	void draw(GtkWidget*, cairo_t*, gpointer);
+	bool configure_event(GtkWidget* const, GdkEventConfigure* const);
+	void draw(GtkWidget* const, cairo_t* const);
 	void quit();
 
  private:

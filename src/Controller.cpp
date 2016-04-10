@@ -23,13 +23,13 @@ Controller::~Controller() { }
 
 // -------------------------- Window Navigation --------------------------- //
 
-void Controller::moveVertical(int direction) {
+void Controller::moveVertical(const int direction) {
     drawer.moveVertical(direction);
     drawer.drawAll();
     interface.queueDraw();
 }
 
-void Controller::moveHorizontal(int direction) {
+void Controller::moveHorizontal(const int direction) {
     drawer.moveHorizontal(direction);
     drawer.drawAll();
     interface.queueDraw();
@@ -43,7 +43,7 @@ void Controller::setZoom() {
     drawer.setZoom(stoi(z)/100.0);
 }
 
-void Controller::zoom(int d) {
+void Controller::zoom(const int d) {
     drawer.zoom(d);
     drawer.drawAll();
     interface.queueDraw();
@@ -154,14 +154,14 @@ void Controller::createPolygon() {
     }
 }
 
-void Controller::removeObject(long index) {
+void Controller::removeObject(const long index) {
     interface.removeShape(index);
     drawer.removeShape(index);
     drawer.drawAll();
     interface.queueDraw();
 }
 
-void Controller::translateObject(long index) {
+void Controller::translateObject(const long index) {
     currentIndex = index;
     interface.buildTranslationWindow();
 }
@@ -176,7 +176,7 @@ void Controller::finishTranslation() {
     #if !RECENT_COMPILER
     try {
     #endif
-        drawer.translate(currentIndex, stod(entries[0]), stod(entries[1]));
+        drawer.translate(currentIndex, {stod(entries[0]), stod(entries[1])});
     #if !RECENT_COMPILER
     } catch(...) {
         return;
@@ -187,7 +187,7 @@ void Controller::finishTranslation() {
     interface.queueDraw();
 }
 
-void Controller::scaleObject(long index) {
+void Controller::scaleObject(const long index) {
     currentIndex = index;
     interface.buildScalingWindow();
 }
@@ -202,7 +202,7 @@ void Controller::finishScaling() {
     #if !RECENT_COMPILER
     try {
     #endif
-        drawer.scale(currentIndex, stod(entries[0]), stod(entries[1]));
+        drawer.scale(currentIndex, {stod(entries[0]), stod(entries[1])});
     #if !RECENT_COMPILER
     } catch(...) {
         return;
@@ -213,7 +213,7 @@ void Controller::finishScaling() {
     interface.queueDraw();
 }
 
-void Controller::rotateObject(long index) {
+void Controller::rotateObject(const long index) {
     currentIndex = index;
     interface.buildRotationWindow();
 }
@@ -249,7 +249,8 @@ void Controller::updateEntries() {
     interface.updateEntries();
 }
 
-bool Controller::objectClick(GtkWidget* list, GdkEventButton* event) {
+bool Controller::objectClick(GtkWidget* const list,
+                             GdkEventButton* const event) {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         objectOptions(list, event);
         return true;
@@ -257,11 +258,13 @@ bool Controller::objectClick(GtkWidget* list, GdkEventButton* event) {
     return false;
 }
 
-void Controller::objectOptions(GtkWidget* list, GdkEventButton* event) {
+void Controller::objectOptions(GtkWidget* const list,
+                               GdkEventButton* const event) {
     return interface.showObjectOptions(list, event);
 }
 
-void Controller::rowSelected(GtkListBox* list, GtkListBoxRow* row) {
+void Controller::rowSelected(GtkListBox* const list,
+                             GtkListBoxRow* const row) {
     if (row) {
         long index = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
         drawer.highlightObject(index);
@@ -303,15 +306,14 @@ void Controller::clearObjects() {
     interface.queueDraw();
 }
 
-bool Controller::configure_event(GtkWidget* widget,
-                                 GdkEventConfigure* event,
-                                 gpointer data) {
+bool Controller::configure_event(GtkWidget* const widget,
+                                 GdkEventConfigure* const event) {
     drawer.resizeViewport(gtk_widget_get_allocated_width(widget),
                           gtk_widget_get_allocated_height(widget));
     return cairo::update(widget);
 }
 
-void Controller::draw(GtkWidget* widget, cairo_t* cr, gpointer data) {
+void Controller::draw(GtkWidget* const widget, cairo_t* const cr) {
     cairo::draw(cr);
 }
 

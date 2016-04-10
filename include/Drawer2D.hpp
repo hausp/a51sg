@@ -11,15 +11,12 @@ using Polygon2D = Polygon<2>;
 
 class Drawer2D : public Drawer<2> {
  public:
-    using Drawer<2>::Drawer;
+    Drawer2D(int width, int height);
 
-    void draw(const Point2D&) const;
-    void draw(const Line2D&) const;
-    void draw(const Polygon2D&) const;
-    void drawAxis() override;
-
- private:
-    Point2D toViewport(const Point2D&) const;
+    void draw( Point2D&);
+    void draw( Line2D&);
+    void draw( Polygon2D&);
+    void drawAxis();
 };
 
 #endif /* DRAWER2D_HPP */

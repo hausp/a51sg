@@ -27,16 +27,16 @@ void Interface::build() {
     buildMainbar(outerbox);
 }
 
-void Interface::buildMenubar(const GtkWidget* box) {
+void Interface::buildMenubar(GtkWidget* const box) {
     std::vector<GtkWidget*> menus;
     auto menubar = gtk::new_menubar(menus, "_File", "_Objects");
-    gtk::box_push_back(box, {{menubar}});
+    gtk::box_push_back(box, menubar);
     gtk::new_submenu(menus[0], "_Open", signals::open_file_dialog,
                                 "_Save", signals::save_file_dialog);
     gtk::new_submenu(menus[1], "_Clear", signals::clear_objects);
 }
 
-void Interface::buildSidebar(const GtkWidget* outerbox) {
+void Interface::buildSidebar(GtkWidget* const outerbox) {
     auto sidebox   = gtk::new_box(NULL, GTK_ORIENTATION_VERTICAL, 3);
     auto scwin     = gtk::new_scrolled_window(NULL, NULL, GTK_SHADOW_IN, 200, 200);
     auto objFrame  = gtk::new_frame("Create Object", 0.5);
@@ -62,20 +62,20 @@ void Interface::buildSidebar(const GtkWidget* outerbox) {
     auto objLabel  = gtk_label_new("Objects list");
     auto percent   = gtk_label_new("%");
 
-    g_signal_connect(objList, "popup-menu", G_CALLBACK(signals::object_options), NULL);
-    g_signal_connect(objList, "row-selected", G_CALLBACK(signals::row_selected), NULL);
-    g_signal_connect(objList, "button-press-event", G_CALLBACK(signals::object_click), NULL);
+    g_signal_connect(objList, "popup-menu",
+                     G_CALLBACK(signals::object_options), NULL);
+    g_signal_connect(objList, "row-selected",
+                     G_CALLBACK(signals::row_selected), NULL);
+    g_signal_connect(objList, "button-press-event",
+                     G_CALLBACK(signals::object_click), NULL);
     
     gtk_container_add(GTK_CONTAINER(scwin), objList);
 
     gtk::box_push_back(outerbox, sidebox);
     gtk::box_push_back(winbox, navFrame, zoomFrame);
     gtk::box_push_back(sidebox, objLabel, scwin, objFrame, winFrame);
-    gtk::box_push_back(zoombox, zoomIn, true, true, 
-                                zoomOut, true, true,
-                                zoomLevel,
-                                percent, 3, 
-                                set, true, true);
+    gtk::box_push_back(zoombox, zoomIn, true, true,  zoomOut, true, true,
+                                zoomLevel, percent, 3, set, true, true);
 
     gtk_grid_attach(GTK_GRID(objgrid), point, 0, 0, 2, 1);
     gtk_grid_attach(GTK_GRID(objgrid), line, 2, 0, 2, 1);
@@ -87,13 +87,14 @@ void Interface::buildSidebar(const GtkWidget* outerbox) {
     gtk_grid_attach(GTK_GRID(navGrid), down, 1, 2, 1, 1);
 }
 
-void Interface::buildMainbar(const GtkWidget* outerbox) {
+void Interface::buildMainbar(GtkWidget* const outerbox) {
     auto centerbox = gtk::new_box(NULL, GTK_ORIENTATION_VERTICAL, 3);
     canvas = gtk_drawing_area_new();
     gtk_widget_set_size_request(canvas, 500, 500);
-    gtk::box_push_back(outerbox, {{centerbox}});
-    gtk::box_push_back(centerbox, {{gtk_label_new("viewport")}, {canvas}});
-    g_signal_connect(canvas, "configure-event", G_CALLBACK(signals::configure_event), NULL);
+    gtk::box_push_back(outerbox, centerbox);
+    gtk::box_push_back(centerbox, gtk_label_new("viewport"), canvas);
+    g_signal_connect(canvas, "configure-event",
+                     G_CALLBACK(signals::configure_event), NULL);
     g_signal_connect(canvas, "draw", G_CALLBACK(signals::draw), NULL);
 }
 
@@ -124,8 +125,8 @@ void Interface::buildVertexWindow() {
     auto buttonbox = gtk::new_button_box();
     numVertices    = gtk::new_entry("", 0, 3, 3);
 
-    gtk::box_push_back(mainbox, {{vertexbox}, {buttonbox}});
-    gtk::box_push_back(vertexbox, {{gtk_label_new("Number of vertices:")}, {numVertices}});
+    gtk::box_push_back(mainbox, vertexbox, buttonbox);
+    gtk::box_push_back(vertexbox, gtk_label_new("Number of vertices:"), numVertices);
 
     gtk::new_button("Ok", buttonbox, signals::vertex_ok);
     gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
@@ -133,7 +134,8 @@ void Interface::buildVertexWindow() {
     gtk_widget_show_all(dialog);
 }
 
-void Interface::buildCreationWindow(const char* name, int points, int m, void (*ok)()) {
+void Interface::buildCreationWindow(const char* name, int points,
+                                    int m, void (*ok)()) {
     dialog         = gtk::new_dialog(window, name, 6);
     auto mainbox   = gtk::new_box(dialog, GTK_ORIENTATION_VERTICAL, 3);
     auto namebox   = gtk::new_box(NULL, GTK_ORIENTATION_HORIZONTAL);
@@ -146,8 +148,10 @@ void Interface::buildCreationWindow(const char* name, int points, int m, void (*
     std::vector<GtkWidget*> frames;
     std::vector<GtkWidget*> pointboxes;
 
-    gtk::box_push_back(mainbox, {{namebox}, {scwin, true, true}, {buttonbox, 3}});
-    gtk::box_push_back(namebox, {{gtk_label_new("Name:")}, {shapeName, true, true}});
+    gtk::box_push_back(mainbox, namebox);
+    gtk::box_push_back(mainbox, scwin, true, true);
+    gtk::box_push_back(mainbox, buttonbox, 3);
+    gtk::box_push_back(namebox, gtk_label_new("Name:"), shapeName, true, true);
 
     auto okButton = gtk::new_button("Ok", buttonbox, ok);
     gtk_widget_set_can_default(okButton, true);
@@ -169,8 +173,8 @@ void Interface::buildCreationWindow(const char* name, int points, int m, void (*
         for (int j = 0; j < 2; j++) {
             entries.push_back(gtk::new_entry("", 1, 5, 5));
             gtk_entry_set_activates_default(GTK_ENTRY(entries.back()), true);
-            gtk::box_push_back(pointboxes.back(), {{gtk_label_new(labels[j])},
-                                                   {entries.back(), true, true, 5}});
+            gtk::box_push_back(pointboxes.back(), gtk_label_new(labels[j]));
+            gtk::box_push_back(pointboxes.back(), entries.back(), true, true, 5);
         }
         frameName = "Point " + std::to_string(i+2);
     }
@@ -181,7 +185,7 @@ void Interface::buildCreationWindow(const char* name, int points, int m, void (*
     gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scwin), size);
 }
 
-void Interface::buildPointWindow(const GtkWidget* parent, const std::string title, 
+void Interface::buildPointWindow(GtkWidget* const parent, const std::string title, 
                                  const std::string label, void (*ok)()) {
     dialog             = gtk::new_dialog(parent, title.c_str(), 10);
     auto mainbox       = gtk::new_box(dialog, GTK_ORIENTATION_VERTICAL, 3);
@@ -191,13 +195,19 @@ void Interface::buildPointWindow(const GtkWidget* parent, const std::string titl
     auto labelX        = "X " + label + ":";
     auto labelY        = "Y " + label + ":";
 
-    gtk::box_push_back(mainbox, {{xbox}, {ybox}, {buttonbox}});
+    gtk::box_push_back(mainbox, xbox, ybox, buttonbox);
 
     entries.clear();
+
     entries.push_back(gtk::new_entry("", 0, 5, 5));
-    gtk::box_push_back(xbox, {{gtk_label_new(labelX.c_str())}, {entries.back(), true, true}});
+
+    gtk::box_push_back(xbox, gtk_label_new(labelX.c_str()));
+    gtk::box_push_back(xbox, entries.back(), true, true);
+
     entries.push_back(gtk::new_entry("", 0, 5, 5));
-    gtk::box_push_back(ybox, {{gtk_label_new(labelY.c_str())}, {entries.back(), true, true}});
+
+    gtk::box_push_back(ybox, gtk_label_new(labelY.c_str()));
+    gtk::box_push_back(ybox, entries.back(), true, true);
 
     gtk::new_button("Ok", buttonbox, ok);
     gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
@@ -234,11 +244,11 @@ void Interface::buildRotationWindow() {
     gtk_widget_set_sensitive(entries[0], false);
     gtk_widget_set_sensitive(entries[1], false);
 
-    gtk::box_push_back(mainbox, {{topbox}, {optFrame}, {ptFrame}, {buttonbox}});
-    gtk::box_push_back(topbox, {{gtk_label_new("Rotation Degree:")}, {entries[2]}});
-    gtk::box_push_back(optbox, {{radioButtons[0]}, {radioButtons[1]}, {radioButtons[2]}});
-    gtk::box_push_back(pointbox, {{gtk_label_new("X:"), 3}, {entries[0], true},
-                                  {gtk_label_new("Y:"), 3}, {entries[1], true}});
+    gtk::box_push_back(mainbox, topbox, optFrame, ptFrame, buttonbox);
+    gtk::box_push_back(topbox, gtk_label_new("Rotation Degree:"), entries[2]);
+    gtk::box_push_back(optbox, radioButtons[0], radioButtons[1], radioButtons[2]);
+    gtk::box_push_back(pointbox, gtk_label_new("X:"), 3, entries[0], true,
+                                 gtk_label_new("Y:"), 3, entries[1], true);
 
     for (auto radio : radioButtons) {
         g_signal_connect(radio, "toggled", G_CALLBACK(signals::update_entries), NULL);
@@ -258,7 +268,7 @@ void Interface::closeDialog() {
     gtk_widget_destroy(dialog);
 }
 
-void Interface::showObjectOptions(GtkWidget* objList, GdkEventButton* event) {
+void Interface::showObjectOptions(GtkWidget* const objList, GdkEventButton* event) {
     GtkListBoxRow* row;
     if (event) {
         row = gtk_list_box_get_row_at_y(GTK_LIST_BOX(objList), event->y);
@@ -299,7 +309,7 @@ void Interface::addShape(const std::string& name) {
     gtk_widget_show(label);
 }
 
-void Interface::removeShape(long index) {
+void Interface::removeShape(const long index) {
     auto selected_row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(objList), index);
     gtk_container_remove(GTK_CONTAINER(objList), GTK_WIDGET(selected_row));
 }

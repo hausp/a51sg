@@ -7,17 +7,12 @@
 #include <functional>
 #include <vector>
 
-template<unsigned R = 3, unsigned C = 3>
+template<unsigned N = 3, unsigned M = 3>
 class Matrix {
 public:
-    /*template<typename ...Args>
-    Matrix(typename std::enable_if<sizeof...(Args)+1 == R, const std::initializer_list<double>&>::type c,
-          const Args... args) {
-        init(c, args...);
-    }*/
     Matrix() {
-    	for (unsigned i = 0; i < R; i++) {
-    		std::vector<double> container(C);
+    	for (unsigned i = 0; i < N; i++) {
+    		std::vector<double> container(M);
     		data.push_back(container);
     	}
     }
@@ -40,26 +35,26 @@ public:
 		return data.at(index);
 	}
 
-	Matrix<R,C> operator+=(const Matrix<R,C>& m) {
+	Matrix<N,M>& operator+=(const Matrix<N,M>& m) {
 		return process(m, std::plus<double>());
 	}
 
-	Matrix<R,C> operator-=(const Matrix<R,C>& m) {
+	Matrix<N,M>& operator-=(const Matrix<N,M>& m) {
 		return process(m, std::minus<double>());
 	}
 
-	Matrix<R,C> operator*=(typename std::enable_if<R == C, const Matrix<R,R>&> m) {
+	Matrix<N,M>& operator*=(const Matrix<M,M>& m) {
 		*this = *this * m;
 		return *this;
 	}
 
-	template<unsigned C2>
-	Matrix<R,C2> operator*(const Matrix<C,C2>& m) {
-		Matrix<R,C2> r;
-		for (unsigned i = 0; i < R; i++) {
-			for (unsigned j = 0; j < C2; j++) {
+	template<unsigned P>
+	Matrix<N,P> operator*(const Matrix<M,P>& m) {
+		Matrix<N,P> r;
+		for (unsigned i = 0; i < N; i++) {
+			for (unsigned j = 0; j < P; j++) {
 				r[i][j] = 0;
-				for (unsigned k = 0; k < C; k++) {
+				for (unsigned k = 0; k < M; k++) {
 					r[i][j] += (*this)[i][k] * m[k][j];
 				}
 			}
@@ -67,20 +62,20 @@ public:
 		return r;
 	}
 
-	Matrix<R,C> operator+(const Matrix<R,C>& m) const {
-		Matrix<R,C> r = *this;
+	Matrix<N,M> operator+(const Matrix<N,M>& m) const {
+		Matrix<N,M> r = *this;
 		return r += m;
 	}
 
-	Matrix<R,C> operator-(const Matrix<R,C>& m) const {
-		Matrix<R,C> r = *this;
+	Matrix<N,M> operator-(const Matrix<N,M>& m) const {
+		Matrix<N,M> r = *this;
 		return r -= m;
 	}
 
-	Matrix<R,C> operator*(const double value) const {
-		Matrix<R,C> r;
-		for (unsigned i = 0; i < R; i++) {
-			for (unsigned j = 0; j < C; j++) {
+	Matrix<N,M> operator*(const double value) const {
+		Matrix<N,M> r;
+		for (unsigned i = 0; i < N; i++) {
+			for (unsigned j = 0; j < M; j++) {
 				r[i][j] = (*this)[i][j] * value;
 			}
 		}
@@ -106,19 +101,10 @@ public:
 private:
 	std::vector<std::vector<double>> data;
 
-    /*template<typename ...Args>
-    void init(const std::initializer_list<double>& c, const Args... args) {
-    	if (c.size() != C) {
-    		throw "banana";
-    	}
-        data.push_back(std::vector<double>(c.begin(), c.end()));
-        init(args...);
-    }
-    void init() {}*/
-
-	Matrix<R,C> process(const Matrix<R,C>& m, const std::function<double(double, double)>& fn) {
-		for (unsigned i = 0; i < R; i++) {
-			for (unsigned j = 0; j < C; j++) {
+	Matrix<N,M> process(const Matrix<N,M>& m, 
+                        const std::function<double(double, double)>& fn) {
+		for (unsigned i = 0; i < N; i++) {
+			for (unsigned j = 0; j < M; j++) {
 				(*this)[i][j] = fn((*this)[i][j], m[i][j]);
 			}
 		}

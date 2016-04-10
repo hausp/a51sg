@@ -21,7 +21,7 @@ namespace signals {
     void zoom_out();
 
     // Set signals receiver
-    void set_receiver(Controller&);
+    void set_receiver(Controller*);
     
     // Shapes stuff signals
     void point_pressed();
@@ -32,17 +32,17 @@ namespace signals {
     void polygon_ok();
     void vertex_ok();
 
-    void remove_object(long);
-    void translate_object(long);
+    void remove_object(const long);
+    void translate_object(const long);
     void finish_translation();
-    void scale_object(long);
+    void scale_object(const long);
     void finish_scaling();
-    void rotate_object(long);
+    void rotate_object(const long);
     void finish_rotation();
     void update_entries();
-    bool object_click(GtkWidget*, GdkEventButton*);
-    void object_options(GtkWidget*, GdkEventButton*);
-    void row_selected(GtkListBox*, GtkListBoxRow*);
+    bool object_click(GtkWidget* const, GdkEventButton* const);
+    void object_options(GtkWidget* const, GdkEventButton* const);
+    void row_selected(GtkListBox* const, GtkListBoxRow* const);
 
     // Widget event signals
     void open_file_dialog();
@@ -50,8 +50,8 @@ namespace signals {
     void open_file(const std::string&);
     void save_file(const std::string&);
     void clear_objects();
-    bool configure_event(GtkWidget*, GdkEventConfigure*, gpointer);
-    void draw(GtkWidget*, cairo_t*, gpointer);
+    bool configure_event(GtkWidget* const, GdkEventConfigure* const);
+    void draw(GtkWidget* const, cairo_t* const);
     void close();
 }
 

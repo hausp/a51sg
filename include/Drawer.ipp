@@ -3,20 +3,20 @@
 
 #include <cmath>
 #include <iostream>
-#include "gtk.hpp"
+#include "Drawer.hpp"
 #include "cairo.hpp"
 #include "Drawable.hpp"
+#include "gtk.hpp"
 #include "Line.hpp"
-#include "Point.hpp"
+#include "Matrix.hpp"
 #include "Polygon.hpp"
+#include "Point.hpp"
+#include "Window.hpp"
 
 template<unsigned D>
-Drawer<D>::Drawer(const int width, const int height) 
-: defaultWidth(width), defaultHeight(height) {
-    window = std::make_pair(new Point<D>(0,0),
-                new Point<D>(defaultWidth, defaultHeight));
-    viewport = std::make_pair(new Point<D>(0,0),
-                new Point<D>(defaultWidth, defaultHeight));
+Drawer<D>::Drawer(const int width, const int height)
+: window(Point<D>(0,0), Point<D>(width, height)) {
+    viewport = std::make_pair(Point<D>(0,0), Point<D>(width, height));
 }
 
 template<unsigned D>
@@ -24,10 +24,6 @@ Drawer<D>::~Drawer<D>() {
     for (auto shape : displayFile) {
         delete shape;
     }
-    delete window.first;
-    delete window.second;
-    delete viewport.first;
-    delete viewport.second;
 }
 
 template<unsigned D>
@@ -59,15 +55,13 @@ void Drawer<D>::drawAll() {
 }
 
 template<unsigned D>
-void Drawer<D>::moveVertical(const int direction) {
-    (*window.first)[1] += direction * moveSpeed;
-    (*window.second)[1] += direction * moveSpeed;
+void Drawer<D>::moveHorizontal(const int direction) {
+    window.moveHorizontal(direction * moveSpeed);
 }
 
 template<unsigned D>
-void Drawer<D>::moveHorizontal(const int direction) {
-    (*window.first)[0] += direction * moveSpeed;
-    (*window.second)[0] += direction * moveSpeed;
+void Drawer<D>::moveVertical(const int direction) {
+    window.moveVertical(direction * moveSpeed);
 }
 
 template<unsigned D>
@@ -78,28 +72,29 @@ void Drawer<D>::removeShape(const unsigned long index) {
 }
 
 template<unsigned D>
-void Drawer<D>::translate(const unsigned long index, const double dx, const double dy) {
+void Drawer<D>::translate(const unsigned long index, const std::array<double, D>& ds) {
     if (index < displayFile.size()) {
-        displayFile[index]->transform(translationMatrix(dx, dy));
+        displayFile[index]->transform(utils::translationMatrix(ds));
         drawAll();
     }
 }
 
 template<unsigned D>
-void Drawer<D>::scale(const unsigned long index, const double sx, const double sy) {
+void Drawer<D>::scale(const unsigned long index, const std::array<double, D>& ss) {
     if (index < displayFile.size()) {
         auto& shape = displayFile[index];
-        Point<D> center = shape->center();
-        auto m = translationMatrix(-center[0], -center[1]);
-        m = m * scalingMatrix(sx, sy);
-        m = m * translationMatrix(center[0], center[1]);
+        auto center = shape->center();
+        auto m = utils::translationMatrix((center * -1).toArray());
+        m = m * utils::scalingMatrix(ss);
+        m = m * utils::translationMatrix(center.toArray());
         shape->transform(m);
         drawAll();
     }
 }
 
 template<unsigned D>
-void Drawer<D>::rotate(const unsigned long index, const double angle, const int type, const std::vector<std::string>& entries) {
+void Drawer<D>::rotate(const unsigned long index, const double angle,
+                       const int type, const std::vector<std::string>& entries) {
     if (index < displayFile.size()) {
         auto& shape = displayFile[index];
         Point<D> axis;
@@ -115,30 +110,12 @@ void Drawer<D>::rotate(const unsigned long index, const double angle, const int 
                 break;
         }
 
-        auto m = translationMatrix(-axis[0], -axis[1]);
-        m = m * rotationMatrix(angle);
-        m = m * translationMatrix(axis[0], axis[1]);
+        auto m = utils::translationMatrix((axis * -1).toArray());
+        m = m * utils::rotationMatrix(angle);
+        m = m * utils::translationMatrix(axis.toArray());
         shape->transform(m);
         drawAll();
     }
-}
-
-template<unsigned D>
-Matrix<D+1,D+1> Drawer<D>::translationMatrix(const double dx, const double dy) {
-    return {{1,0,0},{0,1,0},{dx,dy,1}};
-}
-
-template<unsigned D>
-Matrix<D+1,D+1> Drawer<D>::scalingMatrix(const double sx, const double sy) {
-    return {{sx,0,0},{0,sy,0},{0,0,1}};
-}
-
-template<unsigned D>
-Matrix<D+1,D+1> Drawer<D>::rotationMatrix(const double angle) {
-    double a = angle * M_PI / 180;
-    double s = sin(a);
-    double c = cos(a);
-    return {{c,s,0},{-s,c,0},{0,0,1}};
 }
 
 template<unsigned D>
@@ -156,24 +133,17 @@ void Drawer<D>::setZoom(const double rate) {
 }
 
 template<unsigned D>
-void Drawer<D>::setViewport(Point<2>* v1, Point<2>* v2) {
+void Drawer<D>::setViewport(Point<2> v1, Point<2> v2) {
     viewport = std::make_pair(v1, v2);
 }
 
 template<unsigned D>
 void Drawer<D>::zoom(const int d) {
-    if (currentZoom + d * zoomRate > 0) {
-        currentZoom += d * zoomRate;
-        double factor = 1 / (2 * currentZoom);
-        Point<2> delta(defaultWidth * factor, defaultHeight * factor);
-        Point<2> center = (*window.first + *window.second) / 2;
-        *window.first = center - delta;
-        *window.second = center + delta;
-    }
+    window.zoom(d * zoomRate);
 }
 
 template<unsigned D>
 void Drawer<D>::resizeViewport(const double length, const double height) {
-    (*viewport.second)[0] = length;
-    (*viewport.second)[1] = height;
+    viewport.second[0] = length;
+    viewport.second[1] = height;
 }

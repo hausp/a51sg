@@ -3,16 +3,17 @@
 #define DRAWER_HPP
 
 #include <vector>
-#include "Matrix.hpp"
+#include "Point.hpp"
+#include "Window.hpp"
 
 template<unsigned D>
 class Drawable;
 template<unsigned D> 
-class Point;
-template<unsigned D>
 class Line;
 template<unsigned D>
 class Polygon;
+template<unsigned R, unsigned C>
+class Matrix;
 
 template<unsigned D>
 class Drawer {
@@ -25,38 +26,31 @@ class Drawer {
     const std::vector<Drawable<D>*>& getDisplayFile();
     void clearDisplayFile();
 
-    virtual void draw(const Point<D>&) const = 0;
-    virtual void draw(const Line<D>&) const = 0;
-    virtual void draw(const Polygon<D>&) const = 0;
+    virtual void draw(Point<D>&) = 0;
+    virtual void draw(Line<D>&) = 0;
+    virtual void draw(Polygon<D>&) = 0;
     void drawAll();
-    virtual void drawAxis() = 0;
     void moveVertical(const int);
     void moveHorizontal(const int);
     void removeShape(const unsigned long);
-    void translate(const unsigned long, const double, const double);
-    void scale(const unsigned long, const double, const double);
+    void translate(const unsigned long, const std::array<double, D>&);
+    void scale(const unsigned long, const std::array<double, D>&);
     void rotate(const unsigned long, const double, const int, const std::vector<std::string>&);
-    Matrix<D+1,D+1> translationMatrix(const double, const double);
-    Matrix<D+1,D+1> scalingMatrix(const double, const double);
-    Matrix<D+1,D+1> rotationMatrix(const double);
     void highlightObject(const long);
 
     void setZoom(const double);
-    void setViewport(Point<2>*, Point<2>*);
+    void setViewport(Point<2>, Point<2>);
     void zoom(const int);
     void resizeViewport(const double, const double);
 
  protected:
-    std::pair<Point<2>*, Point<2>*> window;
-    std::pair<Point<2>*, Point<2>*> viewport;
+    Window window;
+    std::pair<Point<2>, Point<2>> viewport;
 
  private:
     std::vector<Drawable<D>*> displayFile;
     long highlighted = -1;
-    double defaultWidth;
-    double defaultHeight;
     double zoomRate = 0.05;
-    double currentZoom = 1;
     int moveSpeed = 10;
 };
 

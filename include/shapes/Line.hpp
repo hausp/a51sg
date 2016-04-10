@@ -33,8 +33,6 @@ class Line : public Drawable<D> {
         pointList.push_back(p2);
     }
 
-    ~Line() {}
-
     void draw(Drawer<D>& drawer) override {
         drawer.draw(*this);
     }

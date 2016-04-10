@@ -45,8 +45,8 @@ namespace signals {
     }
 
 // -------------------------- Set signal receiver -------------------------- //
-    void set_receiver(Controller& c) {
-        receiver = &c;
+    void set_receiver(Controller* c) {
+        receiver = c;
     }
 
 // ------------------------- Shapes stuff signals -------------------------- //
@@ -78,11 +78,11 @@ namespace signals {
         receiver->vertexOk();
     }
 
-    void remove_object(long index) {
+    void remove_object(const long index) {
         receiver->removeObject(index);
     }
 
-    void translate_object(long index) {
+    void translate_object(const long index) {
         receiver->translateObject(index);
     }
 
@@ -90,16 +90,15 @@ namespace signals {
         receiver->finishTranslation();
     }
 
-    void scale_object(long index) {
-        long i = index;
-        receiver->scaleObject(i);
+    void scale_object(const long index) {
+        receiver->scaleObject(index);
     }
 
     void finish_scaling() {
         receiver->finishScaling();
     }
 
-    void rotate_object(long index) {
+    void rotate_object(const long index) {
         receiver->rotateObject(index);
     }
 
@@ -111,15 +110,15 @@ namespace signals {
         receiver->updateEntries();
     }
 
-    bool object_click(GtkWidget* widget, GdkEventButton* e) {
-        return receiver->objectClick(widget, e);
+    bool object_click(GtkWidget* const widget, GdkEventButton* const event) {
+        return receiver->objectClick(widget, event);
     }
 
-    void object_options(GtkWidget* widget, GdkEventButton* event) {
+    void object_options(GtkWidget* const widget, GdkEventButton* const event) {
         receiver->objectOptions(widget, event);
     }
 
-    void row_selected(GtkListBox* list, GtkListBoxRow* row) {
+    void row_selected(GtkListBox* const list, GtkListBoxRow* const row) {
         receiver->rowSelected(list, row);
     }
 
@@ -144,14 +143,13 @@ namespace signals {
         receiver->clearObjects();
     }
 
-    bool configure_event(GtkWidget* widget,
-                         GdkEventConfigure* event,
-                         gpointer data) {
-        return receiver->configure_event(widget, event, data);
+    bool configure_event(GtkWidget* const widget,
+                         GdkEventConfigure* const event) {
+        return receiver->configure_event(widget, event);
     }
 
-    void draw(GtkWidget* widget, cairo_t* cr, gpointer data) {
-        receiver->draw(widget, cr, data);
+    void draw(GtkWidget* const widget, cairo_t* const cr) {
+        receiver->draw(widget, cr);
     }
 
     void close() {
