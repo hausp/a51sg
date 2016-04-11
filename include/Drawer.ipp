@@ -160,6 +160,7 @@ void Drawer<D>::setViewport(Point<2> v1, Point<2> v2) {
 template<unsigned D>
 void Drawer<D>::zoom(const int d) {
     window.zoom(d * zoomRate);
+    updateAll();
 }
 
 template<unsigned D>

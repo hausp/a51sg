@@ -74,7 +74,8 @@ std::vector<Point<D>> Point<D>::points() const {
 
 template<unsigned D>
 void Point<D>::update(const Matrix<D+1,D+1>& matrix) {
-    ndc().transform(matrix);
+    ndc() = Point<D>(*this);
+    ndc() *= matrix;
 }
 
 template<unsigned D>
