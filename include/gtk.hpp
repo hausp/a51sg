@@ -60,6 +60,10 @@ namespace gtk {
     template<typename T>
     GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)(T) = NULL, T = NULL);
 
+    template<typename T>
+    GtkWidget* new_button_icon(const char*, const GtkIconSize& = GTK_ICON_SIZE_BUTTON,
+                               void (*)(T) = NULL, T = NULL);
+
     template<typename... Args>
     std::vector<GtkWidget*> new_radio_group(const std::string&, const Args...);
 

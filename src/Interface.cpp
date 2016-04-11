@@ -42,13 +42,15 @@ void Interface::buildSidebar(GtkWidget* const middlebox) {
     auto topscwin  = gtk::new_scrolled_window(NULL, NULL, GTK_SHADOW_IN, -1, 50);
     //auto downscwin = gtk::new_scrolled_window(NULL, NULL, GTK_SHADOW_IN, 100, 100);
     auto sidePaned = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
-    auto objXFrame = gtk::new_frame("Create Object", 0.5);
-    auto winXFrame = gtk::new_frame("Window", 0.5);
+    auto objFrame  = gtk::new_frame("Create Object", 0.5);
+    auto winFrame  = gtk::new_frame("Window", 0.5);
     auto navXFrame = gtk::new_expander_with_frame("Navigation");
+    auto rotXFrame = gtk::new_expander_with_frame("Rotation");
     auto zExpand   = gtk::new_expander_with_frame("Zoom");
-    auto objgrid   = gtk::new_grid(objXFrame, 3, 3, true, true, 5);
+    auto objgrid   = gtk::new_grid(objFrame, 3, 3, true, true, 5);
     auto navGrid   = gtk::new_grid(navXFrame, 3, 3, true, true, 5);
-    auto winbox    = gtk::new_box(winXFrame, GTK_ORIENTATION_VERTICAL, 0, false, 3);
+    auto winbox    = gtk::new_box(winFrame, GTK_ORIENTATION_VERTICAL, 0, false, 3);
+    auto rotbox    = gtk::new_box(rotXFrame, GTK_ORIENTATION_HORIZONTAL, 1, false, 3);
     auto zoombox   = gtk::new_box(zExpand, GTK_ORIENTATION_HORIZONTAL, 1, false, 3);
     objList        = gtk_list_box_new();
     auto set       = gtk::new_button("Set", NULL, signals::set_zoom);
@@ -61,8 +63,10 @@ void Interface::buildSidebar(GtkWidget* const middlebox) {
     auto left      = gtk::new_button("\u25C0", NULL, signals::left);
     auto right     = gtk::new_button("\u25B6", NULL, signals::right);
     auto down      = gtk::new_button("\u25BC", NULL, signals::down);
-    auto rotateL   = gtk::new_button("\u21BA", NULL, signals::right);
-    auto rotateR   = gtk::new_button("\u21BB", NULL, signals::down);
+    auto rotateC   = gtk::new_button_icon("object-rotate-left", GTK_ICON_SIZE_BUTTON,
+                                          signals::rotate_window, 1l);
+    auto rotateA   = gtk::new_button_icon("object-rotate-right", GTK_ICON_SIZE_BUTTON,
+                                          signals::rotate_window, -1l);
     zoomLevel      = gtk::new_entry("5", 1, 3, 3);
     auto objLabel  = gtk_label_new("Objects list");
     auto percent   = gtk_label_new("%");
@@ -88,8 +92,10 @@ void Interface::buildSidebar(GtkWidget* const middlebox) {
     gtk::box_push_back(middlebox, sidebox, false, false);
     gtk::box_push_back(sidebox, objLabel, sidePaned, true, true);
     gtk::box_push_back(winbox, gtk_widget_get_parent(navXFrame),
+                               gtk_widget_get_parent(rotXFrame),
                                gtk_widget_get_parent(zExpand));
-    gtk::box_push_back(downbox, objXFrame, winXFrame);
+    gtk::box_push_back(downbox, objFrame, winFrame);
+    gtk::box_push_back(rotbox, rotateC, rotateA);
     gtk::box_push_back(zoombox, zoomIn, true, true,  zoomOut, true, true,
                                 zoomLevel, percent, 3, set, true, true);
 

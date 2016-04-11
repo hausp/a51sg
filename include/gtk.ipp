@@ -131,6 +131,16 @@ GtkWidget* gtk::new_button(const char* name, GtkWidget* parent, void (*action)(T
     return button;
 }
 
+template<typename T>
+GtkWidget* gtk::new_button_icon(const char* icon, const GtkIconSize& size,
+                           void (*action)(T), T data) {
+    auto button = gtk_button_new_from_icon_name(icon, size);
+    if (action) {
+        g_signal_connect_swapped(button, "clicked", G_CALLBACK(action), (gpointer) data);
+    }
+    return button;
+}
+
 template<typename... Args>
 std::vector<GtkWidget*> gtk::new_radio_group(const std::string& text, const Args... args) {
     std::vector<GtkWidget*> list;
