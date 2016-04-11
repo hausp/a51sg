@@ -13,9 +13,9 @@ class Drawer2D : public Drawer<2> {
  public:
     Drawer2D(int width, int height);
 
-    void draw( Point2D&);
-    void draw( Line2D&);
-    void draw( Polygon2D&);
+    void draw(Point2D&);
+    void draw(Line2D&);
+    void draw(Polygon2D&);
     void drawAxis();
 };
 

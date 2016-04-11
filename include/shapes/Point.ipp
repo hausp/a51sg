@@ -72,6 +72,10 @@ std::vector<Point<D>> Point<D>::points() const {
     return {*this};
 }
 
+template<unsigned D>
+void Point<D>::update(const Matrix<D+1,D+1>& matrix) {
+    ndc().transform(matrix);
+}
 
 template<unsigned D>
 const size_t Point<D>::dimension() const {

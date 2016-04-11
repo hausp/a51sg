@@ -29,11 +29,13 @@ Drawer<D>::~Drawer<D>() {
 template<unsigned D>
 void Drawer<D>::addShape(Drawable<D>* d) {
     displayFile.push_back(d);
+    update(d);
 }
 
 template<unsigned D>
 void Drawer<D>::swap(const std::vector<Drawable<D>*>& newDisplayFile) {
     displayFile = newDisplayFile;
+    updateAll();
 }
 
 template<unsigned D>
@@ -57,11 +59,13 @@ void Drawer<D>::drawAll() {
 template<unsigned D>
 void Drawer<D>::moveHorizontal(const int direction) {
     window.moveHorizontal(direction * moveSpeed);
+    updateAll();
 }
 
 template<unsigned D>
 void Drawer<D>::moveVertical(const int direction) {
     window.moveVertical(direction * moveSpeed);
+    updateAll();
 }
 
 template<unsigned D>
@@ -75,6 +79,7 @@ template<unsigned D>
 void Drawer<D>::translate(const unsigned long index, const std::array<double, D>& ds) {
     if (index < displayFile.size()) {
         displayFile[index]->transform(utils::translationMatrix(ds));
+        update(displayFile[index]);
         drawAll();
     }
 }
@@ -85,9 +90,10 @@ void Drawer<D>::scale(const unsigned long index, const std::array<double, D>& ss
         auto& shape = displayFile[index];
         auto center = shape->center();
         auto m = utils::translationMatrix((center * -1).toArray());
-        m = m * utils::scalingMatrix(ss);
-        m = m * utils::translationMatrix(center.toArray());
+        m *= utils::scalingMatrix(ss);
+        m *= utils::translationMatrix(center.toArray());
         shape->transform(m);
+        update(displayFile[index]);
         drawAll();
     }
 }
@@ -111,10 +117,24 @@ void Drawer<D>::rotate(const unsigned long index, const double angle,
         }
 
         auto m = utils::translationMatrix((axis * -1).toArray());
-        m = m * utils::rotationMatrix(angle);
-        m = m * utils::translationMatrix(axis.toArray());
+        m *= utils::rotationMatrix(angle);
+        m *= utils::translationMatrix(axis.toArray());
         shape->transform(m);
+        update(displayFile[index]);
         drawAll();
+    }
+}
+
+template<unsigned D>
+void Drawer<D>::update(Drawable<D>* shape) {
+    shape->update(window.normalizerMatrix());
+}
+
+template<unsigned D>
+void Drawer<D>::updateAll() {
+    auto normalizer = window.normalizerMatrix();
+    for (auto shape : displayFile) {
+        shape->update(normalizer);
     }
 }
 

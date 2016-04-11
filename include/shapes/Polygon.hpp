@@ -67,6 +67,12 @@ class Polygon : public Drawable<D> {
         return list;
     }
 
+    void update(const Matrix<D+1,D+1>& matrix) override {
+        for (auto& line : lines) {
+            line.update(matrix);
+        }
+    }
+
     const size_t numberOfPoints() const {
         return lines.size();
     }

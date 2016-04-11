@@ -50,6 +50,11 @@ class Line : public Drawable<D> {
         return pointList;
     }
 
+    void update(const Matrix<D+1,D+1>& matrix) override {
+        (*this)[0].update(matrix);
+        (*this)[1].update(matrix);
+    }
+
     Point<D>& operator[](size_t index) {
         return pointList[index];
     }

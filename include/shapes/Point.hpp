@@ -15,9 +15,7 @@ template<unsigned D>
 class Point : public Drawable<D> {
  public:
     Point();
-
     Point(const double);
-
     Point(const Point& point);
 
     template<typename ...Args>
@@ -34,47 +32,27 @@ class Point : public Drawable<D> {
     ~Point();
 
     void draw(Drawer<D>& drawer) override;
-
     void transform(const Matrix<D+1,D+1>& matrix) override;
-
     Point<D> center() const override;
-
     Point<D>& ndc();
-
     std::vector<Point<D>> points() const override;
-
+    void update(const Matrix<D+1,D+1>&) override;
     const size_t dimension() const;
-
     double& operator[](size_t index);
-    
     const double& operator[](size_t index) const;
-
     bool operator==(const Point<D>& p);
-
     Point<D>& operator+=(const Point<D>& p);
-
     Point<D>& operator-=(const Point<D>& p);
-
     Point<D>& operator*=(const double v);
-
     Point<D>& operator/=(const double v);
-
     Point<D> operator+(const Point<D>& p) const;
-
     Point<D> operator-(const Point<D>& p) const;
-
     Point<D> operator*(const double v) const;
-
     Point<D> operator/(const double v) const;
-
     typename std::vector<double>::iterator begin();
-
     typename std::vector<double>::const_iterator begin() const;
-
     typename std::vector<double>::iterator end();
-    
     typename std::vector<double>::const_iterator end() const;
-
     std::array<double, D> toArray();
 
  private:

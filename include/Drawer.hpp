@@ -36,6 +36,8 @@ class Drawer {
     void translate(const unsigned long, const std::array<double, D>&);
     void scale(const unsigned long, const std::array<double, D>&);
     void rotate(const unsigned long, const double, const int, const std::vector<std::string>&);
+    void update(Drawable<D>*);
+    void updateAll();
     void highlightObject(const long);
 
     void setZoom(const double);

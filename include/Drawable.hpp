@@ -14,6 +14,7 @@ template<unsigned D>
 class Drawer;
 template<unsigned D>
 class Point;
+class Window;
 
 enum class DrawableType {
     Point,
@@ -52,6 +53,7 @@ class Drawable {
     virtual void transform(const Matrix<D+1,D+1>&) = 0;
     virtual Point<D> center() const = 0;
     virtual std::vector<Point<D>> points() const = 0;
+    virtual void update(const Matrix<D+1,D+1>&) = 0;
 
     const std::string& getName() const { return name; }
     const DrawableType getType() const { return type; }

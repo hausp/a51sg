@@ -38,15 +38,20 @@ class Window {
     }
 
     void rotate(const double _angle) {
-        angle = fmod((angle + _angle), 360);
+        angle = fmod(angle + _angle, 360);
     }
 
     Point<2> toViewport(const Viewport& viewport, Point<2>& p) {
         double width  = viewport.second[0] - viewport.first[0];
         double height = viewport.second[1] - viewport.first[1];
         Point<2> pn   = p.ndc();
+        std::cout << "ndc(0) = " << pn[0] << std::endl;
+        std::cout << "ndc(1) = " << pn[1] << std::endl;
         double x = (pn[0] + 1) / 2 * width + viewport.first[0];
-        double y = (2 - pn[1]) / 2 * height + viewport.first[1];
+        double y = -pn[1] / 2 * height + viewport.first[1];
+        //double y = -pn[1] / 2 * height + viewport.first[1] + height/2;
+        std::cout << "output(0) = " << x << std::endl;
+        std::cout << "output(1) = " << y << std::endl;
         return Point<2>(x, y);
     }
 
