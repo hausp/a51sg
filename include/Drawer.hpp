@@ -36,6 +36,7 @@ class Drawer {
     void translate(const unsigned long, const std::array<double, D>&);
     void scale(const unsigned long, const std::array<double, D>&);
     void rotate(const unsigned long, const double, const int, const std::vector<std::string>&);
+    void rotateWindow(long);
     void update(Drawable<D>*);
     void updateAll();
     void highlightObject(const long);
@@ -53,6 +54,7 @@ class Drawer {
     std::vector<Drawable<D>*> displayFile;
     long highlighted = -1;
     double zoomRate = 0.05;
+    double rotationSpeed = 10;
     int moveSpeed = 10;
 };
 

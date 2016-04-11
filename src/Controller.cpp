@@ -245,6 +245,12 @@ void Controller::finishRotation() {
     interface.queueDraw();
 }
 
+void Controller::rotateWindow(long direction) {
+    drawer.rotateWindow(direction);
+    drawer.drawAll();
+    interface.queueDraw();
+}
+
 void Controller::updateEntries() {
     interface.updateEntries();
 }

@@ -126,6 +126,12 @@ void Drawer<D>::rotate(const unsigned long index, const double angle,
 }
 
 template<unsigned D>
+void Drawer<D>::rotateWindow(long direction) {
+    window.rotate(direction * rotationSpeed);
+    updateAll();
+}
+
+template<unsigned D>
 void Drawer<D>::update(Drawable<D>* shape) {
     shape->update(window.normalizerMatrix());
 }

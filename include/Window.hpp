@@ -28,17 +28,42 @@ class Window {
     }
 
     void moveHorizontal(const double displacement) {
-        min[0] += displacement;
-        max[0] += displacement;
+        auto m = utils::rotationMatrix(-angle);
+        m *= utils::translationMatrix(std::array<double, 2>{displacement, 0});
+        m *= utils::rotationMatrix(angle);
+        min *= m;
+        max *= m;
+        // double a = angle * M_PI / 180;
+        // double s = sin(a);
+        // double c = cos(a);
+        // double dx = displacement;
+        // double dy = 0;
+        // min[0] += dx * c + dy * s;
+        // min[1] += dy * c - dx * s;
+        // max[0] += dx * c + dy * s;
+        // max[1] += dy * c - dx * s;
     }
 
     void moveVertical(const double displacement) {
-        min[1] += displacement;
-        max[1] += displacement;
+        auto m = utils::rotationMatrix(-angle);
+        m *= utils::translationMatrix(std::array<double, 2>{0, displacement});
+        m *= utils::rotationMatrix(angle);
+        min *= m;
+        max *= m;
+        // double a = angle * M_PI / 180;
+        // double s = sin(a);
+        // double c = cos(a);
+        // double dx = 0;
+        // double dy = displacement;
+        // min[0] += dx * c + dy * s;
+        // min[1] += dy * c - dx * s;
+        // max[0] += dx * c + dy * s;
+        // max[1] += dy * c - dx * s;
     }
 
     void rotate(const double _angle) {
         angle = fmod(angle + _angle, 360);
+        std::cout << "Angle: " << angle << std::endl;
     }
 
     Point<2> toViewport(const Viewport& viewport, Point<2>& p) {

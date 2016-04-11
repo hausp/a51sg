@@ -34,13 +34,14 @@ class Controller {
 	void createLine();
 	void createPolygon();
 
-	void removeObject(const long index);
-	void translateObject(const long index);
+	void removeObject(const long);
+	void translateObject(const long);
 	void finishTranslation();
-	void scaleObject(const long index);
+	void scaleObject(const long);
 	void finishScaling();
-	void rotateObject(const long index);
+	void rotateObject(const long);
 	void finishRotation();
+	void rotateWindow(long);
 
 	void updateEntries();
 	bool objectClick(GtkWidget* const, GdkEventButton* const);

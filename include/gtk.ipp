@@ -112,7 +112,7 @@ GtkWidget* gtk::new_button(const char* name, GtkWidget* parent, void (*action)(T
         gtk_container_add(GTK_CONTAINER(parent), button);
     }
     if (action) {
-        g_signal_connect_swapped(button, "clicked", G_CALLBACK(action), data);
+        g_signal_connect_swapped(button, "clicked", G_CALLBACK(action), (gpointer) data);
     }
     return button;
 }
