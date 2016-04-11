@@ -39,6 +39,7 @@ namespace signals {
     void finish_scaling();
     void rotate_object(const long);
     void finish_rotation();
+    void rotate_window(long);
     void update_entries();
     bool object_click(GtkWidget* const, GdkEventButton* const);
     void object_options(GtkWidget* const, GdkEventButton* const);

@@ -106,6 +106,10 @@ namespace signals {
         receiver->finishRotation();
     }
 
+    void rotate_window(long direction) {
+        receiver->rotateWindow(direction);
+    }
+
     void update_entries() {
         receiver->updateEntries();
     }
