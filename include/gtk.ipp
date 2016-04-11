@@ -5,6 +5,20 @@
 
 namespace {
     void _box_push_back(const GtkWidget*) { (void)_box_push_back; }
+    template<typename... Args>
+    void _box_push_back(const GtkWidget*, GtkWidget*, bool, bool, Args...);
+    template<typename... Args>
+    void _box_push_back(const GtkWidget*, GtkWidget*, bool, Args...);
+    template<typename... Args>
+    void _box_push_back(const GtkWidget*, GtkWidget*, int, Args...);
+    template<typename... Args>
+    void _box_push_back(const GtkWidget*, GtkWidget*, Args...);
+
+    template<typename... Args>
+    void _box_push_back(const GtkWidget* box, GtkWidget* child) {
+        gtk_box_pack_start(GTK_BOX(box), child, false, false, 0);
+    }
+
 
     template<typename... Args>
     void _box_push_back(const GtkWidget* box, GtkWidget* child, bool alloc,

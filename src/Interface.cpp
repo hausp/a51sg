@@ -21,10 +21,10 @@ void Interface::build() {
     auto mainbox = gtk::new_box(window, GTK_ORIENTATION_VERTICAL);
     buildMenubar(mainbox);
 
-    auto outerbox = gtk::new_box(mainbox, GTK_ORIENTATION_HORIZONTAL, 10);
-    gtk::set_margins(outerbox, 10, 0, 10, 10);
-    buildSidebar(outerbox);
-    buildMainbar(outerbox);
+    auto middlebox = gtk::new_box(mainbox, GTK_ORIENTATION_HORIZONTAL, 10);
+    gtk::set_margins(middlebox, 10, 0, 10, 10);
+    buildSidebar(middlebox);
+    buildMainbar(middlebox);
 }
 
 void Interface::buildMenubar(GtkWidget* const box) {
@@ -36,17 +36,20 @@ void Interface::buildMenubar(GtkWidget* const box) {
     gtk::new_submenu(menus[1], "_Clear", signals::clear_objects);
 }
 
-void Interface::buildSidebar(GtkWidget* const outerbox) {
+void Interface::buildSidebar(GtkWidget* const middlebox) {
     auto sidebox   = gtk::new_box(NULL, GTK_ORIENTATION_VERTICAL, 3);
-    auto scwin     = gtk::new_scrolled_window(NULL, NULL, GTK_SHADOW_IN, 200, 200);
-    auto objFrame  = gtk::new_frame("Create Object", 0.5);
-    auto winFrame  = gtk::new_frame("Window", 0.5);
-    auto navFrame  = gtk::new_frame("Navigation", 0.5);
-    auto zoomFrame = gtk::new_frame("Zoom", 0.5);
-    auto objgrid   = gtk::new_grid(objFrame, 3, 3, true, true, 5);
-    auto navGrid   = gtk::new_grid(navFrame, 3, 3, true, true, 5);
-    auto winbox    = gtk::new_box(winFrame, GTK_ORIENTATION_VERTICAL, 0, false, 3);
-    auto zoombox   = gtk::new_box(zoomFrame, GTK_ORIENTATION_HORIZONTAL, 1, false, 3);
+    auto downbox   = gtk::new_box(NULL, GTK_ORIENTATION_VERTICAL, 3);
+    auto topscwin  = gtk::new_scrolled_window(NULL, NULL, GTK_SHADOW_IN, -1, 50);
+    //auto downscwin = gtk::new_scrolled_window(NULL, NULL, GTK_SHADOW_IN, 100, 100);
+    auto sidePaned = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
+    auto objXFrame = gtk::new_frame("Create Object", 0.5);
+    auto winXFrame = gtk::new_frame("Window", 0.5);
+    auto navXFrame = gtk::new_expander_with_frame("Navigation");
+    auto zExpand   = gtk::new_expander_with_frame("Zoom");
+    auto objgrid   = gtk::new_grid(objXFrame, 3, 3, true, true, 5);
+    auto navGrid   = gtk::new_grid(navXFrame, 3, 3, true, true, 5);
+    auto winbox    = gtk::new_box(winXFrame, GTK_ORIENTATION_VERTICAL, 0, false, 3);
+    auto zoombox   = gtk::new_box(zExpand, GTK_ORIENTATION_HORIZONTAL, 1, false, 3);
     objList        = gtk_list_box_new();
     auto set       = gtk::new_button("Set", NULL, signals::set_zoom);
     auto zoomIn    = gtk::new_button("+", NULL, signals::zoom_in);
@@ -58,6 +61,8 @@ void Interface::buildSidebar(GtkWidget* const outerbox) {
     auto left      = gtk::new_button("\u25C0", NULL, signals::left);
     auto right     = gtk::new_button("\u25B6", NULL, signals::right);
     auto down      = gtk::new_button("\u25BC", NULL, signals::down);
+    auto rotateL   = gtk::new_button("\u21BA", NULL, signals::right);
+    auto rotateR   = gtk::new_button("\u21BB", NULL, signals::down);
     zoomLevel      = gtk::new_entry("5", 1, 3, 3);
     auto objLabel  = gtk_label_new("Objects list");
     auto percent   = gtk_label_new("%");
@@ -69,11 +74,22 @@ void Interface::buildSidebar(GtkWidget* const outerbox) {
     g_signal_connect(objList, "button-press-event",
                      G_CALLBACK(signals::object_click), NULL);
     
-    gtk_container_add(GTK_CONTAINER(scwin), objList);
+    gtk_paned_pack1(GTK_PANED(sidePaned), topscwin, true, false);
+    gtk_paned_pack2(GTK_PANED(sidePaned), downbox, false, false);
 
-    gtk::box_push_back(outerbox, sidebox);
-    gtk::box_push_back(winbox, navFrame, zoomFrame);
-    gtk::box_push_back(sidebox, objLabel, scwin, objFrame, winFrame);
+    gtk_container_add(GTK_CONTAINER(topscwin), objList);
+    //gtk_container_add(GTK_CONTAINER(downscwin), downbox);
+
+    gtk::set_margins(downbox, 0, 6, 0, 0);
+    gtk_paned_set_position(GTK_PANED(sidePaned), 500);
+    // gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(downscwin),
+    //                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+    gtk::box_push_back(middlebox, sidebox, false, false);
+    gtk::box_push_back(sidebox, objLabel, sidePaned, true, true);
+    gtk::box_push_back(winbox, gtk_widget_get_parent(navXFrame),
+                               gtk_widget_get_parent(zExpand));
+    gtk::box_push_back(downbox, objXFrame, winXFrame);
     gtk::box_push_back(zoombox, zoomIn, true, true,  zoomOut, true, true,
                                 zoomLevel, percent, 3, set, true, true);
 
@@ -87,11 +103,11 @@ void Interface::buildSidebar(GtkWidget* const outerbox) {
     gtk_grid_attach(GTK_GRID(navGrid), down, 1, 2, 1, 1);
 }
 
-void Interface::buildMainbar(GtkWidget* const outerbox) {
+void Interface::buildMainbar(GtkWidget* const middlebox) {
     auto centerbox = gtk::new_box(NULL, GTK_ORIENTATION_VERTICAL, 3);
     canvas = gtk_drawing_area_new();
     gtk_widget_set_size_request(canvas, 500, 500);
-    gtk::box_push_back(outerbox, centerbox);
+    gtk::box_push_back(middlebox, centerbox);
     gtk::box_push_back(centerbox, gtk_label_new("viewport"), canvas);
     g_signal_connect(canvas, "configure-event",
                      G_CALLBACK(signals::configure_event), NULL);

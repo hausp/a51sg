@@ -43,6 +43,24 @@ namespace gtk {
         return dialog;
     }
 
+    GtkWidget* new_paned(const GtkOrientation& orientation, 
+                         GtkWidget* chield1, bool expand1, bool shrink1,
+                         GtkWidget* chield2, bool expand2, bool shrink2) {
+        auto paned = gtk_paned_new(orientation);
+        if (chield1) {
+            gtk_paned_pack1(GTK_PANED(paned), chield1, expand1, shrink1);
+        }
+        if (chield2) {
+            gtk_paned_pack2(GTK_PANED(paned), chield2, expand2, shrink2);
+        }
+        return paned;
+    }
+
+    GtkWidget* new_paned(const GtkOrientation& orientation,
+                         GtkWidget* chield1, GtkWidget* chield2) {
+        return new_paned(orientation, chield1, false, false, chield2, false, false);
+    }
+
     GtkWidget* new_frame(const char* name, float xalign, float yalign, int bwidth) {
         GtkWidget* frame = gtk_frame_new(name);
         gtk_frame_set_label_align(GTK_FRAME(frame), xalign, yalign);
@@ -100,6 +118,21 @@ namespace gtk {
         gtk_box_set_homogeneous(GTK_BOX(buttonbox), homogeneous);
         gtk_box_set_spacing(GTK_BOX(buttonbox), spacing);
         return buttonbox;
+    }
+
+    GtkWidget* new_expander(const char* name, const bool expanded) {
+        auto expander = gtk_expander_new_with_mnemonic(name);
+        gtk_expander_set_expanded(GTK_EXPANDER(expander), expanded);
+        return expander;
+    }
+
+    GtkWidget* new_expander_with_frame(const char* name, const bool expanded,
+                                       const GtkShadowType& shadow) {
+        auto expander = new_expander(name, expanded);
+        auto frame = new_frame(NULL, 0, 0, 1);
+        gtk_frame_set_shadow_type(GTK_FRAME(frame), shadow);
+        gtk_container_add(GTK_CONTAINER(expander), frame);
+        return frame;
     }
 
     void set_entry_max_length(const GtkWidget* entry, int length, int show) {

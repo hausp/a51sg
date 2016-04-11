@@ -30,10 +30,17 @@ namespace gtk {
     GtkWidget* new_window(const char*, int = 0);
 
     GtkWidget* new_scrolled_window(GtkAdjustment* = NULL, GtkAdjustment* = NULL, 
-                                   const GtkShadowType& = GTK_SHADOW_NONE, int = 0,
-                                   int = 0, int = 0);
+                                   const GtkShadowType& = GTK_SHADOW_NONE, int = -1,
+                                   int = -1, int = 0);
 
     GtkWidget* new_dialog(const GtkWidget*, const char*, int = 0);
+
+    GtkWidget* new_paned(const GtkOrientation& = GTK_ORIENTATION_HORIZONTAL,
+                         GtkWidget* = NULL, bool = false, bool = false,
+                         GtkWidget* = NULL, bool = false, bool = false);
+
+    GtkWidget* new_paned(const GtkOrientation& = GTK_ORIENTATION_HORIZONTAL,
+                         GtkWidget* = NULL, GtkWidget* = NULL);
 
     GtkWidget* new_frame(const char*, float = 0, float = 0.5, int = 0);
 
@@ -55,6 +62,11 @@ namespace gtk {
 
     template<typename... Args>
     std::vector<GtkWidget*> new_radio_group(const std::string&, const Args...);
+
+    GtkWidget* new_expander(const char*, const bool = true);
+
+    GtkWidget* new_expander_with_frame(const char*, const bool = true,
+                                       const GtkShadowType& = GTK_SHADOW_ETCHED_IN);
 
     void set_entry_max_length(const GtkWidget*, int, int = 50);
 
