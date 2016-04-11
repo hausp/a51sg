@@ -48,8 +48,7 @@ class Window {
         std::cout << "ndc(0) = " << pn[0] << std::endl;
         std::cout << "ndc(1) = " << pn[1] << std::endl;
         double x = (pn[0] + 1) / 2 * width + viewport.first[0];
-        double y = -pn[1] / 2 * height + viewport.first[1];
-        //double y = -pn[1] / 2 * height + viewport.first[1] + height/2;
+        double y = (1 - (pn[1] + 1)/ 2) * height + viewport.first[1];
         std::cout << "output(0) = " << x << std::endl;
         std::cout << "output(1) = " << y << std::endl;
         return Point<2>(x, y);
