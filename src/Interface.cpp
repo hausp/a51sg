@@ -46,12 +46,13 @@ void Interface::buildSidebar(GtkWidget* const middlebox) {
     auto winFrame  = gtk::new_frame("Window", 0.5);
     auto navXFrame = gtk::new_expander_with_frame("Navigation");
     auto rotXFrame = gtk::new_expander_with_frame("Rotation");
-    auto zExpand   = gtk::new_expander_with_frame("Zoom");
+    //auto zExpand   = gtk::new_expander_with_frame("Zoom");
+    auto zoomFrame = gtk::new_frame("Zoom");
     auto objgrid   = gtk::new_grid(objFrame, 3, 3, true, true, 5);
     auto navGrid   = gtk::new_grid(navXFrame, 3, 3, true, true, 5);
     auto winbox    = gtk::new_box(winFrame, GTK_ORIENTATION_VERTICAL, 0, false, 3);
     auto rotbox    = gtk::new_box(rotXFrame, GTK_ORIENTATION_HORIZONTAL, 1, false, 3);
-    auto zoombox   = gtk::new_box(zExpand, GTK_ORIENTATION_HORIZONTAL, 1, false, 3);
+    auto zoombox   = gtk::new_box(zoomFrame, GTK_ORIENTATION_HORIZONTAL, 1, false, 3);
     objList        = gtk_list_box_new();
     auto set       = gtk::new_button("Set", NULL, signals::set_zoom);
     auto zoomIn    = gtk::new_button("+", NULL, signals::zoom_in);
@@ -96,7 +97,7 @@ void Interface::buildSidebar(GtkWidget* const middlebox) {
     gtk::box_push_back(sidebox, objLabel, sidePaned, true, true);
     gtk::box_push_back(winbox, gtk_widget_get_parent(navXFrame),
                                gtk_widget_get_parent(rotXFrame),
-                               gtk_widget_get_parent(zExpand));
+                               gtk_widget_get_parent(zoombox));
     gtk::box_push_back(downbox, objFrame, winFrame);
     gtk::box_push_back(rotbox, rotateC, rotationAngle, 5, rotateA);
     gtk::box_push_back(zoombox, zoomIn, true, true,  zoomOut, true, true,

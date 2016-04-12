@@ -291,6 +291,7 @@ void Controller::saveFileDialog() {
 }
 
 void Controller::openFile(const std::string& filename) {
+    clearObjects();
     auto displayFile = fileManager->fromObj2D(filename);
     for (auto shape : displayFile) {
         interface.addShape(shape->getFormattedName());
