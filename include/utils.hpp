@@ -18,11 +18,11 @@ namespace {
 
 namespace utils {
 	inline bool regex_match(const std::string& text, const std::string& regexp) {
+		#if RECENT_COMPILER
 		if (regexp != currentRegex) {
 			currentRegex = regexp;
 			regex = std::regex(regexp);
 		}
-		#if RECENT_COMPILER
 		return std::regex_match(text, regex);
 		#else
 		return true;

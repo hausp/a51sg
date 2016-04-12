@@ -64,10 +64,15 @@ void Interface::buildSidebar(GtkWidget* const middlebox) {
     auto left      = gtk::new_button("\u25C0", NULL, signals::left);
     auto right     = gtk::new_button("\u25B6", NULL, signals::right);
     auto down      = gtk::new_button("\u25BC", NULL, signals::down);
+    #if RECENT_COMPILER
     auto rotateC   = gtk::new_button_icon("object-rotate-left", GTK_ICON_SIZE_BUTTON,
                                           signals::rotate_window, 1l);
     auto rotateA   = gtk::new_button_icon("object-rotate-right", GTK_ICON_SIZE_BUTTON,
                                           signals::rotate_window, -1l);
+    #else
+    auto rotateC   = gtk::new_button("\u21BA", NULL, signals::rotate_window, 1l);
+    auto rotateA   = gtk::new_button("\u21BB", NULL, signals::rotate_window, -1l);
+    #endif
     zoomLevel      = gtk::new_entry("5", 1, 3, 3);
     rotationAngle  = gtk_label_new("0º");
     auto objLabel  = gtk_label_new("Objects list");

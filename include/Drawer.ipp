@@ -34,6 +34,9 @@ void Drawer<D>::addShape(Drawable<D>* d) {
 
 template<unsigned D>
 void Drawer<D>::swap(const std::vector<Drawable<D>*>& newDisplayFile) {
+    for (auto shape : displayFile) {
+        delete shape;
+    }
     displayFile = newDisplayFile;
     updateAll();
 }
