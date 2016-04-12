@@ -68,8 +68,11 @@ void Interface::buildSidebar(GtkWidget* const middlebox) {
     auto rotateA   = gtk::new_button_icon("object-rotate-right", GTK_ICON_SIZE_BUTTON,
                                           signals::rotate_window, -1l);
     zoomLevel      = gtk::new_entry("5", 1, 3, 3);
+    rotationAngle  = gtk_label_new("0º");
     auto objLabel  = gtk_label_new("Objects list");
     auto percent   = gtk_label_new("%");
+
+    gtk_label_set_width_chars(GTK_LABEL(rotationAngle), 4);
 
     g_signal_connect(objList, "popup-menu",
                      G_CALLBACK(signals::object_options), NULL);
@@ -95,7 +98,7 @@ void Interface::buildSidebar(GtkWidget* const middlebox) {
                                gtk_widget_get_parent(rotXFrame),
                                gtk_widget_get_parent(zExpand));
     gtk::box_push_back(downbox, objFrame, winFrame);
-    gtk::box_push_back(rotbox, rotateC, rotateA);
+    gtk::box_push_back(rotbox, rotateC, rotationAngle, 5, rotateA);
     gtk::box_push_back(zoombox, zoomIn, true, true,  zoomOut, true, true,
                                 zoomLevel, percent, 3, set, true, true);
 

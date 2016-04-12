@@ -21,6 +21,11 @@ class Interface {
         return zoomLevel;
     }
 
+    void updateAngle(double angle) const {
+        auto text = std::to_string(static_cast<int>(angle)) + "º";
+        gtk_label_set_text(GTK_LABEL(rotationAngle), text.c_str());
+    }
+
     const std::vector<std::string> getEntries() const {
         std::vector<std::string> sentries;
         for (auto g : entries) {
@@ -81,6 +86,7 @@ class Interface {
     GtkWidget* shapeName;
     GtkWidget* numVertices;
     GtkWidget* zoomLevel;
+    GtkWidget* rotationAngle;
 
     void buildMenubar(GtkWidget* const);
     void buildSidebar(GtkWidget* const);

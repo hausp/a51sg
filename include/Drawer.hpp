@@ -26,6 +26,9 @@ class Drawer {
     const std::vector<Drawable<D>*>& getDisplayFile();
     void clearDisplayFile();
 
+    double getWindowAngle();
+    double getZoomLevel();
+
     virtual void draw(Point<D>&) = 0;
     virtual void draw(Line<D>&) = 0;
     virtual void draw(Polygon<D>&) = 0;
@@ -54,7 +57,7 @@ class Drawer {
     std::vector<Drawable<D>*> displayFile;
     long highlighted = -1;
     double zoomRate = 0.05;
-    double rotationSpeed = 10;
+    double rotationSpeed = 15;
     int moveSpeed = 10;
 };
 

@@ -62,8 +62,7 @@ class Window {
     }
 
     void rotate(const double _angle) {
-        angle = fmod(angle + _angle, 360);
-        std::cout << "Angle: " << angle << std::endl;
+        angle = fmod(angle + _angle + 360, 360);
     }
 
     Point<2> toViewport(const Viewport& viewport, Point<2>& p) {
@@ -84,6 +83,14 @@ class Window {
             min = center - delta;
             max = center + delta;
         }
+    }
+
+    double getAngle() {
+        return angle;
+    }
+
+    double getZoomLevel() {
+        return currentZoom;
     }
 
  private:

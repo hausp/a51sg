@@ -247,6 +247,7 @@ void Controller::finishRotation() {
 
 void Controller::rotateWindow(long direction) {
     drawer.rotateWindow(direction);
+    interface.updateAngle(drawer.getWindowAngle());
     drawer.drawAll();
     interface.queueDraw();
 }

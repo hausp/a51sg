@@ -49,6 +49,16 @@ void Drawer<D>::clearDisplayFile() {
 }
 
 template<unsigned D>
+double Drawer<D>::getWindowAngle() {
+    return window.getAngle();
+}
+
+template<unsigned D>
+double Drawer<D>::getZoomLevel() {
+    return window.getZoomLevel();
+}
+
+template<unsigned D>
 void Drawer<D>::drawAll() {
     cairo::clear();
     for (auto shape : displayFile) {
