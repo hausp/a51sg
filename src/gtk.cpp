@@ -13,11 +13,12 @@ namespace gtk {
         gtk_main();
     }
 
-    GtkWidget* new_window(const char* name, int bwidth) {
+    GtkWidget* new_window(const char* name, bool resizable, int bwidth) {
         GtkWidget* window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         gtk_window_set_title(GTK_WINDOW(window), name);
         gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER_ALWAYS);
         gtk_container_set_border_width(GTK_CONTAINER(window), bwidth);
+        gtk_window_set_resizable(GTK_WINDOW(window), resizable);
         return window;
     }
 
@@ -43,7 +44,7 @@ namespace gtk {
         return dialog;
     }
 
-    GtkWidget* new_paned(const GtkOrientation& orientation, 
+    GtkWidget* new_paned(const GtkOrientation& orientation,
                          GtkWidget* chield1, bool expand1, bool shrink1,
                          GtkWidget* chield2, bool expand2, bool shrink2) {
         auto paned = gtk_paned_new(orientation);
@@ -57,8 +58,8 @@ namespace gtk {
     }
 
     GtkWidget* new_paned(const GtkOrientation& orientation,
-                         GtkWidget* chield1, GtkWidget* chield2) {
-        return new_paned(orientation, chield1, false, false, chield2, false, false);
+                         GtkWidget* child1, GtkWidget* child2) {
+        return new_paned(orientation, child1, false, false, child2, false, false);
     }
 
     GtkWidget* new_frame(const char* name, float xalign, float yalign, int bwidth) {
@@ -87,7 +88,7 @@ namespace gtk {
         return button;
     }
 
-    GtkWidget* new_box(const GtkWidget* parent, const GtkOrientation& orientation, 
+    GtkWidget* new_box(const GtkOrientation& orientation, const GtkWidget* parent,
                        int spacing, bool homogeneous, int bwidth) {
         GtkWidget* box = gtk_box_new(orientation, spacing);
         gtk_box_set_homogeneous(GTK_BOX(box), homogeneous);
@@ -110,6 +111,14 @@ namespace gtk {
             gtk_container_add(GTK_CONTAINER(parent), grid);
         }
         return grid;
+    }
+
+    GtkWidget* new_list_box(GtkWidget* const parent) {
+        auto list_box = gtk_list_box_new();
+        if (parent) {
+            gtk_container_add(GTK_CONTAINER(parent), list_box);
+        }
+        return list_box;
     }
 
     GtkWidget* new_button_box(const GtkOrientation& orientation,

@@ -88,9 +88,9 @@ class Interface {
     GtkWidget* zoomLevel;
     GtkWidget* rotationAngle;
 
-    void buildMenubar(GtkWidget* const);
-    void buildSidebar(GtkWidget* const);
-    void buildMainbar(GtkWidget* const);
+    GtkWidget* buildMenubar();
+    GtkWidget* buildSidebar();
+    GtkWidget* buildMainbar();
     void buildCreationWindow(const char*, int, int, void (*)());
     void buildPointWindow(GtkWidget* const, const std::string,
                           const std::string, void (*)());

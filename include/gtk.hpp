@@ -27,7 +27,7 @@ namespace gtk {
 
     void queue_draw(GtkWidget*);
 
-    GtkWidget* new_window(const char*, int = 0);
+    GtkWidget* new_window(const char*, bool = true, int = 0);
 
     GtkWidget* new_scrolled_window(GtkAdjustment* = NULL, GtkAdjustment* = NULL, 
                                    const GtkShadowType& = GTK_SHADOW_NONE, int = -1,
@@ -48,12 +48,13 @@ namespace gtk {
 
     GtkWidget* new_button(const char*, GtkWidget* = NULL, void (*)() = NULL);
 
-    GtkWidget* new_box(const GtkWidget* = NULL, 
-                       const GtkOrientation& = GTK_ORIENTATION_HORIZONTAL,
-                       int = 0, bool = false, int = 0);
+    GtkWidget* new_box(const GtkOrientation& = GTK_ORIENTATION_HORIZONTAL,
+                       const GtkWidget* = NULL, int = 0, bool = false, int = 0);
 
     GtkWidget* new_grid(const GtkWidget* = NULL, int = 1, int = 1, bool = false,
                         bool = false, int = 0);
+
+    GtkWidget* new_list_box(GtkWidget* const = NULL);
 
     GtkWidget* new_button_box(const GtkOrientation& = GTK_ORIENTATION_HORIZONTAL,
                               bool = true, int = 0);
