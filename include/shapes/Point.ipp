@@ -4,6 +4,7 @@
 #include "Point.hpp"
 #include "Drawer.hpp"
 #include "Matrix.hpp"
+#include "Window.hpp"
 
 template<unsigned D>
 Point<D>::Point() : Drawable<D>("", DrawableType::Point) { 
@@ -49,6 +50,11 @@ Point<D>::~Point() {
 template<unsigned D>
 void Point<D>::draw(Drawer<D>& drawer) {
     drawer.draw(*this);
+}
+
+template<unsigned D>
+void Point<D>::clip(Window& window) {
+    window.clip(*this);
 }
 
 template<unsigned D>

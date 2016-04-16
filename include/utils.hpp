@@ -4,30 +4,22 @@
 #include <array>
 #include <iostream>
 #include <regex>
-#include "Matrix.hpp"
+template<unsigned D>
+class Line;
+template<unsigned R, unsigned C>
+class Matrix;
 
 #define RECENT_COMPILER 1
 
 using color_t = std::tuple<unsigned, unsigned, unsigned, double>;
 
 namespace {
-
 	std::string currentRegex;
 	std::regex regex;
 }
 
 namespace utils {
-	inline bool regex_match(const std::string& text, const std::string& regexp) {
-		#if RECENT_COMPILER
-		if (regexp != currentRegex) {
-			currentRegex = regexp;
-			regex = std::regex(regexp);
-		}
-		return std::regex_match(text, regex);
-		#else
-		return true;
-		#endif
-	}
+	bool regex_match(const std::string& text, const std::string& regexp);
 
 	template<size_t D>
 	inline Matrix<D+1, D+1> translationMatrix(const std::array<double, D>& ds) {
@@ -51,12 +43,8 @@ namespace utils {
 		return matrix;
 	}
 
-	inline Matrix<3,3> rotationMatrix(const double angle) {
-	    double a = angle * M_PI / 180;
-	    double s = sin(a);
-	    double c = cos(a);
-	    return {{c,s,0},{-s,c,0},{0,0,1}};
-	}
+	Matrix<3,3> rotationMatrix(const double angle);
+	double slope(const Line<2>& line);
 }
 
 #endif

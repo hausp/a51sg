@@ -147,6 +147,7 @@ void Drawer<D>::rotateWindow(long direction) {
 template<unsigned D>
 void Drawer<D>::update(Drawable<D>* shape) {
     shape->update(window.normalizerMatrix());
+    shape->clip(window);
 }
 
 template<unsigned D>

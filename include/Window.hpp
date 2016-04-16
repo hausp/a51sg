@@ -4,94 +4,35 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
-#include <cmath>
 #include "Point.hpp"
+
+template<unsigned D>
+class Line;
+template<unsigned D>
+class Polygon;
 
 using Viewport = std::pair<Point<2>, Point<2>>;
 
 class Window {
-
  public:
-    Window(const Point<2>& min, const Point<2>& max)
-    : min(min), max(max), angle(0), currentZoom(1) {
-        defaultWidth  = max[0] - min[0];
-        defaultHeight = max[1] - min[1];
-    }
-
-    Matrix<3, 3> normalizerMatrix() {
-        Point<2> center = (min + max)/-2;
-        Matrix<3, 3> normalizer = utils::translationMatrix(center.toArray());
-        normalizer *= utils::rotationMatrix(-angle);
-        std::array<double, 2> s = {2/(max[0] - min[0]), 2/(max[1] - min[1])};
-        normalizer *= utils::scalingMatrix(s);
-        return normalizer;
-    }
-
-    void moveHorizontal(const double displacement) {
-        auto m = utils::rotationMatrix(-angle);
-        m *= utils::translationMatrix(std::array<double, 2>{displacement, 0});
-        m *= utils::rotationMatrix(angle);
-        min *= m;
-        max *= m;
-        // double a = angle * M_PI / 180;
-        // double s = sin(a);
-        // double c = cos(a);
-        // double dx = displacement;
-        // double dy = 0;
-        // min[0] += dx * c + dy * s;
-        // min[1] += dy * c - dx * s;
-        // max[0] += dx * c + dy * s;
-        // max[1] += dy * c - dx * s;
-    }
-
-    void moveVertical(const double displacement) {
-        auto m = utils::rotationMatrix(-angle);
-        m *= utils::translationMatrix(std::array<double, 2>{0, displacement});
-        m *= utils::rotationMatrix(angle);
-        min *= m;
-        max *= m;
-        // double a = angle * M_PI / 180;
-        // double s = sin(a);
-        // double c = cos(a);
-        // double dx = 0;
-        // double dy = displacement;
-        // min[0] += dx * c + dy * s;
-        // min[1] += dy * c - dx * s;
-        // max[0] += dx * c + dy * s;
-        // max[1] += dy * c - dx * s;
-    }
-
-    void rotate(const double _angle) {
-        angle = fmod(angle + _angle + 360, 360);
-    }
-
-    Point<2> toViewport(const Viewport& viewport, Point<2>& p) {
-        double width  = viewport.second[0] - viewport.first[0];
-        double height = viewport.second[1] - viewport.first[1];
-        Point<2> pn   = p.ndc();
-        double x = (pn[0] + 1) / 2 * width + viewport.first[0];
-        double y = (1 - (pn[1] + 1)/ 2) * height + viewport.first[1];
-        return Point<2>(x, y);
-    }
-
-    void zoom(const double zoomRate) {
-        if (currentZoom + zoomRate > 0) {
-            currentZoom += zoomRate;
-            double factor = 1 / (2 * currentZoom);
-            Point<2> delta(defaultWidth * factor, defaultHeight * factor);
-            Point<2> center = (min + max) / 2;
-            min = center - delta;
-            max = center + delta;
-        }
-    }
-
-    double getAngle() {
-        return angle;
-    }
-
-    double getZoomLevel() {
-        return currentZoom;
-    }
+    Window(const Point<2>&, const Point<2>&);
+    Matrix<3, 3> normalizerMatrix();
+    void moveHorizontal(const double);
+    void moveVertical(const double);
+    void rotate(const double);
+    Point<2> toViewport(const Viewport&, Point<2>&);
+    void zoom(const double);
+    double getAngle();
+    double getZoomLevel();
+    void clip(Point<2>&);
+    void clip(Line<2>&);
+    void clip(Polygon<2>&);
+    template<unsigned D>
+    void clip(Point<D>&) {}
+    template<unsigned D>
+    void clip(Line<D>&) {}
+    template<unsigned D>
+    void clip(Polygon<D>&) {}
 
  private:
     Point<2> min;
@@ -100,6 +41,9 @@ class Window {
     double currentZoom;
     double defaultWidth;
     double defaultHeight;
+
+    void clipCH(Line<2>&);
+    void clipLB(Line<2>&);
 };
 
 #endif /* WINDOW_HPP */

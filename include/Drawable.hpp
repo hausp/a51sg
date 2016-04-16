@@ -49,19 +49,22 @@ class Drawable {
 
     virtual ~Drawable() { }
 
-    virtual void draw(Drawer<D>&) { }
+    virtual void draw(Drawer<D>&) = 0;
+    virtual void clip(Window&) = 0;
     virtual void transform(const Matrix<D+1,D+1>&) = 0;
     virtual Point<D> center() const = 0;
     virtual std::vector<Point<D>> points() const = 0;
     virtual void update(const Matrix<D+1,D+1>&) = 0;
 
+    void setName(const std::string& name) { this->name = name; }
     const std::string& getName() const { return name; }
     const DrawableType getType() const { return type; }
     std::string getFormattedName() const {
         return types[type] + "(" + name + ")";
     }
 
-    void setName(const std::string& name) { this->name = name; }
+    void setVisible(bool visibility) { visible = visibility; }
+    bool isVisible() const { return visible; }
  
  protected:
     Drawable(const std::string& name, 
@@ -71,6 +74,7 @@ class Drawable {
     std::string name;
     DrawableType type;
     color_t color;
+    bool visible = true;
 };
 
 #endif /* DRAWABLE_HPP */

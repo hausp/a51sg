@@ -7,80 +7,35 @@
 #include <vector>
 #include "Drawable.hpp"
 #include "Point.hpp"
-#include "Drawer.hpp"
+
+template<unsigned D>
+class Drawer;
+class Window;
 
 template<unsigned D>
 class Line : public Drawable<D> {
  public:
-
-    Line() : Drawable<D>("", DrawableType::Line) { }
-
-    Line(const Line& line) : Drawable<D>("", DrawableType::Line) {
-        for (auto p : line) {
-            pointList.push_back(p);
-        }
-    }
-
-    Line(const std::string& name, const Point<D>& p1, const Point<D>& p2)
-    : Drawable<D>(name, DrawableType::Line) {
-        pointList.push_back(p1);
-        pointList.push_back(p2);
-    }
-
-    Line(const Point<D>& p1, const Point<D>& p2) 
-    : Drawable<D>("", DrawableType::Line) {
-        pointList.push_back(p1);
-        pointList.push_back(p2);
-    }
-
-    void draw(Drawer<D>& drawer) override {
-        drawer.draw(*this);
-    }
-
-    void transform(const Matrix<D+1,D+1>& matrix) override {
-        (*this)[0] *= matrix;
-        (*this)[1] *= matrix;
-    }
-
-    Point<D> center() const override {
-        return (pointList[0] + pointList[1]) / 2;
-    }
-
-    std::vector<Point<D>> points() const override {
-        return pointList;
-    }
-
-    void update(const Matrix<D+1,D+1>& matrix) override {
-        (*this)[0].update(matrix);
-        (*this)[1].update(matrix);
-    }
-
-    Point<D>& operator[](size_t index) {
-        return pointList[index];
-    }
-
-    const Point<D>& operator[](size_t index) const {
-        return pointList[index];
-    }
-
-    typename std::vector<Point<D>>::iterator begin() { 
-        return pointList.begin();
-    }
-
-    typename std::vector<Point<D>>::const_iterator begin() const {
-        return pointList.cbegin();
-    }
-
-    typename std::vector<Point<D>>::iterator end() {
-        return pointList.end();
-    }
-
-    typename std::vector<Point<D>>::const_iterator end() const {
-        return pointList.cend();
-    }
+    Line();
+    Line(const Line&);
+    Line(const std::string&, const Point<D>&, const Point<D>&);
+    Line(const Point<D>&, const Point<D>&);
+    void draw(Drawer<D>&) override;
+    void clip(Window&) override;
+    void transform(const Matrix<D+1,D+1>&) override;
+    Point<D> center() const override;
+    std::vector<Point<D>> points() const override;
+    void update(const Matrix<D+1,D+1>&) override;
+    Point<D>& operator[](size_t);
+    const Point<D>& operator[](size_t) const;
+    typename std::vector<Point<D>>::iterator begin();
+    typename std::vector<Point<D>>::const_iterator begin() const;
+    typename std::vector<Point<D>>::iterator end();
+    typename std::vector<Point<D>>::const_iterator end() const;
 
  private:
     std::vector<Point<D>> pointList;
 };
+
+#include "Line.ipp"
 
 #endif /* LINE_HPP */

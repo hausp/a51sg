@@ -5,113 +5,44 @@
 #define POLYGON_HPP
 
 #include <vector>
-#include "Point.hpp"
-#include "Drawer.hpp"
+#include "Drawable.hpp"
+#include "Line.hpp"
+
+class Window;
 
 template<unsigned D>
 class Polygon : public Drawable<D> {
  public:
-
-    Polygon() : Drawable<D>("", DrawableType::Polygon) { }
-
-    Polygon(const Polygon& polygon) : Drawable<D>("", DrawableType::Polygon) {
-        for (auto l : polygon) {
-            lines.push_back(l);
-        }
-    }
-
+    Polygon();
+    Polygon(const Polygon&);
     template<typename ...Args>
-    Polygon(const Point<D>& p1, const Point<D>& p2, const Args&... args)
-    : Drawable<D>("", DrawableType::Polygon) {
-        init(p1, p2, args...);
-    }
-
+    Polygon(const Point<D>&, const Point<D>&, const Args&...);
     template<typename ...Args>
-    Polygon(const std::string& name, const Point<D>& p1, 
-            const Point<D>& p2, const Args&... args)
-    : Drawable<D>(name, DrawableType::Polygon) {
-        init(p1, p2, args...);
-    }
-
-    Polygon(const std::vector<Point<D>>& points)
-    : Drawable<D>("", DrawableType::Polygon) {
-        for (unsigned i = 0; i < points.size()-1; i++) {
-            lines.push_back(Line<D>(points[i], points[i+1]));
-        }
-        lines.push_back(Line<D>(points.back(), points.front()));
-    }
-
-    void draw(Drawer<D>& drawer) override {
-        drawer.draw(*this);
-    }
-
-    void transform(const Matrix<D+1,D+1>& matrix) override {
-        for (auto& line : lines) {
-            line.transform(matrix);
-        }
-    }
-
-    Point<D> center() const override {
-        Point<D> r;
-        for (auto& line : lines) {
-            r += line[0];
-        }
-        return r / numberOfPoints();
-    }
-
-    std::vector<Point<D>> points() const override {
-        std::vector<Point<D>> list;
-        for (auto& line : lines) {
-            list.push_back(line[0]);
-        }
-        return list;
-    }
-
-    void update(const Matrix<D+1,D+1>& matrix) override {
-        for (auto& line : lines) {
-            line.update(matrix);
-        }
-    }
-
-    const size_t numberOfPoints() const {
-        return lines.size();
-    }
-
-    Point<D>& operator[](size_t index) {
-        return lines[index][0];
-    }
-
-    const Point<D>& operator[](size_t index) const {
-        return lines[index][0];
-    }
-
-    typename std::vector<Line<D>>::iterator begin() {
-        return lines.begin();
-    }
-
-    typename std::vector<Line<D>>::const_iterator begin() const {
-        return lines.cbegin();
-    }
-
-    typename std::vector<Line<D>>::iterator end() {
-        return lines.end();
-    }
-
-    typename std::vector<Line<D>>::const_iterator end() const {
-        return lines.cend();
-    }
+    Polygon(const std::string&, const Point<D>&, 
+            const Point<D>&, const Args&...);
+    Polygon(const std::vector<Point<D>>&);
+    void draw(Drawer<D>&) override;
+    void clip(Window&) override;
+    void transform(const Matrix<D+1,D+1>&) override;
+    Point<D> center() const override;
+    std::vector<Point<D>> points() const override;
+    void update(const Matrix<D+1,D+1>&) override;
+    const size_t numberOfPoints() const;
+    Point<D>& operator[](size_t);
+    const Point<D>& operator[](size_t) const;
+    typename std::vector<Line<D>>::iterator begin();
+    typename std::vector<Line<D>>::const_iterator begin() const;
+    typename std::vector<Line<D>>::iterator end();
+    typename std::vector<Line<D>>::const_iterator end() const;
 
  private:
     std::vector<Line<D>> lines;
 
     template<typename ...Args>
-    void init(const Point<D>& p0, const Point<D>& p1, const Args&... args) {
-        lines.push_back(Line<D>(p0, p1));
-        init(p1, args...);
-    }
-    void init(const Point<D>& p) {
-        lines.push_back(Line<D>(p, lines[0][0]));
-    }
+    void init(const Point<D>&, const Point<D>&, const Args&...);
+    void init(const Point<D>&);
 };
+
+#include "Polygon.ipp"
 
 #endif /* POLYGON_HPP */
