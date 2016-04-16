@@ -1,3 +1,4 @@
 *.[od]
+*.obj
 build/
 bin/
