@@ -11,7 +11,7 @@
 class Interface {
 
  public:
-    Interface();
+    Interface(unsigned, unsigned);
 
     const char* getShapeName() const {
         return gtk_entry_get_text(GTK_ENTRY(shapeName));
@@ -76,6 +76,9 @@ class Interface {
     void show();
 
  private:
+    unsigned canvasWidth;
+    unsigned canvasHeight;
+
     GtkWidget* window;
     GtkWidget* dialog;
     GtkWidget* canvas;

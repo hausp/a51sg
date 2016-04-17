@@ -14,12 +14,15 @@ int main(int argc, char** argv) {
  	// Init GTK+ with command line options
     gtk::init(argc, argv);
 
+    unsigned canvasWidth = 500;
+    unsigned canvasHeight = 500;
+
     // Graphical Interface - managing ugly buttons and boxes
-    Interface gui;
+    Interface gui(canvasWidth, canvasHeight);
 
     // Drawer - the cool stuff goes here
     // Default values to window - length(600), height(600)
-    Drawer2D drawer(500, 500);
+    Drawer2D drawer(canvasWidth, canvasHeight);
     
     // Controller - being God
     Controller controller(gui, drawer);

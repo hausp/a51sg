@@ -65,6 +65,7 @@ Point<2> Window::toViewport(const Viewport& viewport, Point<2>& p) {
     Point<2> pn   = p.ndc();
     double x = (pn[0] + 1) / 2 * width + viewport.first[0];
     double y = (1 - (pn[1] + 1)/ 2) * height + viewport.first[1];
+    //std::cout << "(" << x << "," << y << ")" << std::endl;
     return Point<2>(x, y);
 }
 
@@ -93,6 +94,7 @@ void Window::clip(Point<2>& p) {
 }
 
 void Window::clip(Line<2>& ln) {
+    std::cout << "Clipping..." << std::endl;
     clipCH(ln);
 }
 
@@ -101,8 +103,8 @@ void Window::clip(Polygon<2>& p) {
 }
 
 void Window::clipCH(Line<2>& ln) {
-    auto p1 = ln[0].ndc();
-    auto p2 = ln[1].ndc();
+    auto& p1 = ln[0].ndc();
+    auto& p2 = ln[1].ndc();
     int rc1 = 0;
     int rc2 = 0;
 
@@ -127,21 +129,26 @@ void Window::clipCH(Line<2>& ln) {
 
     int rc = (rc1 == 0) ? rc2 : rc1;
     double x, y;
+    double m = utils::slope(Line<2>(p1, p2));
     if ((rc & 1) != 0) {
-        //x = p1[0]
+        x = p1[0] + (1 - p1[1]) / m;
+        y = 1;
+    } else if ((rc & 2) != 0) {
+        x = p1[0] + (-1 - p1[1]) / m;
+        y = -1;
+    } else if ((rc & 4) != 0) {
+        x = 1;
+        y = p1[1] + m * (1 - p1[0]);
+    } else {
+        x = -1;
+        y = p1[1] + m * (-1 - p1[0]);
     }
 
-    /*double m = (p2[1] - p1[1]) / (p2[0] - p1[0]);
-    double yLeft = m * (-1 - p1[0]) + p1[1];
-    double yRight = m * (1 - p1[0]) + p1[1];
-    if (m != 0) {
-        double xTop = p1[0] + (1/m) * (1 - p1[1]);
-        double xBottom = p1[0] + (1/m) * (-1 - p1[1]);
+    if (rc == rc1) {
+        p1 = Point<2>(x, y);
+    } else {
+        p2 = Point<2>(x, y);
     }
-
-    if (yLeft >= -1) {
-        
-    }*/
 }
 
 void Window::clipLB(Line<2>& ln) {

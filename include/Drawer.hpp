@@ -59,6 +59,7 @@ class Drawer {
     double zoomRate = 0.05;
     double rotationSpeed = 15;
     int moveSpeed = 10;
+    unsigned viewportBorder = 20;
 };
 
 #include "Drawer.ipp"

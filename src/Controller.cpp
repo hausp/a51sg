@@ -72,7 +72,7 @@ void Controller::createPoint() {
     std::string name = interface.getShapeName();
 
     for (auto entry : entries) {
-        if (!utils::regex_match(entry, "^\\d+")) return;
+        if (!utils::regex_match(entry, utils::REGEX_INTEGER)) return;
     }
 
     if (name != "") {
@@ -99,7 +99,7 @@ void Controller::createLine() {
     std::string name = interface.getShapeName();
 
     for (auto entry : entries) {
-        if (!utils::regex_match(entry, "^\\d+")) return;
+        if (!utils::regex_match(entry, utils::REGEX_INTEGER)) return;
     }
 
     if (name != "") {
@@ -128,7 +128,7 @@ void Controller::createPolygon() {
     std::string name = interface.getShapeName();
 
     for (auto entry : entries) {
-        if (!utils::regex_match(entry, "^\\d+")) return;
+        if (!utils::regex_match(entry, utils::REGEX_INTEGER)) return;
     }
 
     if (name != "") {
@@ -170,7 +170,7 @@ void Controller::finishTranslation() {
     auto entries = interface.getEntries();
 
     for (auto entry : entries) {
-        if (!utils::regex_match(entry, "^(\\+|-)?\\d+")) return;
+        if (!utils::regex_match(entry, utils::REGEX_INTEGER)) return;
     }
 
     #if !RECENT_COMPILER
@@ -196,7 +196,7 @@ void Controller::finishScaling() {
     auto entries = interface.getEntries();
 
     for (auto entry : entries) {
-        if (!utils::regex_match(entry, "^\\d+(\\.\\d+)?")) return;
+        if (!utils::regex_match(entry, utils::REGEX_REAL_UNSIGNED)) return;
     }
 
     #if !RECENT_COMPILER
@@ -224,7 +224,7 @@ void Controller::finishRotation() {
 
     int i = entries.size();
     while (--i >= 0) {
-        if (!utils::regex_match(entries[i], "^(\\+|-)?\\d+(\\.\\d+)?")) return;
+        if (!utils::regex_match(entries[i], utils::REGEX_REAL)) return;
         if (type != 2) break;
     }
 

@@ -16,7 +16,8 @@
 template<unsigned D>
 Drawer<D>::Drawer(const int width, const int height)
 : window(Point<D>(0,0), Point<D>(width, height)) {
-    viewport = std::make_pair(Point<D>(0,0), Point<D>(width, height));
+    viewport = std::make_pair(Point<D>(viewportBorder, viewportBorder),
+        Point<D>(width - viewportBorder, height - viewportBorder));
 }
 
 template<unsigned D>
@@ -155,6 +156,7 @@ void Drawer<D>::updateAll() {
     auto normalizer = window.normalizerMatrix();
     for (auto shape : displayFile) {
         shape->update(normalizer);
+        shape->clip(window);
     }
 }
 
@@ -185,6 +187,6 @@ void Drawer<D>::zoom(const int d) {
 
 template<unsigned D>
 void Drawer<D>::resizeViewport(const double length, const double height) {
-    viewport.second[0] = length;
-    viewport.second[1] = height;
+    //viewport.second[0] = length;
+    //viewport.second[1] = height;
 }

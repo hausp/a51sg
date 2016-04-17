@@ -8,7 +8,8 @@
 #include "gtk.hpp"
 #include "signals.hpp"
 
-Interface::Interface() { }
+Interface::Interface(unsigned width, unsigned height)
+: canvasWidth(width), canvasHeight(height) { }
 
 void Interface::build() {
     window = gtk::new_window("Area51 - Interactive Graphical System", false);
@@ -122,7 +123,7 @@ GtkWidget* Interface::buildMainbar() {
 
     gtk::set_margins(mainbar, 0, 0, 10, 10);
 
-    gtk_widget_set_size_request(canvas, 500, 500);
+    gtk_widget_set_size_request(canvas, canvasWidth, canvasHeight);
 
     gtk::box_push_back(mainbar, gtk_label_new("viewport"), canvas);
 

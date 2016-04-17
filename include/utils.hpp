@@ -19,6 +19,11 @@ namespace {
 }
 
 namespace utils {
+
+	const std::string REGEX_INTEGER = "^(\\+|-)?\\d+";
+	const std::string REGEX_REAL_UNSIGNED = "^\\d+(\\.\\d+)?";
+	const std::string REGEX_REAL = "^(\\+|-)?\\d+(\\.\\d+)?";
+
 	bool regex_match(const std::string& text, const std::string& regexp);
 
 	template<size_t D>
