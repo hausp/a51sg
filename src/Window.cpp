@@ -95,14 +95,14 @@ void Window::clip(Point<2>& p) {
 
 void Window::clip(Line<2>& ln) {
     std::cout << "Clipping..." << std::endl;
-    clipCH(ln);
+    clipCS(ln);
 }
 
 void Window::clip(Polygon<2>& p) {
 
 }
 
-void Window::clipCH(Line<2>& ln) {
+void Window::clipCS(Line<2>& ln) {
     auto& p1 = ln[0].ndc();
     auto& p2 = ln[1].ndc();
     int rc1 = 0;
@@ -145,10 +145,14 @@ void Window::clipCH(Line<2>& ln) {
     }
 
     if (rc == rc1) {
+        std::cout << "(" << p1[0] << "," << p1[1] << ") -> (" << x << "," << y << ")" << std::endl;
         p1 = Point<2>(x, y);
     } else {
+        std::cout << "(" << p2[0] << "," << p2[1] << ") -> (" << x << "," << y << ")" << std::endl;
         p2 = Point<2>(x, y);
     }
+
+    clipCS(ln);
 }
 
 void Window::clipLB(Line<2>& ln) {
