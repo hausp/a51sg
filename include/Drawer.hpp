@@ -18,7 +18,7 @@ class Matrix;
 template<unsigned D>
 class Drawer {
  public:
-    Drawer(const int, const int);
+    Drawer(const unsigned, const unsigned, const unsigned = 0);
     ~Drawer();
 
     void addShape(Drawable<D>*);
@@ -59,7 +59,6 @@ class Drawer {
     double zoomRate = 0.05;
     double rotationSpeed = 15;
     int moveSpeed = 10;
-    unsigned viewportBorder = 20;
 };
 
 #include "Drawer.ipp"

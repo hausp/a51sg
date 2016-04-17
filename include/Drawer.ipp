@@ -14,10 +14,10 @@
 #include "Window.hpp"
 
 template<unsigned D>
-Drawer<D>::Drawer(const int width, const int height)
-: window(Point<D>(0,0), Point<D>(width, height)) {
-    viewport = std::make_pair(Point<D>(viewportBorder, viewportBorder),
-        Point<D>(width - viewportBorder, height - viewportBorder));
+Drawer<D>::Drawer(const unsigned width, const unsigned height, const unsigned border)
+: window(Point<D>(0,0), Point<D>(width - 2 * border, height - 2 * border)) {
+    viewport = std::make_pair(Point<D>(border, border),
+        Point<D>(width - border, height - border));
 }
 
 template<unsigned D>
@@ -66,9 +66,7 @@ template<unsigned D>
 void Drawer<D>::drawAll() {
     cairo::clear();
     for (auto shape : displayFile) {
-        if (shape->isVisible()) {
-            shape->draw(*this);
-        }
+        shape->draw(*this);
     }
 }
 

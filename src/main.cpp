@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 
     // Drawer - the cool stuff goes here
     // Default values to window - length(600), height(600)
-    Drawer2D drawer(canvasWidth, canvasHeight);
+    Drawer2D drawer(canvasWidth, canvasHeight, 20);
     
     // Controller - being God
     Controller controller(gui, drawer);

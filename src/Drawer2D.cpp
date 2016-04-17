@@ -4,16 +4,18 @@
 #include <cmath>
 #include "Drawer2D.hpp"
 
-Drawer2D::Drawer2D(int width, int height) 
-: Drawer<2>(width, height) { }
+Drawer2D::Drawer2D(const unsigned width, const unsigned height, const unsigned border) 
+: Drawer<2>(width, height, border) { }
 
 void Drawer2D::draw(Point2D& p) {
+    if (!p.isVisible()) return;
     cairo::set_color(p.getColor());
     Point2D pv = window.toViewport(viewport, p);
     cairo::point(pv[0], pv[1]);
 }
 
 void Drawer2D::draw(Line2D& ln) {
+    if (!ln.isVisible()) return;
     cairo::set_color(ln.getColor());
     auto p1 = window.toViewport(viewport, ln[0]);
     auto p2 = window.toViewport(viewport, ln[1]);
@@ -23,6 +25,7 @@ void Drawer2D::draw(Line2D& ln) {
 }
 
 void Drawer2D::draw(Polygon2D& p) {
+    if (!p.isVisible()) return;
     cairo::set_color(p.getColor());
     Point2D pv;
     for (unsigned i = 0; i < p.numberOfPoints(); i++ ) {

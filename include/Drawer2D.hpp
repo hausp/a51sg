@@ -11,7 +11,7 @@ using Polygon2D = Polygon<2>;
 
 class Drawer2D : public Drawer<2> {
  public:
-    Drawer2D(int width, int height);
+    Drawer2D(const unsigned, const unsigned, const unsigned = 0);
 
     void draw(Point2D&);
     void draw(Line2D&);

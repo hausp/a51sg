@@ -95,7 +95,7 @@ void Window::clip(Point<2>& p) {
 
 void Window::clip(Line<2>& ln) {
     std::cout << "Clipping..." << std::endl;
-    clipLB(ln);
+    clipCS(ln);
 }
 
 void Window::clip(Polygon<2>& p) {
