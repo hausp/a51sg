@@ -42,7 +42,7 @@ class Window {
     double defaultWidth;
     double defaultHeight;
 
-    void clipCH(Line<2>&);
+    void clipCS(Line<2>&);
     void clipLB(Line<2>&);
 };
 
