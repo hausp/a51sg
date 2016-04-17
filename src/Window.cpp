@@ -95,7 +95,7 @@ void Window::clip(Point<2>& p) {
 
 void Window::clip(Line<2>& ln) {
     std::cout << "Clipping..." << std::endl;
-    clipCS(ln);
+    clipLB(ln);
 }
 
 void Window::clip(Polygon<2>& p) {
@@ -127,6 +127,7 @@ void Window::clipCS(Line<2>& ln) {
         return;
     }
 
+    ln.setVisible(true);
     int rc = (rc1 == 0) ? rc2 : rc1;
     double x, y;
     double m = utils::slope(Line<2>(p1, p2));
@@ -156,5 +157,74 @@ void Window::clipCS(Line<2>& ln) {
 }
 
 void Window::clipLB(Line<2>& ln) {
+    auto& p1 = ln[0].ndc();
+    auto& p2 = ln[1].ndc();
 
+    double p[4], q[4];
+    p[0] = -(p2[0] - p1[0]);
+    p[1] = -p[0];
+    p[2] = -(p2[1] - p1[1]);
+    p[3] = -p[2];
+    q[0] = p1[0] + 1;
+    q[1] = 1 - p1[0];
+    q[2] = p1[1] + 1;
+    q[3] = 1 - p1[1];
+
+    double u1 = 0;
+    double u2 = 1;
+    for (unsigned i = 0; i < 4; i++) {
+        double r = q[i] / p[i];
+        if (p[i] < 0) {
+            if (r > u1) {
+                u1 = r;
+            }
+        } else {
+            if (r < u2) {
+                u2 = r;
+            }
+        }
+    }
+
+    if (u1 > u2) {
+        ln.setVisible(false);
+        return;
+    }
+
+    ln.setVisible(true);
+    double x1, y1, x2, y2;
+    if (u1 != 0 && u1 != 1) {
+        x1 = p1[0] + u1 * (p2[0] - p1[0]);
+        y1 = p1[1] + u1 * (p2[1] - p1[1]);
+    }
+
+    if (u2 != 0 && u2 != 1) {
+        x2 = p1[0] + u2 * (p2[0] - p1[0]);
+        y2 = p1[1] + u2 * (p2[1] - p1[1]);
+    }
+
+    for (unsigned i = 0; i < 4; i++) {
+        std::cout << "p[" << i << "] = " << p[i] << std::endl;
+    }
+    for (unsigned i = 0; i < 4; i++) {
+        std::cout << "q[" << i << "] = " << q[i] << std::endl;
+    }
+    for (unsigned i = 0; i < 4; i++) {
+        std::cout << "r[" << i << "] = " << q[i]/p[i] << std::endl;
+    }
+    std::cout << "u1 = " << u1 << std::endl;
+    std::cout << "u2 = " << u2 << std::endl;
+
+    if (u1 != 0 && u1 != 1) {
+        std::cout << "(" << p1[0] << "," << p1[1] << ") -> (" << x1 << "," << y1 << ")" << std::endl;
+        p1 = Point<2>(x1, y1);
+    } else {
+        std::cout << "(" << p1[0] << "," << p1[1] << ")" << std::endl;
+    }
+
+    if (u2 != 0 && u2 != 1) {
+        std::cout << "(" << p2[0] << "," << p2[1] << ") -> (" << x2 << "," << y2 << ")" << std::endl;
+        p2 = Point<2>(x2, y2);
+    } else {
+        std::cout << "(" << p2[0] << "," << p2[1] << ")" << std::endl;
+    }
 }

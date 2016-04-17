@@ -66,7 +66,9 @@ template<unsigned D>
 void Drawer<D>::drawAll() {
     cairo::clear();
     for (auto shape : displayFile) {
-        shape->draw(*this);
+        if (shape->isVisible()) {
+            shape->draw(*this);
+        }
     }
 }
 
