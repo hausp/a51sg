@@ -316,9 +316,10 @@ void Controller::clearObjects() {
 
 bool Controller::configure_event(GtkWidget* const widget,
                                  GdkEventConfigure* const event) {
+    bool r = cairo::update(widget);
     drawer.resizeViewport(gtk_widget_get_allocated_width(widget),
                           gtk_widget_get_allocated_height(widget));
-    return cairo::update(widget);
+    return r;
 }
 
 void Controller::draw(GtkWidget* const widget, cairo_t* const cr) {

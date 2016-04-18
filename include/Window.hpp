@@ -44,6 +44,16 @@ class Window {
 
     void clipCS(Line<2>&);
     void clipLB(Line<2>&);
+    void clipNLN(Line<2>&);
+    bool leftcolumn(Point<2>&, Point<2>&);
+    bool topleftcorner(Point<2>&, Point<2>&);
+    bool leftbottomregion(Point<2>&, Point<2>&, double);
+    bool leftedge(Point<2>&, Point<2>&);
+    bool p2bottom(Point<2>&, Point<2>&);
+    bool centercolumn(Point<2>&, Point<2>&);
+    bool inside(Point<2>&, Point<2>&);
+    void p2left(Point<2>&, Point<2>&);
+    void p2lefttop(Point<2>&, Point<2>&);
 };
 
 #endif /* WINDOW_HPP */

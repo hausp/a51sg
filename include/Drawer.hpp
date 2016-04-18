@@ -4,14 +4,11 @@
 
 #include <vector>
 #include "Point.hpp"
+#include "Polygon.hpp"
 #include "Window.hpp"
 
 template<unsigned D>
 class Drawable;
-template<unsigned D> 
-class Line;
-template<unsigned D>
-class Polygon;
 template<unsigned R, unsigned C>
 class Matrix;
 
@@ -49,9 +46,12 @@ class Drawer {
     void zoom(const int);
     void resizeViewport(const double, const double);
 
+    void drawViewportBorders();
+
  protected:
     Window window;
     std::pair<Point<2>, Point<2>> viewport;
+    Polygon<2> wview;
 
  private:
     std::vector<Drawable<D>*> displayFile;

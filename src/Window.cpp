@@ -6,6 +6,11 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include "Polygon.hpp"
 #include "Window.hpp"
 
+#define XMIN -1
+#define YMIN -1
+#define XMAX 1
+#define YMAX 1
+
 Window::Window(const Point<2>& min, const Point<2>& max)
 : min(min), max(max), angle(0), currentZoom(1) {
     defaultWidth  = max[0] - min[0];
@@ -65,7 +70,6 @@ Point<2> Window::toViewport(const Viewport& viewport, Point<2>& p) {
     Point<2> pn   = p.ndc();
     double x = (pn[0] + 1) / 2 * width + viewport.first[0];
     double y = (1 - (pn[1] + 1)/ 2) * height + viewport.first[1];
-    //std::cout << "(" << x << "," << y << ")" << std::endl;
     return Point<2>(x, y);
 }
 
@@ -95,7 +99,7 @@ void Window::clip(Point<2>& p) {
 
 void Window::clip(Line<2>& ln) {
     std::cout << "Clipping..." << std::endl;
-    clipCS(ln);
+    clipNLN(ln);
 }
 
 void Window::clip(Polygon<2>& p) {
@@ -159,8 +163,12 @@ void Window::clipCS(Line<2>& ln) {
 void Window::clipLB(Line<2>& ln) {
     auto& p1 = ln[0].ndc();
     auto& p2 = ln[1].ndc();
-
+    double dx = p2[0] - p1[0];
+    double dy = p2[1] - p1[1];
+    double u1 = 0;
+    double u2 = 1;
     double p[4], q[4];
+
     p[0] = -(p2[0] - p1[0]);
     p[1] = -p[0];
     p[2] = -(p2[1] - p1[1]);
@@ -170,8 +178,6 @@ void Window::clipLB(Line<2>& ln) {
     q[2] = p1[1] + 1;
     q[3] = 1 - p1[1];
 
-    double u1 = 0;
-    double u2 = 1;
     for (unsigned i = 0; i < 4; i++) {
         double r = q[i] / p[i];
         if (p[i] < 0) {
@@ -191,40 +197,277 @@ void Window::clipLB(Line<2>& ln) {
     }
 
     ln.setVisible(true);
-    double x1, y1, x2, y2;
-    if (u1 != 0 && u1 != 1) {
-        x1 = p1[0] + u1 * (p2[0] - p1[0]);
-        y1 = p1[1] + u1 * (p2[1] - p1[1]);
-    }
 
     if (u2 != 0 && u2 != 1) {
-        x2 = p1[0] + u2 * (p2[0] - p1[0]);
-        y2 = p1[1] + u2 * (p2[1] - p1[1]);
+        p2[0] = p1[0] + u2 * dx;
+        p2[1] = p1[1] + u2 * dy;
     }
-
-    for (unsigned i = 0; i < 4; i++) {
-        std::cout << "p[" << i << "] = " << p[i] << std::endl;
-    }
-    for (unsigned i = 0; i < 4; i++) {
-        std::cout << "q[" << i << "] = " << q[i] << std::endl;
-    }
-    for (unsigned i = 0; i < 4; i++) {
-        std::cout << "r[" << i << "] = " << q[i]/p[i] << std::endl;
-    }
-    std::cout << "u1 = " << u1 << std::endl;
-    std::cout << "u2 = " << u2 << std::endl;
 
     if (u1 != 0 && u1 != 1) {
-        std::cout << "(" << p1[0] << "," << p1[1] << ") -> (" << x1 << "," << y1 << ")" << std::endl;
-        p1 = Point<2>(x1, y1);
+        p1[0] += u1 * dx;
+        p1[1] += u1 * dy;
+    }
+}
+    // for (unsigned i = 0; i < 4; i++) {
+    //     std::cout << "p[" << i << "] = " << p[i] << std::endl;
+    // }
+    // for (unsigned i = 0; i < 4; i++) {
+    //     std::cout << "q[" << i << "] = " << q[i] << std::endl;
+    // }
+    // for (unsigned i = 0; i < 4; i++) {
+    //     std::cout << "r[" << i << "] = " << q[i]/p[i] << std::endl;
+    // }
+    // std::cout << "u1 = " << u1 << std::endl;
+    // std::cout << "u2 = " << u2 << std::endl;
+
+    // if (u1 != 0 && u1 != 1) {
+    //     std::cout << "(" << p1[0] << "," << p1[1] << ") -> (" << x1 << "," << y1 << ")" << std::endl;
+    //     p1 = Point<2>(x1, y1);
+    // } else {
+    //     std::cout << "(" << p1[0] << "," << p1[1] << ")" << std::endl;
+    // }
+
+    // if (u2 != 0 && u2 != 1) {
+    //     std::cout << "(" << p2[0] << "," << p2[1] << ") -> (" << x2 << "," << y2 << ")" << std::endl;
+    //     p2 = Point<2>(x2, y2);
+    // } else {
+    //     std::cout << "(" << p2[0] << "," << p2[1] << ")" << std::endl;
+    // }
+// }
+
+void Window::clipNLN(Line<2>& ln) {
+    auto& p1 = ln[0].ndc();
+    auto& p2 = ln[1].ndc();
+
+    if (p1[0] < XMIN) {
+        // P1 in left column
+        ln.setVisible(leftcolumn(p1, p2));
+    } else if (p1[0] > XMAX) {
+        // P1 in right column, rotate 180°,
+        // moving it to left column
+        utils::nln_rotate180c(p1);
+        utils::nln_rotate180c(p2);
+        ln.setVisible(leftcolumn(p1, p2));
+        // Rotate back
+        utils::nln_rotate180c(p1);
+        utils::nln_rotate180c(p2);
     } else {
-        std::cout << "(" << p1[0] << "," << p1[1] << ")" << std::endl;
+        // P1 is in center column
+        ln.setVisible(centercolumn(p1, p2));
+    }
+}
+
+bool Window::leftcolumn(Point<2>& p1, Point<2>& p2) {
+    if (p2[0] < XMIN) {
+        // Line is out of window
+        return false;
+    }
+    if (p1[1] > YMAX) {
+        // P1 is in top left corner
+        return topleftcorner(p1, p2);
+    }
+    if (p1[1] < YMIN) {
+        // P1 is in bottom left corner, reflect in x axis,
+        // moving to top left corner
+        utils::nln_reflect_xaxis(p1);
+        utils::nln_reflect_xaxis(p2);
+        bool visible = topleftcorner(p1, p2);
+        // reflect back
+        utils::nln_reflect_xaxis(p1);
+        utils::nln_reflect_xaxis(p2);
+        return visible;
+    }
+    return leftedge(p1, p2);
+}
+
+bool Window::topleftcorner(Point<2>& p1, Point<2>& p2) {
+    if (p2[1] > YMAX) {
+        // Line is out of window
+        return false;
     }
 
-    if (u2 != 0 && u2 != 1) {
-        std::cout << "(" << p2[0] << "," << p2[1] << ") -> (" << x2 << "," << y2 << ")" << std::endl;
-        p2 = Point<2>(x2, y2);
+    double m0 = (p2[1] - p1[1]) / (p2[0] - p1[0]);
+    double m1 = (YMAX - p1[1]) / (XMIN - p1[0]);
+    
+    if (m0 <= m1) {
+        return leftbottomregion(p1, p2, m0);
     } else {
-        std::cout << "(" << p2[0] << "," << p2[1] << ")" << std::endl;
+        utils::nln_reflect_xmy(p1);
+        utils::nln_reflect_xmy(p2);
+
+        bool visible = leftbottomregion(p1, p2, 1/m0);
+        utils::nln_reflect_xmy(p1);
+        utils::nln_reflect_xmy(p2);
+        return visible;
+    }
+}
+
+bool Window::leftbottomregion(Point<2>& p1, Point<2>& p2, double m0) {
+    if (p2[1] >= YMIN) {
+        if (p2[0] > XMAX) {
+            p2[0] = XMAX;
+            p2[1] = p1[1] + (XMAX - p1[0]) * m0;
+        }
+    } else {
+        double m2 = (YMIN - p1[1]) / (XMIN - p1[0]);
+        if (m2 >= m0) {
+            return false;
+        }
+        if (p2[0] > XMAX) {
+            double m3 = (YMIN - p1[1]) / (XMAX - p1[0]);
+            if (m3 > m0) {
+                p2[0] = p1[0] + (YMIN - p1[1]) / m0;
+                p2[1] = YMIN;
+            } else {
+                p2[0] = XMAX;
+                p2[1] = p1[1] + (XMAX - p1[0]) * m0;
+            }
+        } else {
+            p2[0] = p1[0] + (YMIN - p1[1]) / m0;
+            p2[1] = YMIN;
+        }
+    }
+
+    p1[1] += (XMIN - p1[0]) * m0;
+    p1[0] = XMIN;
+    return true;
+}
+
+bool Window::leftedge(Point<2>& p1, Point<2>& p2) {
+    if (p2[0] < XMIN) {
+        return false;
+    }
+
+    if (p2[1] < YMIN) {
+
+        return p2bottom(p1, p2);
+    }
+
+    if (p2[1] > YMAX) {
+
+        utils::nln_reflect_xaxis(p1);
+        utils::nln_reflect_xaxis(p2);
+        bool visible = p2bottom(p1, p2);
+        utils::nln_reflect_xaxis(p1);
+        utils::nln_reflect_xaxis(p2);
+        return visible;
+    }
+
+    double m0 = (p2[1] - p1[1]) / (p2[0] - p1[0]);
+    if (p2[0] > XMAX) {
+        p2[0] = XMAX;
+        p2[1] = p1[1] + (XMAX - p1[0]) * m0;
+    }
+    p1[1] += (XMIN - p1[0]) * m0;
+    p1[0] = XMIN;
+
+    return true;
+}
+
+bool Window::p2bottom(Point<2>& p1, Point<2>& p2) {
+    double m0 = (p2[1] - p1[1]) / (p2[0] - p1[0]);
+
+    double m2 = (YMIN - p1[1]) / (XMIN - p1[0]);
+
+    if (m2 >= m0) {
+        return false;
+    }
+
+    if (p2[0] <= XMAX) {
+
+        p2[0] = p1[0] + (YMIN - p1[1]) / m0;
+        p2[1] = YMIN;
+
+    } else {
+        double m3 = (YMIN - p1[1]) / (XMAX - p1[0]);
+
+        if (m3 > m0) {
+
+            p2[0] = p1[0] + (YMIN - p1[1]) / m0;
+            p2[1] = YMIN;
+
+        } else {
+
+            p2[0] = XMAX;
+            p2[1] = p1[1] + (XMAX - p1[0]) * m0;
+
+        }
+    }
+
+    p1[1] += (XMIN - p1[0]) * m0;
+    p1[0] = XMIN;
+    return true;
+}
+
+bool Window::centercolumn(Point<2>& p1, Point<2>& p2) {
+    if (p1[1] > YMAX) {
+
+        utils::nln_rotate270c(p1);
+        utils::nln_rotate270c(p2);
+        bool visible = leftedge(p1, p2);
+        utils::nln_rotate90c(p1);
+        utils::nln_rotate90c(p2);
+        return visible;
+    }
+
+    if (p1[1] < YMIN) {
+
+        utils::nln_rotate90c(p1);
+        utils::nln_rotate90c(p2);
+        bool visible = leftedge(p1, p2);
+        utils::nln_rotate270c(p1);
+        utils::nln_rotate270c(p2);
+        return visible;
+    }
+
+    return inside(p1, p2);
+}
+
+bool Window::inside(Point<2>& p1, Point<2>& p2) {
+
+    if (p2[0] < XMIN) {
+        p2left(p1, p2);
+    } else if (p2[0] > XMAX) {
+        utils::nln_rotate180c(p1);
+        utils::nln_rotate180c(p2);
+        p2left(p1, p2);
+        utils::nln_rotate180c(p1);
+        utils::nln_rotate180c(p2);
+    } else if (p2[1] > YMAX) {
+        p2[0] = p1[0] + (YMAX - p1[1]) * (p2[0] - p1[0]) / (p2[1] - p1[1]);
+        p2[1] = YMAX;
+    } else if (p2[1] < YMIN) {
+        p2[0] = p1[0] + (YMIN - p1[1]) * (p2[0] - p1[0]) / (p2[1] - p1[1]);
+        p2[1] = YMIN;
+    }
+
+    return true;
+}
+
+void Window::p2left(Point<2>& p1, Point<2>& p2) {
+    if (p2[1] > YMAX) {
+        p2lefttop(p1, p2);
+    } else if (p2[1] < YMIN) {
+        utils::nln_rotate90c(p1);
+        utils::nln_rotate90c(p2);
+        p2lefttop(p1, p2);
+        utils::nln_rotate270c(p1);
+        utils::nln_rotate270c(p2);
+    } else {
+        p2[1] = p1[1] + (XMIN - p1[0]) * (p2[1] - p1[1]) / (p2[0] - p1[0]);
+        p2[0] = XMIN;
+    }
+}
+
+void Window::p2lefttop(Point<2>& p1, Point<2>& p2) {
+    double m0 = (p2[1] - p1[1]) / (p2[0] - p1[0]);
+    double m1 = (YMAX - p1[1]) / (XMIN - p1[0]);
+
+    if (m0 < m1) {
+        p2[0] = p1[0] + (YMAX - p1[1]) / m0;
+        p2[1] = YMAX;
+    } else {
+        p2[0] = XMIN;
+        p2[1] = p1[1] + (XMIN - p1[0]) * m0;
     }
 }

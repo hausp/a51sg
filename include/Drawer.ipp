@@ -16,8 +16,15 @@
 template<unsigned D>
 Drawer<D>::Drawer(const unsigned width, const unsigned height, const unsigned border)
 : window(Point<D>(0,0), Point<D>(width - 2 * border, height - 2 * border)) {
-    viewport = std::make_pair(Point<D>(border, border),
-        Point<D>(width - border, height - border));
+    viewport = std::make_pair(Point<2>(border, border),
+                              Point<2>(width - border, height - border));
+    wview = {Point<2>(-1, -1),
+                 Point<2>(-1, height - 2 * border + 1),
+                 Point<2>(width - 2 * border + 1, height - 2 * border + 1),
+                 Point<2>(width - 2 * border + 1, -1)};
+    wview.setVisible(true);
+    wview.update(window.normalizerMatrix());
+    wview.setColor(177, 0, 0);
 }
 
 template<unsigned D>
@@ -65,6 +72,7 @@ double Drawer<D>::getZoomLevel() {
 template<unsigned D>
 void Drawer<D>::drawAll() {
     cairo::clear();
+    draw(wview);
     for (auto shape : displayFile) {
         shape->draw(*this);
     }
@@ -189,4 +197,5 @@ template<unsigned D>
 void Drawer<D>::resizeViewport(const double length, const double height) {
     //viewport.second[0] = length;
     //viewport.second[1] = height;
+    draw(wview);
 }
