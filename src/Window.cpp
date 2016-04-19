@@ -288,13 +288,12 @@ bool Window::topleftcorner(Point<2>& p1, Point<2>& p2) {
 
     double m0 = (p2[1] - p1[1]) / (p2[0] - p1[0]);
     double m1 = (YMAX - p1[1]) / (XMIN - p1[0]);
-    
+
     if (m0 <= m1) {
         return leftbottomregion(p1, p2, m0);
     } else {
         utils::nln_reflect_xmy(p1);
         utils::nln_reflect_xmy(p2);
-
         bool visible = leftbottomregion(p1, p2, 1/m0);
         utils::nln_reflect_xmy(p1);
         utils::nln_reflect_xmy(p2);
@@ -339,12 +338,10 @@ bool Window::leftedge(Point<2>& p1, Point<2>& p2) {
     }
 
     if (p2[1] < YMIN) {
-
         return p2bottom(p1, p2);
     }
 
     if (p2[1] > YMAX) {
-
         utils::nln_reflect_xaxis(p1);
         utils::nln_reflect_xaxis(p2);
         bool visible = p2bottom(p1, p2);
@@ -360,40 +357,29 @@ bool Window::leftedge(Point<2>& p1, Point<2>& p2) {
     }
     p1[1] += (XMIN - p1[0]) * m0;
     p1[0] = XMIN;
-
     return true;
 }
 
 bool Window::p2bottom(Point<2>& p1, Point<2>& p2) {
     double m0 = (p2[1] - p1[1]) / (p2[0] - p1[0]);
-
     double m2 = (YMIN - p1[1]) / (XMIN - p1[0]);
 
     if (m2 >= m0) {
         return false;
     }
-
     if (p2[0] <= XMAX) {
-
         p2[0] = p1[0] + (YMIN - p1[1]) / m0;
         p2[1] = YMIN;
-
     } else {
         double m3 = (YMIN - p1[1]) / (XMAX - p1[0]);
-
         if (m3 > m0) {
-
             p2[0] = p1[0] + (YMIN - p1[1]) / m0;
             p2[1] = YMIN;
-
         } else {
-
             p2[0] = XMAX;
             p2[1] = p1[1] + (XMAX - p1[0]) * m0;
-
         }
     }
-
     p1[1] += (XMIN - p1[0]) * m0;
     p1[0] = XMIN;
     return true;
@@ -401,7 +387,6 @@ bool Window::p2bottom(Point<2>& p1, Point<2>& p2) {
 
 bool Window::centercolumn(Point<2>& p1, Point<2>& p2) {
     if (p1[1] > YMAX) {
-
         utils::nln_rotate270c(p1);
         utils::nln_rotate270c(p2);
         bool visible = leftedge(p1, p2);
@@ -411,20 +396,17 @@ bool Window::centercolumn(Point<2>& p1, Point<2>& p2) {
     }
 
     if (p1[1] < YMIN) {
-
-        utils::nln_rotate90c(p1);
+        utils::nln_rotate90c(p1);inside
         utils::nln_rotate90c(p2);
         bool visible = leftedge(p1, p2);
         utils::nln_rotate270c(p1);
         utils::nln_rotate270c(p2);
         return visible;
     }
-
     return inside(p1, p2);
 }
 
 bool Window::inside(Point<2>& p1, Point<2>& p2) {
-
     if (p2[0] < XMIN) {
         p2left(p1, p2);
     } else if (p2[0] > XMAX) {
@@ -440,7 +422,6 @@ bool Window::inside(Point<2>& p1, Point<2>& p2) {
         p2[0] = p1[0] + (YMIN - p1[1]) * (p2[0] - p1[0]) / (p2[1] - p1[1]);
         p2[1] = YMIN;
     }
-
     return true;
 }
 
