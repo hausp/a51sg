@@ -274,6 +274,7 @@ bool Window::leftcolumn(Point<2>& p1, Point<2>& p2) {
         bool visible = topleftcorner(p1, p2);
         // reflect back
         utils::nln_reflect_xaxis(p1);
+
         utils::nln_reflect_xaxis(p2);
         return visible;
     }
@@ -396,7 +397,7 @@ bool Window::centercolumn(Point<2>& p1, Point<2>& p2) {
     }
 
     if (p1[1] < YMIN) {
-        utils::nln_rotate90c(p1);inside
+        utils::nln_rotate90c(p1);
         utils::nln_rotate90c(p2);
         bool visible = leftedge(p1, p2);
         utils::nln_rotate270c(p1);
