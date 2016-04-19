@@ -1,8 +1,10 @@
+/* created by Ghabriel Nunes<ghabriel.nunes@gmail.com> 
+and Marleson Graf<aszdrick@gmail.com> [2016] */
+
 #include "Line.hpp"
 #include "Matrix.hpp"
 #include "Point.hpp"
 #include "utils.hpp"
-
 
 void utils::nln_rotate90c(Point<2>& p) {
     double temp = p[0];

@@ -10,7 +10,7 @@ Polygon<D>::Polygon() : Drawable<D>("", DrawableType::Polygon) { }
 template<unsigned D>
 Polygon<D>::Polygon(const Polygon& polygon) : Drawable<D>("", DrawableType::Polygon) {
     for (auto l : polygon) {
-        lines.push_back(l);
+        vertices.push_back(l);
     }
 }
 
@@ -32,10 +32,9 @@ Polygon<D>::Polygon(const std::string& name, const Point<D>& p1,
 template<unsigned D>
 Polygon<D>::Polygon(const std::vector<Point<D>>& points)
 : Drawable<D>("", DrawableType::Polygon) {
-    for (unsigned i = 0; i < points.size()-1; i++) {
-        lines.push_back(Line<D>(points[i], points[i+1]));
+    for (unsigned i = 0; i < points.size(); i++) {
+        vertices.push_back(points[i]);
     }
-    lines.push_back(Line<D>(points.back(), points.front()));
 }
 
 template<unsigned D>
@@ -50,16 +49,16 @@ void Polygon<D>::clip(Window& window) {
 
 template<unsigned D>
 void Polygon<D>::transform(const Matrix<D+1,D+1>& matrix) {
-    for (auto& line : lines) {
-        line.transform(matrix);
+    for (auto& vertex : vertices) {
+        vertex.transform(matrix);
     }
 }
 
 template<unsigned D>
 Point<D> Polygon<D>::center() const {
     Point<D> r;
-    for (auto& line : lines) {
-        r += line[0];
+    for (auto& vertex : vertices) {
+        r += vertex[0];
     }
     return r / numberOfPoints();
 }
@@ -67,62 +66,69 @@ Point<D> Polygon<D>::center() const {
 template<unsigned D>
 std::vector<Point<D>> Polygon<D>::points() const {
     std::vector<Point<D>> list;
-    for (auto& line : lines) {
-        list.push_back(line[0]);
+    for (auto& vertex : vertices) {
+        list.push_back(vertex[0]);
     }
     return list;
 }
 
 template<unsigned D>
 void Polygon<D>::update(const Matrix<D+1,D+1>& matrix) {
-    for (auto& line : lines) {
-        line.update(matrix);
+    ndcVertices.clear();
+    for (auto& vertex : vertices) {
+        vertex.update(matrix);
+        ndcVertices.push_back(vertex.ndc());
     }
 }
 
 template<unsigned D>
 const size_t Polygon<D>::numberOfPoints() const {
-    return lines.size();
+    return vertices.size();
 }
 
 template<unsigned D>
 Point<D>& Polygon<D>::operator[](size_t index) {
-    return lines[index][0];
+    return vertices[index];
 }
 
 template<unsigned D>
 const Point<D>& Polygon<D>::operator[](size_t index) const {
-    return lines[index][0];
+    return vertices[index];
 }
 
 template<unsigned D>
-typename std::vector<Line<D>>::iterator Polygon<D>::begin() {
-    return lines.begin();
+typename std::vector<Point<D>>::iterator Polygon<D>::begin() {
+    return vertices.begin();
 }
 
 template<unsigned D>
-typename std::vector<Line<D>>::const_iterator Polygon<D>::begin() const {
-    return lines.cbegin();
+typename std::vector<Point<D>>::const_iterator Polygon<D>::begin() const {
+    return vertices.cbegin();
 }
 
 template<unsigned D>
-typename std::vector<Line<D>>::iterator Polygon<D>::end() {
-    return lines.end();
+typename std::vector<Point<D>>::iterator Polygon<D>::end() {
+    return vertices.end();
 }
 
 template<unsigned D>
-typename std::vector<Line<D>>::const_iterator Polygon<D>::end() const {
-    return lines.cend();
+typename std::vector<Point<D>>::const_iterator Polygon<D>::end() const {
+    return vertices.cend();
 }
 
 template<unsigned D>
 template<typename ...Args>
 void Polygon<D>::init(const Point<D>& p0, const Point<D>& p1, const Args&... args) {
-    lines.push_back(Line<D>(p0, p1));
+    vertices.push_back(p0);
     init(p1, args...);
 }
 
 template<unsigned D>
 void Polygon<D>::init(const Point<D>& p) {
-    lines.push_back(Line<D>(p, lines[0][0]));
+    vertices.push_back(p);
+}
+
+template<unsigned D>
+std::vector<Point<D>>& Polygon<D>::ndc() {
+    return ndcVertices;
 }

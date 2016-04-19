@@ -1,3 +1,5 @@
+/* created by Ghabriel Nunes<ghabriel.nunes@gmail.com> 
+and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 #ifndef DRAWER2D_HPP
 #define DRAWER2D_HPP

@@ -6,7 +6,7 @@
 
 #include <vector>
 #include "Drawable.hpp"
-#include "Line.hpp"
+#include "Point.hpp"
 
 class Window;
 
@@ -18,7 +18,7 @@ class Polygon : public Drawable<D> {
     template<typename ...Args>
     Polygon(const Point<D>&, const Point<D>&, const Args&...);
     template<typename ...Args>
-    Polygon(const std::string&, const Point<D>&, 
+    Polygon(const std::string&, const Point<D>&,
             const Point<D>&, const Args&...);
     Polygon(const std::vector<Point<D>>&);
     void draw(Drawer<D>&) override;
@@ -30,13 +30,15 @@ class Polygon : public Drawable<D> {
     const size_t numberOfPoints() const;
     Point<D>& operator[](size_t);
     const Point<D>& operator[](size_t) const;
-    typename std::vector<Line<D>>::iterator begin();
-    typename std::vector<Line<D>>::const_iterator begin() const;
-    typename std::vector<Line<D>>::iterator end();
-    typename std::vector<Line<D>>::const_iterator end() const;
+    typename std::vector<Point<D>>::iterator begin();
+    typename std::vector<Point<D>>::const_iterator begin() const;
+    typename std::vector<Point<D>>::iterator end();
+    typename std::vector<Point<D>>::const_iterator end() const;
+    std::vector<Point<D>>& ndc();
 
  private:
-    std::vector<Line<D>> lines;
+    std::vector<Point<D>> vertices;
+    std::vector<Point<D>> ndcVertices;
 
     template<typename ...Args>
     void init(const Point<D>&, const Point<D>&, const Args&...);

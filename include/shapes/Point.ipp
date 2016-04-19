@@ -12,7 +12,7 @@ Point<D>::Point() : Drawable<D>("", DrawableType::Point) {
 }
 
 template<unsigned D>
-Point<D>::Point(const double value) {
+Point<D>::Point(const double value) : Drawable<D>("", DrawableType::Point) {
     coordinates.fill(value);
 }
 
@@ -166,22 +166,22 @@ Point<D> Point<D>::operator/(const double v) const {
 }
 
 template<unsigned D>
-typename std::vector<double>::iterator Point<D>::begin() {
+typename std::array<double, D>::iterator Point<D>::begin() {
     return coordinates.begin();
 }
 
 template<unsigned D>
-typename std::vector<double>::const_iterator Point<D>::begin() const {
+typename std::array<double, D>::const_iterator Point<D>::begin() const {
     return coordinates.cbegin();
 }
 
 template<unsigned D>
-typename std::vector<double>::iterator Point<D>::end() {
+typename std::array<double, D>::iterator Point<D>::end() {
     return coordinates.end();
 }
 
 template<unsigned D>
-typename std::vector<double>::const_iterator Point<D>::end() const {
+typename std::array<double, D>::const_iterator Point<D>::end() const {
     return coordinates.cend();
 }
 

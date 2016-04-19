@@ -50,10 +50,10 @@ class Point : public Drawable<D> {
     Point<D> operator-(const Point<D>&) const;
     Point<D> operator*(const double) const;
     Point<D> operator/(const double) const;
-    typename std::vector<double>::iterator begin();
-    typename std::vector<double>::const_iterator begin() const;
-    typename std::vector<double>::iterator end();
-    typename std::vector<double>::const_iterator end() const;
+    typename std::array<double, D>::iterator begin();
+    typename std::array<double, D>::const_iterator begin() const;
+    typename std::array<double, D>::iterator end();
+    typename std::array<double, D>::const_iterator end() const;
     std::array<double, D> toArray();
 
  private:

@@ -98,7 +98,6 @@ void Window::clip(Point<2>& p) {
 }
 
 void Window::clip(Line<2>& ln) {
-    std::cout << "Clipping..." << std::endl;
     clipNLN(ln);
 }
 
