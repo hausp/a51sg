@@ -34,6 +34,7 @@ class Window {
     void clip(Line<D>&) {}
     template<unsigned D>
     void clip(Polygon<D>&) {}
+    void setClippingAlgorithm(const int);
 
  private:
     Point<2> min;
@@ -42,6 +43,7 @@ class Window {
     double currentZoom;
     double defaultWidth;
     double defaultHeight;
+    unsigned lcAlgorithm;
 
     void clipCS(Line<2>&);
     void clipLB(Line<2>&);

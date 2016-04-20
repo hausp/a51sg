@@ -13,7 +13,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #define YMAX 1
 
 Window::Window(const Point<2>& min, const Point<2>& max)
-: min(min), max(max), angle(0), currentZoom(1) {
+: min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2) {
     defaultWidth  = max[0] - min[0];
     defaultHeight = max[1] - min[1];
 }
@@ -93,13 +93,26 @@ double Window::getZoomLevel() {
     return currentZoom;
 }
 
+void Window::setClippingAlgorithm(const int algorithm) {
+    lcAlgorithm = algorithm;
+}
+
 void Window::clip(Point<2>& p) {
     auto pn = p.ndc();
     p.setVisible(pn[0] >= -1 && pn[0] <= 1 && pn[1] >= -1 && pn[1] <= 1);
 }
 
 void Window::clip(Line<2>& ln) {
-    clipNLN(ln);
+    switch(lcAlgorithm) {
+        case 0:
+            clipCS(ln);
+            break;
+        case 1:
+            clipLB(ln);
+            break;
+        case 2:
+            clipNLN(ln);
+    }
 }
 
 void Window::clip(Polygon<2>& p) {
