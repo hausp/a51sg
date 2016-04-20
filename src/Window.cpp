@@ -140,9 +140,16 @@ void Window::clip(Polygon<2>& p) {
         athertonStep(winVector, auxList, artifVert, point, result);
     }
 
-    p.ndc().clear();
-    for (auto point : result) {
-        p.ndc().push_back(point);
+    if (incomingList.size() > 0) {
+        p.ndc().clear();
+        for (auto point : result) {
+            p.ndc().push_back(point);
+        }        
+    } else {
+        auto point = p.ndc()[0];
+        if (point[0] < -1 || point[0] > 1 || point[1] < -1 || point[1] > 1) {
+            p.ndc().clear();
+        }
     }
 }
 
@@ -343,6 +350,24 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
         if (-1 <= y2 && y2 <= 1) intersections[1] = Point<2>(1, y2);
         if (-1 <= x1 && x1 <= 1) intersections[2] = Point<2>(x1, -1);
         if (-1 <= x2 && x2 <= 1) intersections[3] = Point<2>(x2, 1);
+        while (intersections.size() > 0) {
+            bool stop = true;
+            for (auto pair : intersections) {
+                double u1 = (pair.second[0] - current[0]) / (next[0] - current[0]);
+                double u2 = (pair.second[1] - current[1]) / (next[1] - current[1]);
+                // std::cout << "u1 = " << u1 << std::endl;
+                // std::cout << "u2 = " << u2 << std::endl;
+                if (u1 < 0 || u1 > 1 || u2 < 0 || u2 > 1 || std::isinf(u1) || std::isinf(u2)) {
+                    intersections.erase(pair.first);
+                    stop = false;
+                    break;
+                }
+            }
+            if (stop) {
+                break;
+            }
+        }
+        // std::cout << "intersections.size() = " << intersections.size() << std::endl;
         if (intersections.size() == 0) {
             if (auxList.size() > 0 && auxList.back() != current) {
                 auxList.push_back(current);
@@ -359,7 +384,6 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
             if (intersections.find(1) != intersections.end()) {
                 // out -> in
                 listInsert(win, 1, intersections[1]);
-                incomingList.push_back(intersections[1]);
             }
             if (intersections.find(2) != intersections.end()) {
                 // in -> out
@@ -368,9 +392,14 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
             if (intersections.find(3) != intersections.end()) {
                 // out -> in
                 listInsert(win, 0, intersections[3]);
-                incomingList.push_back(intersections[3]);
             }
+
+            bool isIncoming = (current[0] < -1 || current[0] > 1
+                || current[1] < -1 || current[1] > 1);
             for (auto pair : intersections) {
+                if (isIncoming) {
+                    incomingList.push_back(pair.second);
+                }
                 auxList.push_back(pair.second);
                 artificialVertices.push_back(pair.second);
             }
