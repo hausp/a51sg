@@ -32,10 +32,11 @@ void Interface::build() {
 
 GtkWidget* Interface::buildMenubar() {
     std::vector<GtkWidget*> menus;
-    auto menubar = gtk::new_menubar(menus, "_File", "_Objects");
+    auto menubar = gtk::new_menubar(menus, "_File", "_Object", "_Window");
     gtk::new_submenu(menus[0], "_Open", signals::open_file_dialog,
                                 "_Save", signals::save_file_dialog);
     gtk::new_submenu(menus[1], "_Clear", signals::clear_objects);
+    gtk::new_submenu(menus[2], "_Clipping...", signals::clipping_dialog);
     return menubar;
 }
 
@@ -302,6 +303,37 @@ void Interface::updateEntries() {
 
 void Interface::closeDialog() {
     gtk_widget_destroy(dialog);
+}
+
+int Interface::clippingSelection() {
+    auto selectDialog = gtk_dialog_new_with_buttons ("Line clipping algorithm selection",
+                                                     GTK_WINDOW(window),
+                                                      GTK_DIALOG_MODAL,
+                                                     "_OK",
+                                                     GTK_RESPONSE_OK,
+                                                     "_Cancel",
+                                                     GTK_RESPONSE_CANCEL,
+                                                     NULL);
+    gtk_window_set_destroy_with_parent(GTK_WINDOW(selectDialog), true);
+    auto contentArea = gtk_dialog_get_content_area(GTK_DIALOG(selectDialog));
+    radioButtons = gtk::new_radio_group("Cohen-Sutherland algorithm",
+                                        "Liang-Barsky algorithm",
+                                        "Nicholl-Lee-Nicholl algorithm");
+
+    for (int i = 0; i < 3; i++) {
+        gtk_container_add(GTK_CONTAINER(contentArea), radioButtons[i]);
+    }
+
+    gtk_widget_show_all(selectDialog);
+    int result = gtk_dialog_run(GTK_DIALOG(selectDialog));
+    int selected = -1;
+
+    if (result == GTK_RESPONSE_OK) {
+        selected = getSelectedRadio();
+    }
+    gtk_widget_destroy(selectDialog);
+
+    return selected;
 }
 
 void Interface::showObjectOptions(GtkWidget* const objList, GdkEventButton* event) {

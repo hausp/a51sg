@@ -47,6 +47,7 @@ class Drawer {
     void setViewport(Point<2>, Point<2>);
     void zoom(const int);
     void resizeViewport(const double, const double);
+    void setClippingAlgorithm(const int);
 
     void drawViewportBorders();
 

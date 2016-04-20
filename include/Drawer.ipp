@@ -199,3 +199,8 @@ void Drawer<D>::resizeViewport(const double length, const double height) {
     //viewport.second[1] = height;
     draw(wview);
 }
+
+template<unsigned D>
+void Drawer<D>::setClippingAlgorithm(const int algorithm) {
+    window.setClippingAlgorithm(algorithm);
+}
