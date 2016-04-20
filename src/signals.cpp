@@ -126,7 +126,6 @@ namespace signals {
         receiver->rowSelected(list, row);
     }
 
-// -------------------------- Widget event signals --------------------------- //
     void open_file_dialog() {
         receiver->openFileDialog();
     }
@@ -143,6 +142,11 @@ namespace signals {
         receiver->saveFile(filename);
     }
 
+    void clipping_dialog() {
+        receiver->clippingSelection();
+    }
+
+// -------------------------- Widget event signals --------------------------- //
     void clear_objects() {
         receiver->clearObjects();
     }

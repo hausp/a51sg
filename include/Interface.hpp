@@ -62,6 +62,8 @@ class Interface {
     void updateEntries();
     void closeDialog();
 
+    int clippingSelection();
+
     void addShape(const std::string& name);
     void removeShape(const long);
     void clearObjects(long);

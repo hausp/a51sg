@@ -280,8 +280,6 @@ void Controller::rowSelected(GtkListBox* const list,
     }
 }
 
-// ----------------------------- Widget events ----------------------------- //
-
 void Controller::openFileDialog() {
     interface.openFileDialog();
 }
@@ -313,6 +311,15 @@ void Controller::clearObjects() {
     drawer.drawAll();
     interface.queueDraw();
 }
+
+void Controller::clippingSelection() {
+    auto result = interface.clippingSelection();
+    if (result > -1) {
+        drawer.setClippingAlgorithm(result);    
+    }
+}
+
+// ----------------------------- Widget events ----------------------------- //
 
 bool Controller::configure_event(GtkWidget* const widget,
                                  GdkEventConfigure* const event) {

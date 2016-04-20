@@ -48,13 +48,14 @@ class Controller {
 	void objectOptions(GtkWidget* const, GdkEventButton* const);
 	void vertexOk();
 	void rowSelected(GtkListBox* const, GtkListBoxRow* const);
-
-	// Widget events
 	void openFileDialog();
 	void saveFileDialog();
 	void openFile(const std::string&);
 	void saveFile(const std::string&);
 	void clearObjects();
+	void clippingSelection();
+
+	// Widget events
 	bool configure_event(GtkWidget* const, GdkEventConfigure* const);
 	void draw(GtkWidget* const, cairo_t* const);
 	void quit();

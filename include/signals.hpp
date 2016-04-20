@@ -44,13 +44,14 @@ namespace signals {
     bool object_click(GtkWidget* const, GdkEventButton* const);
     void object_options(GtkWidget* const, GdkEventButton* const);
     void row_selected(GtkListBox* const, GtkListBoxRow* const);
-
-    // Widget event signals
     void open_file_dialog();
     void save_file_dialog();
     void open_file(const std::string&);
     void save_file(const std::string&);
     void clear_objects();
+    void clipping_dialog();
+
+    // Widget event signals
     bool configure_event(GtkWidget* const, GdkEventConfigure* const);
     void draw(GtkWidget* const, cairo_t* const);
     void close();
