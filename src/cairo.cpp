@@ -76,6 +76,10 @@ namespace cairo {
         cairo_stroke(cr);
     }
 
+    void stroke_preserve() {
+        cairo_stroke_preserve(cr);
+    }
+
     bool update(GtkWidget* widget) {
         if (surface)
             cairo_surface_destroy(surface);

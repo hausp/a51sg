@@ -38,7 +38,13 @@ void Drawer2D::draw(Polygon2D& p) {
         cairo::line_to(point[0], point[1]);
     }
     cairo::close_path();
-    cairo::stroke();
+    //cairo::stroke_preserve();
+    if (p.isFilled()) {
+        std::cout << "Filling up with gasoline" << std::endl;
+        cairo::fill();
+    } else {
+        cairo::stroke();
+    }
 }
 
 void Drawer2D::drawAxis() {

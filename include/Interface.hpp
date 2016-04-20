@@ -50,7 +50,6 @@ class Interface {
         return -1;
     }
 
-
     void build();
     void buildPointWindow();
     void buildLineWindow();

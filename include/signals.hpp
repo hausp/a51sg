@@ -30,7 +30,7 @@ namespace signals {
     void point_ok();
     void line_ok();
     void polygon_ok();
-    void vertex_ok();
+    void vertex_ok(GtkWidget*);
 
     void remove_object(const long);
     void translate_object(const long);

@@ -21,6 +21,7 @@ namespace cairo {
     void set_color(double, double, double, double = 1);
     void set_color(const color_t&);
     void stroke();
+    void stroke_preserve();
     bool update(GtkWidget*);
 }
 

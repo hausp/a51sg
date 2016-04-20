@@ -46,7 +46,7 @@ class Controller {
 	void updateEntries();
 	bool objectClick(GtkWidget* const, GdkEventButton* const);
 	void objectOptions(GtkWidget* const, GdkEventButton* const);
-	void vertexOk();
+	void vertexOk(bool);
 	void rowSelected(GtkListBox* const, GtkListBoxRow* const);
 	void openFileDialog();
 	void saveFileDialog();
@@ -65,6 +65,7 @@ class Controller {
  	Drawer2D& drawer;
  	std::shared_ptr<FileManager> fileManager;
  	long currentIndex;
+ 	bool filledPolygon;
 };
 
 #endif /* CONTROLLER_HPP */
