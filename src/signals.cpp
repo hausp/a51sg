@@ -74,8 +74,9 @@ namespace signals {
         receiver->createPolygon();
     }
 
-    void vertex_ok() {
-        receiver->vertexOk();
+    void vertex_ok(GtkWidget* button) {
+        bool filled = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
+        receiver->vertexOk(filled);
     }
 
     void remove_object(const long index) {

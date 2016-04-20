@@ -63,7 +63,8 @@ void Controller::polygonPressed() {
     interface.buildVertexWindow();
 }
 
-void Controller::vertexOk() {
+void Controller::vertexOk(bool filled) {
+    filledPolygon = filled;
     interface.buildPolygonWindow();
 }
 
@@ -146,6 +147,7 @@ void Controller::createPolygon() {
         #endif
         Polygon2D* polygon = new Polygon2D(polygonPoints);
         polygon->setName(name);
+        polygon->setFilled(filledPolygon);
         drawer.addShape(polygon);
         interface.addShape(polygon->getFormattedName());
         interface.closeDialog();

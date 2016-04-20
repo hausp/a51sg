@@ -35,10 +35,13 @@ class Polygon : public Drawable<D> {
     typename std::vector<Point<D>>::iterator end();
     typename std::vector<Point<D>>::const_iterator end() const;
     std::vector<Point<D>>& ndc();
+    bool isFilled() { return filled; }
+    void setFilled(bool f) { filled = f; }
 
  private:
     std::vector<Point<D>> vertices;
     std::vector<Point<D>> ndcVertices;
+    bool filled = false;
 
     template<typename ...Args>
     void init(const Point<D>&, const Point<D>&, const Args&...);
