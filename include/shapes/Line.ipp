@@ -71,13 +71,13 @@ const Point<D>& Line<D>::operator[](size_t index) const {
 }
 
 template<unsigned D>
-bool Line<D>::operator==(const Line<D>& ln) {
+bool Line<D>::operator==(const Line<D>& ln) const {
     return ((*this)[0] == ln[0] && (*this)[1] == ln[1])
         || ((*this)[0] == ln[1] && (*this)[1] == ln[0]);
 }
 
 template<unsigned D>
-bool Line<D>::operator!=(const Line<D>& ln) {
+bool Line<D>::operator!=(const Line<D>& ln) const {
     return !(*this == ln);
 }
 

@@ -41,8 +41,8 @@ class Point : public Drawable<D> {
     const size_t dimension() const;
     double& operator[](size_t);
     const double& operator[](size_t) const;
-    bool operator==(const Point<D>&);
-    bool operator!=(const Point<D>&);
+    bool operator==(const Point<D>&) const;
+    bool operator!=(const Point<D>&) const;
     Point<D>& operator+=(const Point<D>&);
     Point<D>& operator-=(const Point<D>&);
     Point<D>& operator*=(const double);

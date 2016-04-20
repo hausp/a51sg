@@ -61,6 +61,13 @@ class Window {
     void listInsert(std::list<Point<2>>&, unsigned, const Point<2>&);
     void buildLists(Polygon<2>&, std::list<Point<2>>&,
         std::vector<Point<2>>&, std::vector<Point<2>>&, std::vector<Point<2>>&);
+    void athertonStep(const std::vector<Point<2>>&, const std::vector<Point<2>>&,
+        const std::vector<Point<2>>&, const Point<2>&, std::vector<Point<2>>&);
+    // void athertonStepPolygon(const std::list<Point<2>>&, const std::vector<Point<2>>&,
+        // const std::vector<Point<2>>&, const Point<2>&, const Point<2>&, std::vector<Point<2>>&);
+    // void athertonStepWindow(const std::list<Point<2>>&, const std::vector<Point<2>>&,
+        // const std::vector<Point<2>>&, const Point<2>&, const Point<2>&,
+        // std::vector<Point<2>>&);
 };
 
 #endif /* WINDOW_HPP */

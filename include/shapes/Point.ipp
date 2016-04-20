@@ -100,7 +100,7 @@ const double& Point<D>::operator[](size_t index) const {
 }
 
 template<unsigned D>
-bool Point<D>::operator==(const Point<D>& p) {
+bool Point<D>::operator==(const Point<D>& p) const {
     for (unsigned i = 0; i < D; i++) {
         if ((*this)[i] != p[i]) {
             return false;
@@ -110,7 +110,7 @@ bool Point<D>::operator==(const Point<D>& p) {
 }
 
 template<unsigned D>
-bool Point<D>::operator!=(const Point<D>& p) {
+bool Point<D>::operator!=(const Point<D>& p) const {
     return !(*this == p);
 }
 

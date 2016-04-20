@@ -124,34 +124,175 @@ void Window::clip(Polygon<2>& p) {
     std::list<Point<2>> win = {{-1, 1}, {1, 1}, {1, -1}, {-1, -1}};
     std::vector<Point<2>> incomingList;
     std::vector<Point<2>> auxList;
-    std::vector<Point<2>> artificialVertices;
-    buildLists(p, win, incomingList, auxList, artificialVertices);
+    std::vector<Point<2>> artifVert;
+    buildLists(p, win, incomingList, auxList, artifVert);
 
+    std::vector<Point<2>> winVector;
+    winVector.reserve(win.size());
+    for (auto point : win) {
+        winVector.push_back(point);
+    }
+
+    std::cout << "-----------------------------" << std::endl;
     std::vector<Point<2>> result;
-    /*for (auto point : incomingList) {
-        bool store = false;
-        for (unsigned i = 0; i < auxList.size(); i++) {
-            if (auxList[i] == point) {
-                store = true;
-            }
-            if (!store) {
-                continue;
-            }
-            result.push_back(auxList[i]);
+    for (auto point : incomingList) {
+        //athertonStepPolygon(win, auxList, artifVert, point, point, result);
+        athertonStep(winVector, auxList, artifVert, point, result);
+    }
 
-            bool stop = false;
-            for (auto vertex : artificialVertices) {
-                if (vertex == auxList[i]) {
-                    stop = true;
+    p.ndc().clear();
+    for (auto point : result) {
+        p.ndc().push_back(point);
+    }
+}
+
+void Window::athertonStep(const std::vector<Point<2>>& win,
+    const std::vector<Point<2>>& auxList, const std::vector<Point<2>>& artifVert,
+    const Point<2>& point, std::vector<Point<2>>& result) {
+
+    std::vector<std::vector<Point<2>>> lists = {auxList, win};
+    int memory[] = {-1, -1};
+    unsigned index = 0;
+    unsigned i = 0;
+    bool process = false;
+    bool ignore = false;
+    bool recentRotation = false;
+    while (true) {
+        if (lists[index][i] == point) {
+            if (process) {
+                result.push_back(point);
+                std::cout << "(" << point[0] << "," << point[1] << ")" << std::endl;
+                break;
+            }
+            process = true;
+            ignore = true;
+            memory[index] = i;
+        }
+
+        if (!process) {
+            i = (i + 1) % lists[index].size();
+            continue;
+        }
+
+        if (!recentRotation) {
+            result.push_back(lists[index][i]);
+            std::cout << "(" << lists[index][i][0] << "," << lists[index][i][1] << ")" << std::endl;
+        } else {
+            recentRotation = false;
+        }
+
+        if (!ignore) {
+            bool found = false;
+            for (auto vertex : artifVert) {
+                if (vertex == lists[index][i]) {
+                    found = true;
                     break;
                 }
             }
-            if (stop) {
+
+            if (found) {
+                // the last point visited
+                auto& last = lists[index][i];
+
+                // swaps the current list
+                index = 1 - index;
+
+                // finds the starting point for the new list if it's our first time
+                if (memory[index] == -1) {
+                    for (unsigned j = 0; j < lists[index].size(); j++) {
+                        if (lists[index][j] == last) {
+                            memory[index] = j;
+                            break;
+                        }
+                    }
+                }
+
+                // sets the "recent rotation" flag
+                recentRotation = true;
+
+                // tells the algorithm to ignore the next artificial vertex
+                ignore = true;
+
+                // goes to the new starting point
+                i = memory[index];
+                continue;
+            }
+        }
+
+        ignore = false;
+
+        // rotates our iterator
+        i = (i + 1) % lists[index].size();
+    }
+}
+
+/*void Window::athertonStepPolygon(const std::list<Point<2>>& win,
+    const std::vector<Point<2>>& auxList, const std::vector<Point<2>>& artifVert,
+    const Point<2>& point, const Point<2>& target, std::vector<Point<2>>& result) {
+
+    bool store = false;
+    unsigned i = 0;
+    while (true) {
+        if (auxList[i] == point) {
+            store = true;
+        }
+        if (!store) {
+            i = (i + 1) % auxList.size();
+            continue;
+        }
+        result.push_back(auxList[i]);
+
+        bool stop = false;
+        for (auto vertex : artifVert) {
+            if (vertex == auxList[i]) {
+                stop = true;
                 break;
             }
         }
-    }*/
+        if (stop) {
+            athertonStepWindow(win, auxList, artifVert, auxList[i], point, result);
+            break;
+        }
+        i = (i + 1) % auxList.size();
+    }
 }
+
+void Window::athertonStepWindow(const std::list<Point<2>>& win,
+    const std::vector<Point<2>>& auxList, const std::vector<Point<2>>& artifVert,
+    const Point<2>& point, const Point<2>& target, std::vector<Point<2>>& result) {
+
+    bool process = false;
+    unsigned i = 0;
+    while (true) {
+        if (auxList[i] == point) {
+            process = true;
+            i = (i + 1) % auxList.size();
+            continue;
+        }
+        if (!process) {
+            i = (i + 1) % auxList.size();
+            continue;
+        }
+        result.push_back(auxList[i]);
+
+        if (auxList[i] == target) {
+            break;
+        }
+
+        bool stop = false;
+        for (auto vertex : artifVert) {
+            if (vertex == auxList[i]) {
+                stop = true;
+                break;
+            }
+        }
+        if (stop) {
+            athertonStepPolygon(win, auxList, artifVert, auxList[i], point, result);
+            break;
+        }
+        i = (i + 1) % auxList.size();
+    }
+}*/
 
 void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
     std::vector<Point<2>>& incomingList, std::vector<Point<2>>& auxList,
