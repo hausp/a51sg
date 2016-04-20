@@ -110,6 +110,11 @@ bool Point<D>::operator==(const Point<D>& p) {
 }
 
 template<unsigned D>
+bool Point<D>::operator!=(const Point<D>& p) {
+    return !(*this == p);
+}
+
+template<unsigned D>
 Point<D>& Point<D>::operator+=(const Point<D>& p) {
     for (unsigned i = 0; i < D; i++) {
         (*this)[i] += p[i];

@@ -27,6 +27,8 @@ class Line : public Drawable<D> {
     void update(const Matrix<D+1,D+1>&) override;
     Point<D>& operator[](size_t);
     const Point<D>& operator[](size_t) const;
+    bool operator==(const Line<D>&);
+    bool operator!=(const Line<D>&);
     typename std::vector<Point<D>>::iterator begin();
     typename std::vector<Point<D>>::const_iterator begin() const;
     typename std::vector<Point<D>>::iterator end();

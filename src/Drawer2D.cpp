@@ -27,10 +27,15 @@ void Drawer2D::draw(Line2D& ln) {
 void Drawer2D::draw(Polygon2D& p) {
     if (!p.isVisible()) return;
     cairo::set_color(p.getColor());
-    Point2D pv;
+    /*Point2D pv;
     for (unsigned i = 0; i < p.numberOfPoints(); i++ ) {
         pv = window.toViewport(viewport, p[i]);
         cairo::line_to(pv[0], pv[1]);
+    }*/
+    auto& points = p.ndc();
+    for (auto point : points) {
+        point = window.toViewport(viewport, point);
+        cairo::line_to(point[0], point[1]);
     }
     cairo::close_path();
     cairo::stroke();

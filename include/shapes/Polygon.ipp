@@ -67,7 +67,7 @@ template<unsigned D>
 std::vector<Point<D>> Polygon<D>::points() const {
     std::vector<Point<D>> list;
     for (auto& vertex : vertices) {
-        list.push_back(vertex[0]);
+        list.push_back(vertex);
     }
     return list;
 }

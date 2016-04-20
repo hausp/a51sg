@@ -4,6 +4,7 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
+#include <list>
 #include "Point.hpp"
 
 template<unsigned D>
@@ -54,6 +55,8 @@ class Window {
     bool inside(Point<2>&, Point<2>&);
     void p2left(Point<2>&, Point<2>&);
     void p2lefttop(Point<2>&, Point<2>&);
+    void clockwiseSort(Polygon<2>&);
+    void listInsert(std::list<Point<2>>&, unsigned, const Point<2>&);
 };
 
 #endif /* WINDOW_HPP */

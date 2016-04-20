@@ -2,6 +2,7 @@
 and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 #include <cmath>
+#include <unordered_map>
 #include "Line.hpp"
 #include "Polygon.hpp"
 #include "Window.hpp"
@@ -102,7 +103,119 @@ void Window::clip(Line<2>& ln) {
 }
 
 void Window::clip(Polygon<2>& p) {
+    clockwiseSort(p);
+    std::list<Point<2>> win = {{-1, 1}, {1, 1}, {1, -1}, {-1, -1}};
+    std::vector<Point<2>> incomingList;
+    std::vector<Point<2>> auxList;
+    unsigned size = p.numberOfPoints();
+    std::cout << "boot" << std::endl;
+    for (unsigned i = 0; i < size; i++) {
+        std::cout << "iteration #" << i << std::endl;
+        auto& next = p.ndc()[(i + 1) % size];
+        auto& current = p.ndc()[i];
+        double slope = utils::slope(Line<2>(current, next));
+        double y1 = slope * (-1 - current[0]) + current[1];
+        double y2 = slope * (1 - current[0]) + current[1];
+        double x1 = (-1 - current[1])/slope + current[0];
+        double x2 = (1 - current[1])/slope + current[0];
+        std::cout << "line: ";
+        std::cout << "(" << current[0] << "," << current[1] << ") to";
+        std::cout << "(" << next[0] << "," << next[1] << ")" << std::endl;
+        std::cout << "x1 = " << x1 << std::endl;
+        std::cout << "y1 = " << y1 << std::endl;
+        std::cout << "x2 = " << x2 << std::endl;
+        std::cout << "y2 = " << y2 << std::endl;
+        std::unordered_map<unsigned, Point<2>> intersections;
+        if (-1 <= y1 && y1 <= 1) intersections[0] = Point<2>(-1, y1);
+        if (-1 <= y2 && y2 <= 1) intersections[1] = Point<2>(1, y2);
+        if (-1 <= x1 && x1 <= 1) intersections[2] = Point<2>(x1, -1);
+        if (-1 <= x2 && x2 <= 1) intersections[3] = Point<2>(x2, 1);
+        std::cout << "intersections.size() = " << intersections.size() << std::endl;
+        if (intersections.size() == 0) {
+            if (auxList.size() > 0 && auxList.back() != current) {
+                auxList.push_back(current);
+            }
+            auxList.push_back(next);
+            std::cout << "done branch 1" << std::endl;
+        } else {
+            if (auxList.size() > 0 && auxList.back() != current) {
+                auxList.push_back(current);
+            }
+            if (intersections.find(0) != intersections.end()) {
+                std::cout << "i0" << std::endl;
+                // in -> out
+                listInsert(win, 3, intersections[0]);
+                //auxList.push_back(intersections[0]);
+            }
+            if (intersections.find(1) != intersections.end()) {
+                std::cout << "i1" << std::endl;
+                // out -> in
+                listInsert(win, 1, intersections[1]);
+                //auxList.push_back(intersections[1]);
+                incomingList.push_back(intersections[1]);
+            }
+            if (intersections.find(2) != intersections.end()) {
+                std::cout << "i2" << std::endl;
+                // in -> out
+                listInsert(win, 2, intersections[2]);
+                //auxList.push_back(intersections[2]);
+            }
+            if (intersections.find(3) != intersections.end()) {
+                std::cout << "i3" << std::endl;
+                // out -> in
+                listInsert(win, 0, intersections[3]);
+                //auxList.push_back(intersections[3]);
+                incomingList.push_back(intersections[1]);
+            }
+            auxList.push_back(next);
+            std::cout << "done branch 1" << std::endl;
+        }
+    }
 
+    std::cout << "Polygon:" << std::endl;
+    for (auto point : auxList) {
+        std::cout << "(" << point[0] << "," << point[1] << ")" << std::endl;
+    }
+
+    std::cout << "Window:" << std::endl;
+    for (auto point : win) {
+        std::cout << "(" << point[0] << "," << point[1] << ")" << std::endl;
+    }
+
+    std::cout << "Incoming:" << std::endl;
+    for (auto point : incomingList) {
+        std::cout << "(" << point[0] << "," << point[1] << ")" << std::endl;
+    }
+}
+
+void Window::listInsert(std::list<Point<2>>& list, unsigned reference,
+    const Point<2>& intersection) {
+    std::vector<Point<2>> corners = {{-1, 1}, {1, 1}, {1, -1}, {-1, -1}};
+    for (auto it = list.begin(); it != list.end(); it++) {
+        if (*it == corners[reference]) {
+            it++;
+            list.insert(it, intersection);
+            break;
+        }
+    }
+}
+
+void Window::clockwiseSort(Polygon<2>& p) {
+    unsigned size = p.numberOfPoints();
+    int order = 0;
+    for (unsigned i = 0; i < size; i++) {
+        auto& next = p[(i + 1) % size];
+        auto& current = p[i];
+        order += (next[0] - current[0]) * (next[1] + current[1]);
+    }
+
+    if (order < 0) {
+        for (unsigned i = 0; i < size/2; i++) {
+            auto aux = p[i];
+            p[i] = p[size - 1 - i];
+            p[size - 1 - i] = aux;
+        }
+    }
 }
 
 void Window::clipCS(Line<2>& ln) {
