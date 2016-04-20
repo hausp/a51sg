@@ -120,10 +120,40 @@ void Window::clip(Polygon<2>& p) {
     std::list<Point<2>> win = {{-1, 1}, {1, 1}, {1, -1}, {-1, -1}};
     std::vector<Point<2>> incomingList;
     std::vector<Point<2>> auxList;
+    std::vector<Point<2>> artificialVertices;
+    buildLists(p, win, incomingList, auxList, artificialVertices);
+
+    std::vector<Point<2>> result;
+    /*for (auto point : incomingList) {
+        bool store = false;
+        for (unsigned i = 0; i < auxList.size(); i++) {
+            if (auxList[i] == point) {
+                store = true;
+            }
+            if (!store) {
+                continue;
+            }
+            result.push_back(auxList[i]);
+
+            bool stop = false;
+            for (auto vertex : artificialVertices) {
+                if (vertex == auxList[i]) {
+                    stop = true;
+                    break;
+                }
+            }
+            if (stop) {
+                break;
+            }
+        }
+    }*/
+}
+
+void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
+    std::vector<Point<2>>& incomingList, std::vector<Point<2>>& auxList,
+    std::vector<Point<2>>& artificialVertices) {
     unsigned size = p.numberOfPoints();
-    std::cout << "boot" << std::endl;
     for (unsigned i = 0; i < size; i++) {
-        std::cout << "iteration #" << i << std::endl;
         auto& next = p.ndc()[(i + 1) % size];
         auto& current = p.ndc()[i];
         double slope = utils::slope(Line<2>(current, next));
@@ -131,57 +161,75 @@ void Window::clip(Polygon<2>& p) {
         double y2 = slope * (1 - current[0]) + current[1];
         double x1 = (-1 - current[1])/slope + current[0];
         double x2 = (1 - current[1])/slope + current[0];
-        std::cout << "line: ";
-        std::cout << "(" << current[0] << "," << current[1] << ") to";
-        std::cout << "(" << next[0] << "," << next[1] << ")" << std::endl;
-        std::cout << "x1 = " << x1 << std::endl;
-        std::cout << "y1 = " << y1 << std::endl;
-        std::cout << "x2 = " << x2 << std::endl;
-        std::cout << "y2 = " << y2 << std::endl;
+        if (y1 == y2) {
+            // only happens if slope == 0
+            if ((current[0] < -1 && next[0] >= -1 && next[0] < 1)
+                || (current[0] >= -1 && next[0] < -1 && current[0] < 1)) {
+                // invalidates the right intersection
+                y2 = 2;
+            } else if ((current[0] <= 1 && next[0] > 1 && current[0] > -1)
+                || (current[0] > 1 && next[0] <= 1 && next[0] > -1)) {
+                // invalidates the left intersection
+                y1 = 2;
+            }
+        }
+        if (x1 == x2) {
+            // only happens if slope == +-inf
+            if ((current[1] < -1 && next[1] >= -1 && next[1] < 1)
+                || (current[1] >= -1 && next[1] < -1 && current[1] < 1)) {
+                // invalidates the upper intersection
+                x2 = 2;
+            } else if ((current[1] <= 1 && next[1] > 1 && current[1] > -1)
+                || (current[1] > 1 && next[1] <= 1 && next[1] > -1)) {
+                // invalidates the lower intersection
+                x1 = 2;
+            }            
+        }
+        // std::cout << "line: ";
+        // std::cout << "(" << current[0] << "," << current[1] << ") to";
+        // std::cout << "(" << next[0] << "," << next[1] << ")" << std::endl;
+        // std::cout << "slope = " << slope << std::endl;
+        // std::cout << "x1 = " << x1 << std::endl;
+        // std::cout << "y1 = " << y1 << std::endl;
+        // std::cout << "x2 = " << x2 << std::endl;
+        // std::cout << "y2 = " << y2 << std::endl;
         std::unordered_map<unsigned, Point<2>> intersections;
         if (-1 <= y1 && y1 <= 1) intersections[0] = Point<2>(-1, y1);
         if (-1 <= y2 && y2 <= 1) intersections[1] = Point<2>(1, y2);
         if (-1 <= x1 && x1 <= 1) intersections[2] = Point<2>(x1, -1);
         if (-1 <= x2 && x2 <= 1) intersections[3] = Point<2>(x2, 1);
-        std::cout << "intersections.size() = " << intersections.size() << std::endl;
         if (intersections.size() == 0) {
             if (auxList.size() > 0 && auxList.back() != current) {
                 auxList.push_back(current);
             }
             auxList.push_back(next);
-            std::cout << "done branch 1" << std::endl;
         } else {
             if (auxList.size() > 0 && auxList.back() != current) {
                 auxList.push_back(current);
             }
             if (intersections.find(0) != intersections.end()) {
-                std::cout << "i0" << std::endl;
                 // in -> out
                 listInsert(win, 3, intersections[0]);
-                //auxList.push_back(intersections[0]);
             }
             if (intersections.find(1) != intersections.end()) {
-                std::cout << "i1" << std::endl;
                 // out -> in
                 listInsert(win, 1, intersections[1]);
-                //auxList.push_back(intersections[1]);
                 incomingList.push_back(intersections[1]);
             }
             if (intersections.find(2) != intersections.end()) {
-                std::cout << "i2" << std::endl;
                 // in -> out
                 listInsert(win, 2, intersections[2]);
-                //auxList.push_back(intersections[2]);
             }
             if (intersections.find(3) != intersections.end()) {
-                std::cout << "i3" << std::endl;
                 // out -> in
                 listInsert(win, 0, intersections[3]);
-                //auxList.push_back(intersections[3]);
-                incomingList.push_back(intersections[1]);
+                incomingList.push_back(intersections[3]);
+            }
+            for (auto pair : intersections) {
+                auxList.push_back(pair.second);
+                artificialVertices.push_back(pair.second);
             }
             auxList.push_back(next);
-            std::cout << "done branch 1" << std::endl;
         }
     }
 

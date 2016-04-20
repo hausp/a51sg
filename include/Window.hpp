@@ -59,6 +59,8 @@ class Window {
     void p2lefttop(Point<2>&, Point<2>&);
     void clockwiseSort(Polygon<2>&);
     void listInsert(std::list<Point<2>>&, unsigned, const Point<2>&);
+    void buildLists(Polygon<2>&, std::list<Point<2>>&,
+        std::vector<Point<2>>&, std::vector<Point<2>>&, std::vector<Point<2>>&);
 };
 
 #endif /* WINDOW_HPP */
