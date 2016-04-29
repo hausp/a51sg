@@ -359,7 +359,8 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
                 double u2 = (pair.second[1] - current[1]) / (next[1] - current[1]);
                 // std::cout << "u1 = " << u1 << std::endl;
                 // std::cout << "u2 = " << u2 << std::endl;
-                if (u1 < 0 || u1 > 1 || u2 < 0 || u2 > 1 || std::isinf(u1) || std::isinf(u2)) {
+                if (u1 < 0 || u1 > 1 || u2 < 0 || u2 > 1 || std::isinf(u1)
+                    || std::isinf(u2) || pair.second == current || pair.second == next) {
                     intersections.erase(pair.first);
                     stop = false;
                     break;
