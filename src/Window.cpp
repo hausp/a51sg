@@ -346,10 +346,10 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
         // std::cout << "x2 = " << x2 << std::endl;
         // std::cout << "y2 = " << y2 << std::endl;
         std::unordered_map<unsigned, Point<2>> intersections;
-        if (-1 <= y1 && y1 <= 1) intersections[0] = Point<2>(-1, y1);
+        if (-1 <= x2 && x2 <= 1) intersections[0] = Point<2>(x2, 1);
         if (-1 <= y2 && y2 <= 1) intersections[1] = Point<2>(1, y2);
         if (-1 <= x1 && x1 <= 1) intersections[2] = Point<2>(x1, -1);
-        if (-1 <= x2 && x2 <= 1) intersections[3] = Point<2>(x2, 1);
+        if (-1 <= y1 && y1 <= 1) intersections[3] = Point<2>(-1, y1);
         while (intersections.size() > 0) {
             bool stop = true;
             for (auto pair : intersections) {
@@ -377,26 +377,11 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
             if (auxList.size() > 0 && auxList.back() != current) {
                 auxList.push_back(current);
             }
-            if (intersections.find(0) != intersections.end()) {
-                // in -> out
-                listInsert(win, 3, intersections[0]);
-            }
-            if (intersections.find(1) != intersections.end()) {
-                // out -> in
-                listInsert(win, 1, intersections[1]);
-            }
-            if (intersections.find(2) != intersections.end()) {
-                // in -> out
-                listInsert(win, 2, intersections[2]);
-            }
-            if (intersections.find(3) != intersections.end()) {
-                // out -> in
-                listInsert(win, 0, intersections[3]);
-            }
 
             bool isIncoming = (current[0] < -1 || current[0] > 1
                 || current[1] < -1 || current[1] > 1);
             for (auto pair : intersections) {
+                listInsert(win, pair.first, pair.second);
                 if (isIncoming) {
                     incomingList.push_back(pair.second);
                 }
