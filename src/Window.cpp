@@ -348,10 +348,10 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
         // std::cout << "x2 = " << x2 << std::endl;
         // std::cout << "y2 = " << y2 << std::endl;
         std::unordered_map<unsigned, Point<2>> intersections;
-        if (-1 <= x2 && x2 <= 1) intersections[0] = Point<2>(x2, 1);
-        if (-1 <= y2 && y2 <= 1) intersections[1] = Point<2>(1, y2);
-        if (-1 <= x1 && x1 <= 1) intersections[2] = Point<2>(x1, -1);
-        if (-1 <= y1 && y1 <= 1) intersections[3] = Point<2>(-1, y1);
+        if (-1 <= x2 && x2 <= 1) intersections[0] = Point<2>(x2, 1);  // top
+        if (-1 <= y2 && y2 <= 1) intersections[1] = Point<2>(1, y2);  // right
+        if (-1 <= x1 && x1 <= 1) intersections[2] = Point<2>(x1, -1); // bottom
+        if (-1 <= y1 && y1 <= 1) intersections[3] = Point<2>(-1, y1); // left
         while (intersections.size() > 0) {
             bool stop = true;
             for (auto pair : intersections) {
@@ -412,7 +412,16 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
             }
 
             if (incoming != INT_MAX) {
-                listInsert(win, incoming, intersections[incoming]);                
+                bool found = false;
+                // for (auto a : artificialVertices) {
+                //     if (intersections[incoming] == a) {
+                //         found = true;
+                //         break;
+                //     }
+                // }
+                if (!found) {
+                    listInsert(win, incoming, intersections[incoming]);                
+                }
             }
             if (outcoming != INT_MAX) {
                 listInsert(win, outcoming, intersections[outcoming]);                
@@ -439,10 +448,24 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
 
 void Window::listInsert(std::list<Point<2>>& list, unsigned reference,
     const Point<2>& intersection) {
-    std::vector<Point<2>> corners = {{-1, -1}, {1, 1}, {1, -1}, {-1, 1}};
+    std::vector<Point<2>> corners = {{-1, 1}, {1, 1}, {1, -1}, {-1, -1}};
     for (auto it = list.begin(); it != list.end(); it++) {
         if (*it == corners[reference]) {
             it++;
+            switch(reference) {
+                case 0:
+                    while (intersection[0] > (*it)[0]) it++;
+                    break;
+                case 1:
+                    while (intersection[1] < (*it)[1]) it++;
+                    break;
+                case 2:
+                    while (intersection[0] < (*it)[0]) it++;
+                    break;
+                case 3:
+                    while (intersection[1] > (*it)[1]) it++;
+                    break;
+            }
             list.insert(it, intersection);
             break;
         }
