@@ -1,6 +1,7 @@
 /* created by Ghabriel Nunes<ghabriel.nunes@gmail.com> 
 and Marleson Graf<aszdrick@gmail.com> [2016] */
 
+#include <climits>
 #include <cmath>
 #include <unordered_map>
 #include "Line.hpp"
@@ -305,6 +306,7 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
     std::vector<Point<2>>& incomingList, std::vector<Point<2>>& auxList,
     std::vector<Point<2>>& artificialVertices) {
     unsigned size = p.numberOfPoints();
+    const int INVALID_VALUE = 2;
     for (unsigned i = 0; i < size; i++) {
         auto& next = p.ndc()[(i + 1) % size];
         auto& current = p.ndc()[i];
@@ -318,11 +320,11 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
             if ((current[0] < -1 && next[0] >= -1 && next[0] < 1)
                 || (current[0] >= -1 && next[0] < -1 && current[0] < 1)) {
                 // invalidates the right intersection
-                y2 = 2;
+                y2 = INVALID_VALUE;
             } else if ((current[0] <= 1 && next[0] > 1 && current[0] > -1)
                 || (current[0] > 1 && next[0] <= 1 && next[0] > -1)) {
                 // invalidates the left intersection
-                y1 = 2;
+                y1 = INVALID_VALUE;
             }
         }
         if (x1 == x2) {
@@ -330,11 +332,11 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
             if ((current[1] < -1 && next[1] >= -1 && next[1] < 1)
                 || (current[1] >= -1 && next[1] < -1 && current[1] < 1)) {
                 // invalidates the upper intersection
-                x2 = 2;
+                x2 = INVALID_VALUE;
             } else if ((current[1] <= 1 && next[1] > 1 && current[1] > -1)
                 || (current[1] > 1 && next[1] <= 1 && next[1] > -1)) {
                 // invalidates the lower intersection
-                x1 = 2;
+                x1 = INVALID_VALUE;
             }            
         }
         // std::cout << "line: ";
@@ -378,17 +380,44 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
                 auxList.push_back(current);
             }
 
+            bool doubleIntersection = (intersections.size() == 2);
+            std::pair<unsigned, double> lowest = {INT_MAX, INVALID_VALUE};
+            if (doubleIntersection) {
+                for (auto pair : intersections) {
+                    double u = (pair.second[0] - current[0]) / (next[0] - current[0]);
+                    //double u2 = (pair.second[1] - current[1]) / (next[1] - current[1]);
+                    if (u < lowest.second) {
+                        lowest.first = pair.first;
+                        lowest.second = u;
+                    }
+                }
+            }
+
             bool isIncoming = (current[0] < -1 || current[0] > 1
                 || current[1] < -1 || current[1] > 1);
+            unsigned incoming = INT_MAX;
+            unsigned outcoming = INT_MAX;
             for (auto pair : intersections) {
-                listInsert(win, pair.first, pair.second);
+                if (doubleIntersection) {
+                    isIncoming = (lowest.first == pair.first);
+                }
                 if (isIncoming) {
+                    incoming = pair.first;
                     incomingList.push_back(pair.second);
+                } else {
+                    outcoming = pair.first;
                 }
                 auxList.push_back(pair.second);
                 artificialVertices.push_back(pair.second);
             }
-            auxList.push_back(next);
+
+            if (incoming != INT_MAX) {
+                listInsert(win, incoming, intersections[incoming]);                
+            }
+            if (outcoming != INT_MAX) {
+                listInsert(win, outcoming, intersections[outcoming]);                
+            }
+            auxList.push_back(next);                
         }
     }
 
@@ -410,7 +439,7 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
 
 void Window::listInsert(std::list<Point<2>>& list, unsigned reference,
     const Point<2>& intersection) {
-    std::vector<Point<2>> corners = {{-1, 1}, {1, 1}, {1, -1}, {-1, -1}};
+    std::vector<Point<2>> corners = {{-1, -1}, {1, 1}, {1, -1}, {-1, 1}};
     for (auto it = list.begin(); it != list.end(); it++) {
         if (*it == corners[reference]) {
             it++;
