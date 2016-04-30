@@ -136,9 +136,12 @@ void Window::clip(Polygon<2>& p) {
 
     std::cout << "-----------------------------" << std::endl;
     std::vector<Point<2>> result;
+    std::cout << "Size of incoming list: " << incomingList.size() << std::endl;
     for (auto point : incomingList) {
+        std::cout << "Before athertonStep" << std::endl;
         //athertonStepPolygon(win, auxList, artifVert, point, point, result);
         athertonStep(winVector, auxList, artifVert, point, result);
+        std::cout << "After athertonStep" << std::endl;
     }
 
     if (incomingList.size() > 0) {
@@ -307,9 +310,11 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
     std::vector<Point<2>>& artificialVertices) {
     unsigned size = p.numberOfPoints();
     const int INVALID_VALUE = 2;
+    auto pn = p.ndc();
     for (unsigned i = 0; i < size; i++) {
-        auto& next = p.ndc()[(i + 1) % size];
-        auto& current = p.ndc()[i];
+        auto& previous = pn[(i - 1 + size) % size];
+        auto& current = pn[i];
+        auto& next = pn[(i + 1) % size];
         double slope = utils::slope(Line<2>(current, next));
         double y1 = slope * (-1 - current[0]) + current[1];
         double y2 = slope * (1 - current[0]) + current[1];
@@ -360,7 +365,7 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
                 // std::cout << "u1 = " << u1 << std::endl;
                 // std::cout << "u2 = " << u2 << std::endl;
                 if (u1 < 0 || u1 > 1 || u2 < 0 || u2 > 1 || std::isinf(u1)
-                    || std::isinf(u2) || pair.second == current || pair.second == next) {
+                    || std::isinf(u2)) {
                     intersections.erase(pair.first);
                     stop = false;
                     break;
@@ -402,32 +407,66 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
                 if (doubleIntersection) {
                     isIncoming = (lowest.first == pair.first);
                 }
-                if (isIncoming) {
-                    incoming = pair.first;
-                    incomingList.push_back(pair.second);
-                } else {
-                    outcoming = pair.first;
+                if (current == pair.second) {
+                    // point over border
+                    if (next[0] >= -1 && next[0] <= 1 && next[1] >= -1 && next[1] <= 1) {
+                        // next inside window, current may be incoming
+                        if ((previous[0] < -1 && current[0] == -1)
+                            || (previous[0] > 1 && current[0] == 1)
+                            || (previous[1] < -1 && current[1] == -1)
+                            || (previous[1] > 1 && current[1] == 1)) {
+                            // current IS incoming
+                            // SOMEONE PLIS FIX THIS UGLY IF WITH MATH
+                            // PREVIOUS SHALL BE OUTSIDE WINDOW AND "BEHIND" CURRENT
+                            isIncoming = true;
+                        } else {
+                            // Prevents doubleIntersection doin' shit
+                            isIncoming = false;
+                        }
+                    } else {
+                        // next outside window, current may be outcoming
+                        if (!doubleIntersection) {
+                            // current IS outcoming
+                            artificialVertices.push_back(pair.second);
+                            listInsert(win, pair.first, pair.second);
+                        }
+                        // Prevents doubleIntersection doin' shit
+                        isIncoming = false;
+                    }
                 }
-                auxList.push_back(pair.second);
-                artificialVertices.push_back(pair.second);
+                if (pair.second != next) {
+                    if (isIncoming) {
+                        // incomingList.push_back(pair.second);
+                        // auxList.push_back(pair.second);
+                        // artificialVertices.push_back(pair.second);
+                        incoming = pair.first;
+                        listInsert(win, pair.first, pair.second);
+                    } else if (pair.second != current) {
+                        // auxList.push_back(pair.second);
+                        // artificialVertices.push_back(pair.second);
+                        outcoming = pair.first;
+                        listInsert(win, pair.first, pair.second);
+                    }
+                }
+            }
+            if (incoming != INT_MAX) {
+                if (intersections[incoming] != next) {
+                    incomingList.push_back(intersections[incoming]);
+                    auxList.push_back(intersections[incoming]);
+                    artificialVertices.push_back(intersections[incoming]);
+                    //listInsert(win, incoming, intersections[incoming]);
+                }
             }
 
-            if (incoming != INT_MAX) {
-                bool found = false;
-                // for (auto a : artificialVertices) {
-                //     if (intersections[incoming] == a) {
-                //         found = true;
-                //         break;
-                //     }
-                // }
-                if (!found) {
-                    listInsert(win, incoming, intersections[incoming]);                
+            if (outcoming != INT_MAX) {
+                if (intersections[outcoming] != next) {
+                    std::cout << "adding outcoming: (" << intersections[outcoming][0] << ", " << intersections[outcoming][1] << ")" << std::endl;
+                    auxList.push_back(intersections[outcoming]);
+                    artificialVertices.push_back(intersections[outcoming]);
+                    //listInsert(win, outcoming, intersections[outcoming]);
                 }
             }
-            if (outcoming != INT_MAX) {
-                listInsert(win, outcoming, intersections[outcoming]);                
-            }
-            auxList.push_back(next);                
+            auxList.push_back(next);
         }
     }
 
