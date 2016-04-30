@@ -5,8 +5,11 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #define DRAWER_HPP
 
 #include <vector>
+#include "Curve.hpp"
+#include "Line.hpp"
 #include "Point.hpp"
 #include "Polygon.hpp"
+#include "SimpleCurve.hpp"
 #include "Window.hpp"
 
 template<unsigned D>
@@ -31,6 +34,8 @@ class Drawer {
     virtual void draw(Point<D>&) = 0;
     virtual void draw(Line<D>&) = 0;
     virtual void draw(Polygon<D>&) = 0;
+    virtual void draw(SimpleCurve<D>&) = 0;
+    virtual void draw(Curve<D>&) = 0;
     void drawAll();
     void moveVertical(const int);
     void moveHorizontal(const int);

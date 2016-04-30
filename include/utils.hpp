@@ -7,13 +7,12 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include <array>
 #include <iostream>
 #include <regex>
+#include "Matrix.hpp"
 
 template<unsigned D>
 class Point;
 template<unsigned D>
 class Line;
-template<unsigned R, unsigned C>
-class Matrix;
 
 #define RECENT_COMPILER 1
 
@@ -29,6 +28,12 @@ namespace utils {
     const std::string REGEX_INTEGER = "^(\\+|-)?\\d+";
     const std::string REGEX_REAL_UNSIGNED = "^\\d+(\\.\\d+)?";
     const std::string REGEX_REAL = "^(\\+|-)?\\d+(\\.\\d+)?";
+    const Matrix<4,4> BEZIER_MATRIX = {
+        {-1, 3, -3, 1},
+        {3, -6, 3, 0},
+        {-3, 3, 0, 0},
+        {1, 0, 0, 0}
+    };
 
     bool regex_match(const std::string& text, const std::string& regexp);
 

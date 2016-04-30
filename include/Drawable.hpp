@@ -20,6 +20,7 @@ enum class DrawableType {
     Point,
     Line,
     Polygon,
+    Curve,
     Undefined
 };
 
@@ -28,6 +29,7 @@ namespace {
     {DrawableType::Point, "Point"},
     {DrawableType::Line, "Line"},
     {DrawableType::Polygon, "Polygon"},
+    {DrawableType::Curve, "Curve"},
     {DrawableType::Undefined, "Undefined"}};
 }
 

@@ -10,6 +10,8 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 using Point2D = Point<2>;
 using Line2D = Line<2>;
 using Polygon2D = Polygon<2>;
+using SimpleCurve2D = SimpleCurve<2>;
+using Curve2D = Curve<2>;
 
 class Drawer2D : public Drawer<2> {
  public:
@@ -18,6 +20,8 @@ class Drawer2D : public Drawer<2> {
     void draw(Point2D&);
     void draw(Line2D&);
     void draw(Polygon2D&);
+    void draw(SimpleCurve2D&);
+    void draw(Curve2D&);
     void drawAxis();
 };
 

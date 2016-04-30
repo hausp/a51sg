@@ -157,6 +157,18 @@ void Window::clip(Polygon<2>& p) {
     }
 }
 
+void Window::clip(SimpleCurve<2>& c) {
+    for (auto& line : c) {
+        clip(line);
+    }
+}
+
+void Window::clip(Curve<2>& curve) {
+    for (auto& c : curve) {
+        clip(c);
+    }
+}
+
 void Window::athertonStep(const std::vector<Point<2>>& win,
     const std::vector<Point<2>>& auxList, const std::vector<Point<2>>& artifVert,
     const Point<2>& point, std::vector<Point<2>>& result) {

@@ -47,6 +47,25 @@ void Drawer2D::draw(Polygon2D& p) {
     }
 }
 
+void Drawer2D::draw(SimpleCurve2D& c) {
+    if (!c.isVisible()) return;
+    cairo::set_color(c.getColor());
+    for (auto& line : c) {
+        if (line.isVisible()) {
+            // std::cout << "(" << line[0][0] << "," << line[0][1] << ")" << std::endl;
+            auto newPoint = window.toViewport(viewport, line[0]);
+            cairo::line_to(newPoint[0], newPoint[1]);            
+        }
+    }
+    cairo::stroke();        
+}
+
+void Drawer2D::draw(Curve2D& curve) {
+    for (auto c : curve) {
+        draw(c);
+    }
+}
+
 void Drawer2D::drawAxis() {
     Line2D x(Point2D(0, viewport.second[1]/2), 
              Point2D(viewport.second[0], viewport.second[1]/2));

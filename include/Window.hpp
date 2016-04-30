@@ -11,6 +11,8 @@ template<unsigned D>
 class Line;
 template<unsigned D>
 class Polygon;
+template<unsigned D>
+class Curve;
 
 using Viewport = std::pair<Point<2>, Point<2>>;
 
@@ -28,12 +30,16 @@ class Window {
     void clip(Point<2>&);
     void clip(Line<2>&);
     void clip(Polygon<2>&);
+    void clip(SimpleCurve<2>&);
+    void clip(Curve<2>&);
     template<unsigned D>
     void clip(Point<D>&) {}
     template<unsigned D>
     void clip(Line<D>&) {}
     template<unsigned D>
     void clip(Polygon<D>&) {}
+    template<unsigned D>
+    void clip(Curve<D>&) {}
     void setClippingAlgorithm(const int);
 
  private:

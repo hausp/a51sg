@@ -6,6 +6,7 @@
 #include <iostream>
 #include "cairo.hpp"
 #include "gtk.hpp"
+#include "BezierCurve.hpp"
 #include "Drawer.hpp"
 #include "Drawer2D.hpp"
 #include "FileManager.hpp"
@@ -52,6 +53,14 @@ void Controller::zoom(const int d) {
 // ----------------------------- Shapes stuff ------------------------------ //
 
 void Controller::pointPressed() {
+    std::vector<Point<2>> points = {Point<2>(100, 100), Point<2>(200, 400), Point<2>(300, 400), Point<2>(400, 100)};
+    auto curve = new BezierCurve<2>(0.05, points);
+    curve->setName("c1");
+    drawer.addShape(curve);
+    interface.addShape(curve->getFormattedName());
+    drawer.draw(*curve);
+    interface.queueDraw();
+
     interface.buildPointWindow();
 }
 
