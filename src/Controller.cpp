@@ -61,11 +61,11 @@ void Controller::linePressed() {
 }
 
 void Controller::polygonPressed() {
-    interface.buildVertexWindow("Create Polygon", true);
+    interface.buildVertexWindow("Create Polygon");
 }
 
 void Controller::curvePressed() {
-    interface.buildVertexWindow("Create Curve");
+    interface.buildVertexWindow("Create Curve", false);
 }
 
 void Controller::vertexOk(bool filled) {
