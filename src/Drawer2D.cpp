@@ -40,7 +40,6 @@ void Drawer2D::draw(Polygon2D& p) {
     cairo::close_path();
     //cairo::stroke_preserve();
     if (p.isFilled()) {
-        std::cout << "Filling up with gasoline" << std::endl;
         cairo::fill();
     } else {
         cairo::stroke();
@@ -50,18 +49,25 @@ void Drawer2D::draw(Polygon2D& p) {
 void Drawer2D::draw(SimpleCurve2D& c) {
     if (!c.isVisible()) return;
     cairo::set_color(c.getColor());
+    Line<2>* lastLine;
     for (auto& line : c) {
+        Point<2> newPoint;
         if (line.isVisible()) {
-            // std::cout << "(" << line[0][0] << "," << line[0][1] << ")" << std::endl;
-            auto newPoint = window.toViewport(viewport, line[0]);
-            cairo::line_to(newPoint[0], newPoint[1]);            
+            newPoint = window.toViewport(viewport, line[0]);
+            lastLine = &line;
+            cairo::line_to(newPoint[0], newPoint[1]);                
+        } else if (lastLine != nullptr) {
+            newPoint = window.toViewport(viewport, (*lastLine)[1]);
+            lastLine = nullptr;
+            cairo::line_to(newPoint[0], newPoint[1]);                
         }
     }
     cairo::stroke();        
 }
 
 void Drawer2D::draw(Curve2D& curve) {
-    for (auto c : curve) {
+    for (auto& c : curve) {
+        c.setColor(curve.getColor());
         draw(c);
     }
 }

@@ -21,6 +21,20 @@ class SimpleCurve : public Drawable<D> {
     SimpleCurve(double accuracy, const Iterable& params)
     : SimpleCurve<D>(Matrix<4,4>(), accuracy, params) {}
 
+    template<typename Iterable>
+    SimpleCurve(const Matrix<4,4>& matrix, double accuracy, const Iterable& params)
+    : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), methodMatrix(matrix) {
+        geometryVectors.resize(D);
+        unsigned j = 0;
+        for (Point<D> p : params) {
+            for (unsigned i = 0; i < D; i++) {
+                geometryVectors[i][j][0] = p[i];
+            }
+            j++;
+        }
+        update();
+    }
+
     void update() {
         unsigned numLines = 1/accuracy + 1;
         lines.clear();
@@ -65,21 +79,6 @@ class SimpleCurve : public Drawable<D> {
     typename std::vector<Line<D>>::const_iterator begin() const;
     typename std::vector<Line<D>>::iterator end();
     typename std::vector<Line<D>>::const_iterator end() const;
-
- protected:
-    template<typename Iterable>
-    SimpleCurve(const Matrix<4,4>& matrix, double accuracy, const Iterable& params)
-    : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), methodMatrix(matrix) {
-        geometryVectors.resize(D);
-        unsigned j = 0;
-        for (Point<D> p : params) {
-            for (unsigned i = 0; i < D; i++) {
-                geometryVectors[i][j][0] = p[i];
-            }
-            j++;
-        }
-        update();
-    }
 
  private:
     double accuracy;

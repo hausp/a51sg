@@ -106,15 +106,15 @@ void Window::clip(Point<2>& p) {
 void Window::clip(Line<2>& ln) {
     switch(lcAlgorithm) {
         case 0:
-            std::cout << "Cohen-Sutherland clipping..." << std::endl;
+            // std::cout << "Cohen-Sutherland clipping..." << std::endl;
             clipCS(ln);
             break;
         case 1:
-            std::cout << "Liang-Barsky clipping..." << std::endl;
+            // std::cout << "Liang-Barsky clipping..." << std::endl;
             clipLB(ln);
             break;
         case 2:
-            std::cout << "Nicholl-Lee-Nicholl clipping..." << std::endl;
+            // std::cout << "Nicholl-Lee-Nicholl clipping..." << std::endl;
             clipNLN(ln);
             break;
     }

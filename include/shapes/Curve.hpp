@@ -20,6 +20,29 @@ class Curve : public Drawable<D> {
     Curve(double accuracy, const Iterable& params)
     : Curve<D>(Matrix<4,4>(), accuracy, params) {}
 
+    template<typename Iterable>
+    Curve(const Matrix<4,4>& matrix, double accuracy, const Iterable& params)
+    : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), methodMatrix(matrix) {
+        unsigned i = 0;
+        while(i < params.size()) {
+            std::vector<Point<D>> points;
+            bool copyLast = (i > 0);
+            if (copyLast) {
+                points.push_back(params[i-1]);
+            }
+            points.push_back(params[i]);
+            points.push_back(params[i+1]);
+            points.push_back(params[i+2]);
+            if (!copyLast) {
+                points.push_back(params[i+3]);
+                i++;
+            }
+            i += 3;
+            SimpleCurve<D> curve(methodMatrix, accuracy, points);
+            curves.push_back(curve);
+        }
+    }
+
     void draw(Drawer<D>&) override;
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;
@@ -34,6 +57,7 @@ class Curve : public Drawable<D> {
 
  private:
     double accuracy;
+    Matrix<4,4> methodMatrix;
     std::vector<SimpleCurve<D>> curves;
 };
 

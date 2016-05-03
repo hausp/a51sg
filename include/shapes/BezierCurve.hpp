@@ -4,14 +4,14 @@
 #ifndef BEZIER_CURVE_HPP
 #define BEZIER_CURVE_HPP
 
-#include "SimpleCurve.hpp"
+#include "Curve.hpp"
 
 template<unsigned D>
-class BezierCurve : public SimpleCurve<D> {
+class BezierCurve : public Curve<D> {
  public:
     template<typename Iterable>
     BezierCurve(double accuracy, const Iterable& params)
-    : SimpleCurve<D>(utils::BEZIER_MATRIX, accuracy, params) {}
+    : Curve<D>(utils::BEZIER_MATRIX, accuracy, params) {}
 };
 
 #endif /* BEZIER_CURVE_HPP */
