@@ -65,7 +65,7 @@ void Controller::polygonPressed() {
 }
 
 void Controller::curvePressed() {
-    interface.buildVertexWindow("Create Curve");
+    interface.buildVertexWindow("Create Curve", false, "curves");
 }
 
 void Controller::vertexOk(bool filled) {

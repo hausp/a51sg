@@ -49,7 +49,7 @@ void Drawer2D::draw(Polygon2D& p) {
 void Drawer2D::draw(SimpleCurve2D& c) {
     if (!c.isVisible()) return;
     cairo::set_color(c.getColor());
-    Line<2>* lastLine;
+    Line<2>* lastLine = nullptr;
     for (auto& line : c) {
         Point<2> newPoint;
         if (line.isVisible()) {

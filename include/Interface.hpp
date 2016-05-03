@@ -55,7 +55,7 @@ class Interface {
     void buildLineWindow();
     void buildPolygonWindow();
     void buildCurveWindow();
-    void buildVertexWindow(const char*, bool = false);
+    void buildVertexWindow(const char*, bool = false, const std::string& = "vertices");
     void buildTranslationWindow();
     void buildScalingWindow();
     void buildRotationWindow();

@@ -170,11 +170,13 @@ void Interface::buildCurveWindow() {
     buildCreationWindow("Create Curve", n, 4, signals::curve_ok);
 }
 
-void Interface::buildVertexWindow(const char* title, bool isPolygon) {
+void Interface::buildVertexWindow(const char* title, bool isPolygon,
+    const std::string& labelContent) {
     dialog         = gtk::new_dialog(window, title, 10);
     auto mainbox   = gtk::new_box(GTK_ORIENTATION_VERTICAL, dialog, 10);
     auto vertexbox = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, NULL, 3);
     auto buttonbox = gtk::new_button_box();
+    auto label = "Number of " + labelContent + ":";
     numVertices    = gtk::new_entry("", 0, 3, 3);
     
     gtk::box_push_back(mainbox, vertexbox);
@@ -188,7 +190,7 @@ void Interface::buildVertexWindow(const char* title, bool isPolygon) {
     }
 
     gtk::box_push_back(mainbox, buttonbox);
-    gtk::box_push_back(vertexbox, gtk_label_new("Number of vertices:"));
+    gtk::box_push_back(vertexbox, gtk_label_new(label.c_str()));
     gtk::box_push_back(vertexbox, numVertices);
 
     gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
