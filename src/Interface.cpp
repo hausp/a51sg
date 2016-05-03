@@ -183,12 +183,14 @@ void Interface::buildVertexWindow(const char* title, bool isPolygon) {
         auto checkBox = gtk_check_button_new_with_mnemonic("Filled polygon");
         gtk::box_push_back(mainbox, checkBox);
         gtk::new_button("Ok", buttonbox, signals::vertex_ok, checkBox);
+        gtk::box_push_back(vertexbox, gtk_label_new("Number of vertices:"));
     } else {
         gtk::new_button("Ok", buttonbox, signals::curve_vertex_ok);
+        gtk::box_push_back(vertexbox, gtk_label_new("Number of curves:"));
     }
 
     gtk::box_push_back(mainbox, buttonbox);
-    gtk::box_push_back(vertexbox, gtk_label_new("Number of vertices:"));
+
     gtk::box_push_back(vertexbox, numVertices);
 
     gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
