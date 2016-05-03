@@ -64,6 +64,7 @@ GtkWidget* Interface::buildSidebar() {
     auto point     = gtk::new_button("\u26AB", NULL, signals::point_pressed);
     auto line      = gtk::new_button("\u2571", NULL, signals::line_pressed);
     auto polygon   = gtk::new_button("\u25B2", NULL, signals::polygon_pressed);
+    auto curve     = gtk::new_button("C", NULL, signals::curve_pressed);
     auto up        = gtk::new_button("\u25B2", NULL, signals::up);
     auto left      = gtk::new_button("\u25C0", NULL, signals::left);
     auto right     = gtk::new_button("\u25B6", NULL, signals::right);
@@ -81,6 +82,7 @@ GtkWidget* Interface::buildSidebar() {
     gtk_widget_modify_font(point, config);
     gtk_widget_modify_font(line, config);
     gtk_widget_modify_font(polygon, config);
+    gtk_widget_modify_font(curve, config);
     gtk_widget_modify_font(rotateA, config);
     gtk_widget_modify_font(rotateC, config);
 
@@ -109,6 +111,7 @@ GtkWidget* Interface::buildSidebar() {
     gtk_grid_attach(GTK_GRID(objgrid), point, 0, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(objgrid), line, 1, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(objgrid), polygon, 2, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(objgrid), curve, 3, 0, 1, 1);
 
     gtk_grid_attach(GTK_GRID(navGrid), up, 1, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(navGrid), left, 0, 1, 1, 1);
@@ -155,19 +158,39 @@ void Interface::buildPolygonWindow() {
     buildCreationWindow("Create Polygon", n, 3, signals::polygon_ok);
 }
 
-void Interface::buildVertexWindow() {
-    dialog         = gtk::new_dialog(window, "Create Polygon", 10);
+void Interface::buildCurveWindow() {
+    std::string value = gtk_entry_get_text(GTK_ENTRY(numVertices));
+    int n = 1;
+    if (utils::regex_match(value, "^\\d+")) {
+        n += 3 * stoi(value);
+    }
+    if (n <= 1) return;
+    
+    gtk_widget_destroy(dialog);
+    buildCreationWindow("Create Curve", n, 4, signals::curve_ok);
+}
+
+void Interface::buildVertexWindow(const char* title, bool isPolygon) {
+    dialog         = gtk::new_dialog(window, title, 10);
     auto mainbox   = gtk::new_box(GTK_ORIENTATION_VERTICAL, dialog, 10);
     auto vertexbox = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, NULL, 3);
     auto buttonbox = gtk::new_button_box();
     numVertices    = gtk::new_entry("", 0, 3, 3);
-    auto checkBox  = gtk_check_button_new_with_mnemonic("Filled polygon");
+    
+    gtk::box_push_back(mainbox, vertexbox);
 
-    gtk::box_push_back(mainbox, vertexbox, checkBox, buttonbox);
-    gtk::box_push_back(vertexbox, gtk_label_new("Number of vertices:"),
-                                  numVertices);
+    if (isPolygon) {
+        auto checkBox = gtk_check_button_new_with_mnemonic("Filled polygon");
+        gtk::box_push_back(mainbox, checkBox);
+        gtk::new_button("Ok", buttonbox, signals::vertex_ok, checkBox);
+    } else {
+        gtk::new_button("Ok", buttonbox, signals::curve_vertex_ok);
+    }
 
-    gtk::new_button("Ok", buttonbox, signals::vertex_ok, checkBox);
+    gtk::box_push_back(mainbox, buttonbox);
+    gtk::box_push_back(vertexbox, gtk_label_new("Number of vertices:"));
+    gtk::box_push_back(vertexbox, numVertices);
+
     gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
 
     gtk_widget_show_all(dialog);

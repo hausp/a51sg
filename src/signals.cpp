@@ -62,6 +62,10 @@ namespace signals {
         receiver->polygonPressed();
     }
 
+    void curve_pressed() {
+        receiver->curvePressed();
+    }
+
     void point_ok() {
         receiver->createPoint();
     }
@@ -74,9 +78,17 @@ namespace signals {
         receiver->createPolygon();
     }
 
+    void curve_ok() {
+        receiver->createCurve();
+    }
+
     void vertex_ok(GtkWidget* button) {
         bool filled = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
         receiver->vertexOk(filled);
+    }
+
+    void curve_vertex_ok() {
+        receiver->curveVertexOk();
     }
 
     void remove_object(const long index) {

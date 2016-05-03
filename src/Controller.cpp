@@ -53,14 +53,6 @@ void Controller::zoom(const int d) {
 // ----------------------------- Shapes stuff ------------------------------ //
 
 void Controller::pointPressed() {
-    std::vector<Point<2>> points = {Point<2>(100, 100), Point<2>(200, 400), Point<2>(300, 400), Point<2>(400, 100)};
-    auto curve = new BezierCurve<2>(0.05, points);
-    curve->setName("c1");
-    drawer.addShape(curve);
-    interface.addShape(curve->getFormattedName());
-    drawer.draw(*curve);
-    interface.queueDraw();
-
     interface.buildPointWindow();
 }
 
@@ -69,12 +61,20 @@ void Controller::linePressed() {
 }
 
 void Controller::polygonPressed() {
-    interface.buildVertexWindow();
+    interface.buildVertexWindow("Create Polygon", true);
+}
+
+void Controller::curvePressed() {
+    interface.buildVertexWindow("Create Curve");
 }
 
 void Controller::vertexOk(bool filled) {
     filledPolygon = filled;
     interface.buildPolygonWindow();
+}
+
+void Controller::curveVertexOk() {
+    interface.buildCurveWindow();
 }
 
 void Controller::createPoint() {
@@ -163,6 +163,41 @@ void Controller::createPolygon() {
         drawer.draw(*polygon);
         interface.queueDraw();
     }
+}
+
+void Controller::createCurve() {
+    auto entries = interface.getEntries();
+    std::string name = interface.getShapeName();
+
+    for (auto entry : entries) {
+        if (!utils::regex_match(entry, utils::REGEX_INTEGER)) return;
+    }
+
+    if (name != "") {
+        std::vector<Point<2>> curvePoints;
+        #if !RECENT_COMPILER
+        try {
+        #endif
+        for (unsigned i = 0; i < entries.size() - 1; i += 2) {
+            curvePoints.push_back(Point2D(stoi(entries[i]), stoi(entries[i + 1])));
+        }
+        #if !RECENT_COMPILER
+        } catch(...) {
+            return;
+        }
+        #endif
+
+        auto curve = new BezierCurve<2>(0.05, curvePoints);
+        curve->setName(name);
+        drawer.addShape(curve);
+        interface.addShape(curve->getFormattedName());
+        interface.closeDialog();
+        drawer.draw(*curve);
+        interface.queueDraw();
+    }
+    // std::vector<Point<2>> points = {Point<2>(100, 100), Point<2>(200, 400), 
+    //                                 Point<2>(300, 400), Point<2>(400, 100)};
+    
 }
 
 void Controller::removeObject(const long index) {

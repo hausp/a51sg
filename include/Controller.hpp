@@ -30,9 +30,11 @@ class Controller {
 	void pointPressed();
 	void linePressed();
 	void polygonPressed();
+	void curvePressed();
 	void createPoint();
 	void createLine();
 	void createPolygon();
+	void createCurve();
 
 	void removeObject(const long);
 	void translateObject(const long);
@@ -47,6 +49,7 @@ class Controller {
 	bool objectClick(GtkWidget* const, GdkEventButton* const);
 	void objectOptions(GtkWidget* const, GdkEventButton* const);
 	void vertexOk(bool);
+	void curveVertexOk();
 	void rowSelected(GtkListBox* const, GtkListBoxRow* const);
 	void openFileDialog();
 	void saveFileDialog();

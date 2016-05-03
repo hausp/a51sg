@@ -54,7 +54,8 @@ class Interface {
     void buildPointWindow();
     void buildLineWindow();
     void buildPolygonWindow();
-    void buildVertexWindow();
+    void buildCurveWindow();
+    void buildVertexWindow(const char*, bool = false);
     void buildTranslationWindow();
     void buildScalingWindow();
     void buildRotationWindow();
