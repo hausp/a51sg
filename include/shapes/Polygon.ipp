@@ -58,7 +58,7 @@ template<unsigned D>
 Point<D> Polygon<D>::center() const {
     Point<D> r;
     for (auto& vertex : vertices) {
-        r += vertex[0];
+        r += vertex;
     }
     return r / numberOfPoints();
 }

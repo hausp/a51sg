@@ -134,14 +134,14 @@ void Window::clip(Polygon<2>& p) {
         winVector.push_back(point);
     }
 
-    std::cout << "-----------------------------" << std::endl;
+    // std::cout << "-----------------------------" << std::endl;
     std::vector<Point<2>> result;
-    std::cout << "Size of incoming list: " << incomingList.size() << std::endl;
+    // std::cout << "Size of incoming list: " << incomingList.size() << std::endl;
     for (auto point : incomingList) {
-        std::cout << "Before athertonStep" << std::endl;
+        // std::cout << "Before athertonStep" << std::endl;
         //athertonStepPolygon(win, auxList, artifVert, point, point, result);
         athertonStep(winVector, auxList, artifVert, point, result);
-        std::cout << "After athertonStep" << std::endl;
+        // std::cout << "After athertonStep" << std::endl;
     }
 
     if (incomingList.size() > 0) {
@@ -184,7 +184,7 @@ void Window::athertonStep(const std::vector<Point<2>>& win,
         if (lists[index][i] == point) {
             if (process) {
                 result.push_back(point);
-                std::cout << "(" << point[0] << "," << point[1] << ")" << std::endl;
+                // std::cout << "(" << point[0] << "," << point[1] << ")" << std::endl;
                 break;
             }
             process = true;
@@ -199,7 +199,7 @@ void Window::athertonStep(const std::vector<Point<2>>& win,
 
         if (!recentRotation) {
             result.push_back(lists[index][i]);
-            std::cout << "(" << lists[index][i][0] << "," << lists[index][i][1] << ")" << std::endl;
+            // std::cout << "(" << lists[index][i][0] << "," << lists[index][i][1] << ")" << std::endl;
         } else {
             recentRotation = false;
         }
@@ -472,7 +472,7 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
 
             if (outcoming != INT_MAX) {
                 if (intersections[outcoming] != next) {
-                    std::cout << "adding outcoming: (" << intersections[outcoming][0] << ", " << intersections[outcoming][1] << ")" << std::endl;
+                    // std::cout << "adding outcoming: (" << intersections[outcoming][0] << ", " << intersections[outcoming][1] << ")" << std::endl;
                     auxList.push_back(intersections[outcoming]);
                     artificialVertices.push_back(intersections[outcoming]);
                     //listInsert(win, outcoming, intersections[outcoming]);
@@ -482,20 +482,20 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
         }
     }
 
-    std::cout << "Polygon:" << std::endl;
-    for (auto point : auxList) {
-        std::cout << "(" << point[0] << "," << point[1] << ")" << std::endl;
-    }
+    // std::cout << "Polygon:" << std::endl;
+    // for (auto point : auxList) {
+    //     std::cout << "(" << point[0] << "," << point[1] << ")" << std::endl;
+    // }
 
-    std::cout << "Window:" << std::endl;
-    for (auto point : win) {
-        std::cout << "(" << point[0] << "," << point[1] << ")" << std::endl;
-    }
+    // std::cout << "Window:" << std::endl;
+    // for (auto point : win) {
+    //     std::cout << "(" << point[0] << "," << point[1] << ")" << std::endl;
+    // }
 
-    std::cout << "Incoming:" << std::endl;
-    for (auto point : incomingList) {
-        std::cout << "(" << point[0] << "," << point[1] << ")" << std::endl;
-    }
+    // std::cout << "Incoming:" << std::endl;
+    // for (auto point : incomingList) {
+    //     std::cout << "(" << point[0] << "," << point[1] << ")" << std::endl;
+    // }
 }
 
 void Window::listInsert(std::list<Point<2>>& list, unsigned reference,

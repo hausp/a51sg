@@ -72,10 +72,10 @@ double Drawer<D>::getZoomLevel() {
 template<unsigned D>
 void Drawer<D>::drawAll() {
     cairo::clear();
-    draw(wview);
     for (auto shape : displayFile) {
         shape->draw(*this);
     }
+    draw(wview);
 }
 
 template<unsigned D>
