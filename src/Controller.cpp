@@ -10,6 +10,8 @@
 #include "Drawer.hpp"
 #include "Drawer2D.hpp"
 #include "FileManager.hpp"
+#include "ForwardDifferenceAlgorithm.hpp"
+#include "IterativeAlgorithm.hpp"
 #include "Interface.hpp"
 #include "Point.hpp"
 #include "Line.hpp"
@@ -187,7 +189,7 @@ void Controller::createCurve() {
         }
         #endif
 
-        auto curve = new BezierCurve<2>(0.05, curvePoints);
+        auto curve = new BezierCurve<2>(ForwardDifferenceAlgorithm<2>(), 0.05, curvePoints);
         curve->setName(name);
         drawer.addShape(curve);
         interface.addShape(curve->getFormattedName());

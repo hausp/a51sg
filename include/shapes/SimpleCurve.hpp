@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <vector>
+#include "CurveAlgorithm.hpp"
 #include "Drawable.hpp"
 
 template<unsigned D>
@@ -18,11 +19,12 @@ template<unsigned D>
 class SimpleCurve : public Drawable<D> {
  public:
     template<typename Iterable>
-    SimpleCurve(double accuracy, const Iterable& params)
-    : SimpleCurve<D>(Matrix<4,4>(), accuracy, params) {}
+    SimpleCurve(const CurveAlgorithm<D>& updater, double accuracy, const Iterable& params)
+    : SimpleCurve<D>(Matrix<4,4>(), updater, accuracy, params) {}
 
     template<typename Iterable>
-    SimpleCurve(const Matrix<4,4>& matrix, double accuracy, const Iterable& params)
+    SimpleCurve(const Matrix<4,4>& matrix, const CurveAlgorithm<D>& updater,
+        double accuracy,const Iterable& params)
     : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), methodMatrix(matrix) {
         geometryVectors.resize(D);
         unsigned j = 0;
@@ -37,7 +39,7 @@ class SimpleCurve : public Drawable<D> {
         for (unsigned i = 0; i < D; i++) {
             coefficients[i] = methodMatrix * geometryVectors[i];
         }
-        updateForwardDifference(coefficients);
+        lines = updater.update(accuracy, coefficients);
     }
 
     void draw(Drawer<D>&) override;
@@ -57,13 +59,6 @@ class SimpleCurve : public Drawable<D> {
     Matrix<4,4> methodMatrix;
     std::vector<Matrix<4,1>> geometryVectors;
     std::vector<Line<D>> lines;
-
-    /*
-    TODO: Change both update() to:
-    update(coefs, CurveAlgorithm alg)
-    */
-    void updateIterative(const std::vector<Matrix<4,1>>&);
-    void updateForwardDifference(const std::vector<Matrix<4,1>>&);
 };
 
 #include "SimpleCurve.ipp"

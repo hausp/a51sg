@@ -6,6 +6,7 @@
 
 #include <vector>
 #include "Drawable.hpp"
+#include "CurveAlgorithm.hpp"
 
 template<unsigned D>
 class SimpleCurve;
@@ -17,11 +18,12 @@ template<unsigned D>
 class Curve : public Drawable<D> {
  public:
     template<typename Iterable>
-    Curve(double accuracy, const Iterable& params)
-    : Curve<D>(Matrix<4,4>(), accuracy, params) {}
+    Curve(const CurveAlgorithm<D>& updater, double accuracy, const Iterable& params)
+    : Curve<D>(Matrix<4,4>(), updater, accuracy, params) {}
 
     template<typename Iterable>
-    Curve(const Matrix<4,4>& matrix, double accuracy, const Iterable& params)
+    Curve(const Matrix<4,4>& matrix, const CurveAlgorithm<D>& updater,
+        double accuracy, const Iterable& params)
     : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), methodMatrix(matrix) {
         unsigned i = 0;
         while(i < params.size()) {
@@ -38,7 +40,7 @@ class Curve : public Drawable<D> {
                 i++;
             }
             i += 3;
-            SimpleCurve<D> curve(methodMatrix, accuracy, points);
+            SimpleCurve<D> curve(methodMatrix, updater, accuracy, points);
             curves.push_back(curve);
         }
     }
