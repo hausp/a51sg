@@ -32,40 +32,12 @@ class SimpleCurve : public Drawable<D> {
             }
             j++;
         }
-        update();
-    }
-
-    void update() {
-        unsigned numLines = 1/accuracy + 1;
-        lines.clear();
-        lines.resize(numLines);
 
         std::vector<Matrix<4,1>> coefficients(D);
         for (unsigned i = 0; i < D; i++) {
             coefficients[i] = methodMatrix * geometryVectors[i];
         }
-
-        Matrix<1,4> tExponents;
-        tExponents[0][3] = 1;
-        unsigned j = 0;
-        double t;
-        for (t = 0; t <= 1.001; t += accuracy) {
-            tExponents[0][2] = t;
-            tExponents[0][1] = t * t;
-            tExponents[0][0] = tExponents[0][1] * t;
-
-            Matrix<1,1> coord;
-            Point<D> p;
-            for (unsigned i = 0; i < D; i++) {
-                coord = tExponents * coefficients[i];
-                p[i] = coord[0][0];
-            }
-            lines[j] = Line<D>(p, Point<D>(0, 0));
-            if (j > 0) {
-                lines[j - 1][1] = p;
-            }
-            j++;
-        }
+        updateForwardDifference(coefficients);
     }
 
     void draw(Drawer<D>&) override;
@@ -85,6 +57,13 @@ class SimpleCurve : public Drawable<D> {
     Matrix<4,4> methodMatrix;
     std::vector<Matrix<4,1>> geometryVectors;
     std::vector<Line<D>> lines;
+
+    /*
+    TODO: Change both update() to:
+    update(coefs, CurveAlgorithm alg)
+    */
+    void updateIterative(const std::vector<Matrix<4,1>>&);
+    void updateForwardDifference(const std::vector<Matrix<4,1>>&);
 };
 
 #include "SimpleCurve.ipp"
