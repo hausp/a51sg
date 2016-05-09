@@ -25,8 +25,10 @@ class Curve : public Drawable<D> {
     Curve(const Matrix<4,4>& matrix, const CurveAlgorithm<D>& updater,
         double accuracy, const Iterable& params)
     : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), methodMatrix(matrix) {
-        // TODO: decouple these calls from this class
-        //auto paramGroups = parseBezierParams(params);
+        // auto paramGroups = parseParams(params);
+        // TODO: save humanity from this atrocity
+        // (note: delete parseBezierParams() and parseBSplineParams() when that happens)
+        // auto paramGroups = parseBezierParams(params);
         auto paramGroups = parseBSplineParams(params);
         for (auto& group : paramGroups) {
             SimpleCurve<D> curve(methodMatrix, updater, accuracy, group);
@@ -34,8 +36,7 @@ class Curve : public Drawable<D> {
         }
     }
 
-    template<typename Iterable>
-    std::vector<std::vector<Point<D>>> parseBezierParams(const Iterable& params) {
+    std::vector<std::vector<Point<D>>> parseBezierParams(const std::vector<Point<D>>& params) {
         std::vector<std::vector<Point<D>>> paramGroups;
         unsigned i = 0;
         while(i < params.size()) {
@@ -57,8 +58,7 @@ class Curve : public Drawable<D> {
         return paramGroups;
     }
 
-    template<typename Iterable>
-    std::vector<std::vector<Point<D>>> parseBSplineParams(const Iterable& params) {
+    std::vector<std::vector<Point<D>>> parseBSplineParams(const std::vector<Point<D>>& params) {
         std::vector<std::vector<Point<D>>> paramGroups;
         for (unsigned i = 0; i < params.size() - 3; i++) {
             std::vector<Point<D>> points = {
@@ -66,14 +66,11 @@ class Curve : public Drawable<D> {
                 params[i+2], params[i+3]
             };
             paramGroups.push_back(points);
-            for (auto p : points) {
-                std::cout << "(" << p[0] << "," << p[1] << ") ";
-            }
-            std::cout << std::endl;
         }
-        std::cout << "size: " << paramGroups.size() << std::endl;
         return paramGroups;
     }
+
+    virtual std::vector<std::vector<Point<D>>> parseParams(const std::vector<Point<D>>&) = 0;
 
     void draw(Drawer<D>&) override;
     void clip(Window&) override;

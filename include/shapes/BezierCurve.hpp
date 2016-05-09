@@ -13,6 +13,28 @@ class BezierCurve : public Curve<D> {
     template<typename Iterable>
     BezierCurve(const CurveAlgorithm<D>& updater, double accuracy, const Iterable& params)
     : Curve<D>(utils::BEZIER_MATRIX, updater, accuracy, params) {}
+
+    std::vector<std::vector<Point<D>>> parseParams(const std::vector<Point<D>>& params) override {
+        std::vector<std::vector<Point<D>>> paramGroups;
+        unsigned i = 0;
+        while(i < params.size()) {
+            std::vector<Point<D>> points;
+            bool copyLast = (i > 0);
+            if (copyLast) {
+                points.push_back(params[i-1]);
+            }
+            points.push_back(params[i]);
+            points.push_back(params[i+1]);
+            points.push_back(params[i+2]);
+            if (!copyLast) {
+                points.push_back(params[i+3]);
+                i++;
+            }
+            i += 3;
+            paramGroups.push_back(points);
+        }
+        return paramGroups;
+    }
 };
 
 #endif /* BEZIER_CURVE_HPP */
