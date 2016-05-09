@@ -12,7 +12,9 @@ class BezierCurve : public Curve<D> {
  public:
     template<typename Iterable>
     BezierCurve(const CurveAlgorithm<D>& updater, double accuracy, const Iterable& params)
-    : Curve<D>(utils::BEZIER_MATRIX, updater, accuracy, params) {}
+    : Curve<D>(utils::BEZIER_MATRIX, updater, accuracy, params) {
+    	Curve<D>::build(params);
+    }
 
     std::vector<std::vector<Point<D>>> parseParams(const std::vector<Point<D>>& params) override {
         std::vector<std::vector<Point<D>>> paramGroups;
