@@ -25,6 +25,17 @@ class Curve : public Drawable<D> {
     Curve(const Matrix<4,4>& matrix, const CurveAlgorithm<D>& updater,
         double accuracy, const Iterable& params)
     : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), methodMatrix(matrix) {
+        //auto paramGroups = parseBezierParams(params);
+        auto paramGroups = parseBSplineParams(params);
+        for (auto& group : paramGroups) {
+            SimpleCurve<D> curve(methodMatrix, updater, accuracy, group);
+            curves.push_back(curve);
+        }
+    }
+
+    template<typename Iterable>
+    std::vector<std::vector<Point<D>>> parseBezierParams(const Iterable& params) {
+        std::vector<std::vector<Point<D>>> paramGroups;
         unsigned i = 0;
         while(i < params.size()) {
             std::vector<Point<D>> points;
@@ -40,9 +51,27 @@ class Curve : public Drawable<D> {
                 i++;
             }
             i += 3;
-            SimpleCurve<D> curve(methodMatrix, updater, accuracy, points);
-            curves.push_back(curve);
+            paramGroups.push_back(points);
         }
+        return paramGroups;
+    }
+
+    template<typename Iterable>
+    std::vector<std::vector<Point<D>>> parseBSplineParams(const Iterable& params) {
+        std::vector<std::vector<Point<D>>> paramGroups;
+        for (unsigned i = 0; i < params.size() - 3; i++) {
+            std::vector<Point<D>> points = {
+                params[i], params[i+1],
+                params[i+2], params[i+3]
+            };
+            paramGroups.push_back(points);
+            for (auto p : points) {
+                std::cout << "(" << p[0] << "," << p[1] << ") ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << "size: " << paramGroups.size() << std::endl;
+        return paramGroups;
     }
 
     void draw(Drawer<D>&) override;
