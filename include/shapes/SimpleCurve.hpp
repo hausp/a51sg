@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <vector>
+#include "CurveAlgorithm.hpp"
 #include "Drawable.hpp"
 
 template<unsigned D>
@@ -18,11 +19,12 @@ template<unsigned D>
 class SimpleCurve : public Drawable<D> {
  public:
     template<typename Iterable>
-    SimpleCurve(double accuracy, const Iterable& params)
-    : SimpleCurve<D>(Matrix<4,4>(), accuracy, params) {}
+    SimpleCurve(const CurveAlgorithm<D>& updater, double accuracy, const Iterable& params)
+    : SimpleCurve<D>(Matrix<4,4>(), updater, accuracy, params) {}
 
     template<typename Iterable>
-    SimpleCurve(const Matrix<4,4>& matrix, double accuracy, const Iterable& params)
+    SimpleCurve(const Matrix<4,4>& matrix, const CurveAlgorithm<D>& updater,
+        double accuracy,const Iterable& params)
     : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), methodMatrix(matrix) {
         geometryVectors.resize(D);
         unsigned j = 0;
@@ -32,40 +34,12 @@ class SimpleCurve : public Drawable<D> {
             }
             j++;
         }
-        update();
-    }
-
-    void update() {
-        unsigned numLines = 1/accuracy + 1;
-        lines.clear();
-        lines.resize(numLines);
 
         std::vector<Matrix<4,1>> coefficients(D);
         for (unsigned i = 0; i < D; i++) {
             coefficients[i] = methodMatrix * geometryVectors[i];
         }
-
-        Matrix<1,4> tExponents;
-        tExponents[0][3] = 1;
-        unsigned j = 0;
-        double t;
-        for (t = 0; t <= 1.001; t += accuracy) {
-            tExponents[0][2] = t;
-            tExponents[0][1] = t * t;
-            tExponents[0][0] = tExponents[0][1] * t;
-
-            Matrix<1,1> coord;
-            Point<D> p;
-            for (unsigned i = 0; i < D; i++) {
-                coord = tExponents * coefficients[i];
-                p[i] = coord[0][0];
-            }
-            lines[j] = Line<D>(p, Point<D>(0, 0));
-            if (j > 0) {
-                lines[j - 1][1] = p;
-            }
-            j++;
-        }
+        lines = updater.update(accuracy, coefficients);
     }
 
     void draw(Drawer<D>&) override;
