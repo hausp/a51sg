@@ -34,6 +34,12 @@ namespace utils {
         {-3, 3, 0, 0},
         {1, 0, 0, 0}
     };
+    const Matrix<4,4> B_SPLINE_MATRIX = {
+        {-1.0/6, 1.0/2, -1.0/2, 1.0/6},
+        {1.0/2, -1, 1.0/2, 0},
+        {-1.0/2, 0, 1.0/2, 0},
+        {1.0/6, 2.0/3, 1.0/6, 0}
+    };
 
     bool regex_match(const std::string& text, const std::string& regexp);
 

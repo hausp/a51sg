@@ -7,6 +7,7 @@
 #include "cairo.hpp"
 #include "gtk.hpp"
 #include "BezierCurve.hpp"
+#include "BSplineCurve.hpp"
 #include "Drawer.hpp"
 #include "Drawer2D.hpp"
 #include "FileManager.hpp"
@@ -189,7 +190,8 @@ void Controller::createCurve() {
         }
         #endif
 
-        auto curve = new BezierCurve<2>(ForwardDifferenceAlgorithm<2>(), 0.05, curvePoints);
+        //auto curve = new BezierCurve<2>(ForwardDifferenceAlgorithm<2>(), 0.05, curvePoints);
+        auto curve = new BSplineCurve<2>(ForwardDifferenceAlgorithm<2>(), 0.05, curvePoints);
         curve->setName(name);
         drawer.addShape(curve);
         interface.addShape(curve->getFormattedName());

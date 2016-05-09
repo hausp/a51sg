@@ -25,6 +25,7 @@ class Curve : public Drawable<D> {
     Curve(const Matrix<4,4>& matrix, const CurveAlgorithm<D>& updater,
         double accuracy, const Iterable& params)
     : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), methodMatrix(matrix) {
+        // TODO: decouple these calls from this class
         //auto paramGroups = parseBezierParams(params);
         auto paramGroups = parseBSplineParams(params);
         for (auto& group : paramGroups) {
