@@ -41,9 +41,10 @@ class Interface {
         }
         return radioList;
     }*/
-    const int getSelectedRadio() const {
+    const int getSelectedRadio() {
         for (unsigned i = 0; i < radioButtons.size(); i++) {
             if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioButtons[i]))) {
+                selectedRadio = i;
                 return i;
             }
         }
@@ -80,6 +81,7 @@ class Interface {
  private:
     unsigned canvasWidth;
     unsigned canvasHeight;
+    int selectedRadio = -1;
 
     GtkWidget* window;
     GtkWidget* dialog;
