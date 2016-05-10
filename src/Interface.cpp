@@ -160,9 +160,14 @@ void Interface::buildPolygonWindow() {
 
 void Interface::buildCurveWindow() {
     std::string value = gtk_entry_get_text(GTK_ENTRY(numVertices));
-    int n = 1;
+    int n = 0;
     if (utils::regex_match(value, "^\\d+")) {
-        n += 3 * stoi(value);
+        n = stoi(value);
+    }
+    if (getSelectedRadio() == 0) {
+        n = n * 3 + 1;
+    } else {
+        n += 3;
     }
     if (n <= 1) return;
     
@@ -185,6 +190,8 @@ void Interface::buildVertexWindow(const char* title, bool isPolygon) {
         gtk::new_button("Ok", buttonbox, signals::vertex_ok, checkBox);
         gtk::box_push_back(vertexbox, gtk_label_new("Number of vertices:"));
     } else {
+        radioButtons = gtk::new_radio_group("Bézier", "B-Spline");
+        gtk::box_push_back(mainbox, radioButtons[0], radioButtons[1]);
         gtk::new_button("Ok", buttonbox, signals::curve_vertex_ok);
         gtk::box_push_back(vertexbox, gtk_label_new("Number of curves:"));
     }

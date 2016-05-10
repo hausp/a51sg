@@ -190,8 +190,13 @@ void Controller::createCurve() {
         }
         #endif
 
-        //auto curve = new BezierCurve<2>(ForwardDifferenceAlgorithm<2>(), 0.05, curvePoints);
-        auto curve = new BSplineCurve<2>(ForwardDifferenceAlgorithm<2>(), 0.05, curvePoints);
+        Curve<2>* curve;
+
+        if (interface.getSelectedRadio() == 0) {
+            curve = new BezierCurve<2>(ForwardDifferenceAlgorithm<2>(), 0.05, curvePoints);
+        } else {
+            curve = new BSplineCurve<2>(ForwardDifferenceAlgorithm<2>(), 0.05, curvePoints);
+        }
         curve->setName(name);
         drawer.addShape(curve);
         interface.addShape(curve->getFormattedName());
