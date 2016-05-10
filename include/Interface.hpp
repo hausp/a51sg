@@ -45,10 +45,10 @@ class Interface {
         for (unsigned i = 0; i < radioButtons.size(); i++) {
             if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioButtons[i]))) {
                 selectedRadio = i;
-                return i;
+                break;
             }
         }
-        return -1;
+        return selectedRadio;
     }
 
     void build();
