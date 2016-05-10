@@ -44,8 +44,7 @@ class Interface {
     const int getSelectedRadio() {
         if (radioButtons.size() > 0 && GTK_IS_TOGGLE_BUTTON(radioButtons[0])) {
             for (unsigned i = 0; i < radioButtons.size(); i++) {
-                if (GTK_IS_TOGGLE_BUTTON(radioButtons[i])
-                    && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioButtons[i]))) {
+                if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioButtons[i]))) {
                     selectedRadio = i;
                     break;
                 }
