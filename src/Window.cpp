@@ -22,16 +22,16 @@ Window::Window(const Point<2>& min, const Point<2>& max)
 Matrix<3, 3> Window::normalizerMatrix() {
     Point<2> center = (min + max)/-2;
     Matrix<3, 3> normalizer = utils::translationMatrix(center.toArray());
-    normalizer *= utils::rotationMatrix(-angle);
+    normalizer *= utils::rotationMatrix<2>(-angle);
     std::array<double, 2> s = {2/(max[0] - min[0]), 2/(max[1] - min[1])};
     normalizer *= utils::scalingMatrix(s);
     return normalizer;
 }
 
 void Window::moveHorizontal(const double displacement) {
-    auto m = utils::rotationMatrix(-angle);
+    auto m = utils::rotationMatrix<2>(-angle);
     m *= utils::translationMatrix(std::array<double, 2>{displacement, 0});
-    m *= utils::rotationMatrix(angle);
+    m *= utils::rotationMatrix<2>(angle);
     min *= m;
     max *= m;
     // double a = angle * M_PI / 180;
@@ -46,9 +46,9 @@ void Window::moveHorizontal(const double displacement) {
 }
 
 void Window::moveVertical(const double displacement) {
-    auto m = utils::rotationMatrix(-angle);
+    auto m = utils::rotationMatrix<2>(-angle);
     m *= utils::translationMatrix(std::array<double, 2>{0, displacement});
-    m *= utils::rotationMatrix(angle);
+    m *= utils::rotationMatrix<2>(angle);
     min *= m;
     max *= m;
     // double a = angle * M_PI / 180;

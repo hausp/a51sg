@@ -139,7 +139,7 @@ void Drawer<D>::rotate(const unsigned long index, const double angle,
         }
 
         auto m = utils::translationMatrix((axis * -1).toArray());
-        m *= utils::rotationMatrix(angle);
+        m *= utils::rotationMatrix<2>(angle);
         m *= utils::translationMatrix(axis.toArray());
         shape->transform(m);
         update(displayFile[index]);

@@ -41,6 +41,10 @@ namespace utils {
         {1.0/6, 2.0/3, 1.0/6, 0}
     };
 
+    enum class RotationPlane {
+        X, Y, Z
+    };
+
     bool regex_match(const std::string& text, const std::string& regexp);
 
     void nln_rotate90c(Point<2>&);
@@ -71,7 +75,25 @@ namespace utils {
         return matrix;
     }
 
-    Matrix<3,3> rotationMatrix(const double angle);
+    template<size_t D>
+    Matrix<D+1,D+1> rotationMatrix(double angle, RotationPlane plane = RotationPlane::Z) {
+        double a = angle * M_PI / 180;
+        double s = sin(a);
+        double c = cos(a);
+        auto planeIndex = static_cast<int>(plane);
+        Matrix<D+1, D+1> matrix;
+        for (unsigned i = 0; i < D + 1; i++) {
+            matrix[i][i] = 1;
+        }
+        auto x = (planeIndex + 1) % (D + 1);
+        auto y = (planeIndex - 1) % (D + 1);
+        matrix[x][x] = c;
+        matrix[y][y] = c;
+        matrix[x][y] = -s;
+        matrix[y][x] = s;
+        return matrix;
+    }
+
     double slope(const Line<2>& line);
 }
 
