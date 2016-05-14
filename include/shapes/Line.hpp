@@ -9,7 +9,7 @@
 #include "Point.hpp"
 
 template<unsigned D>
-class Drawer;
+class BaseDrawer;
 class Window;
 
 template<unsigned D>
@@ -19,7 +19,7 @@ class Line : public Drawable<D> {
     Line(const Line&);
     Line(const std::string&, const Point<D>&, const Point<D>&);
     Line(const Point<D>&, const Point<D>&);
-    void draw(Drawer<D>&) override;
+    void draw(BaseDrawer<D>&) override;
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;

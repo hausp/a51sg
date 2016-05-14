@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-class Drawer2D;
+class Drawer;
 class FileManager;
 class Interface;
 template<unsigned D>
@@ -17,7 +17,7 @@ class Point;
 
 class Controller {
  public:
- 	Controller(Interface&, Drawer2D&);
+ 	Controller(Interface&, Drawer&);
  	~Controller();
 
 	// Window Navigation
@@ -65,7 +65,7 @@ class Controller {
 
  private:
  	Interface& interface;
- 	Drawer2D& drawer;
+ 	Drawer& BaseDrawer;
  	std::shared_ptr<FileManager> fileManager;
  	long currentIndex;
  	bool filledPolygon;

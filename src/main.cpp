@@ -5,8 +5,8 @@
 #include "signals.hpp"
 #include "Controller.hpp"
 #include "Interface.hpp"
+#include "BaseDrawer.hpp"
 #include "Drawer.hpp"
-#include "Drawer2D.hpp"
 #include "Matrix.hpp"
 #include "Point.hpp"
 
@@ -20,12 +20,12 @@ int main(int argc, char** argv) {
     // Graphical Interface - managing ugly buttons and boxes
     Interface gui(canvasWidth, canvasHeight);
 
-    // Drawer - the cool stuff goes here
+    // BaseDrawer - the cool stuff goes here
     // Default values to window - length(600), height(600)
-    Drawer2D drawer(canvasWidth, canvasHeight, 20);
+    Drawer BaseDrawer(canvasWidth, canvasHeight, 20);
     
     // Controller - being God
-    Controller controller(gui, drawer);
+    Controller controller(gui, BaseDrawer);
 
     // Set controller to receive GTK+ signals
     signals::set_receiver(&controller);

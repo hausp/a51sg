@@ -5,70 +5,24 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #define DRAWER_HPP
 
 #include <vector>
-#include "Curve.hpp"
-#include "Line.hpp"
-#include "Point.hpp"
-#include "Polygon.hpp"
-#include "SimpleCurve.hpp"
-#include "Window.hpp"
+#include "BaseDrawer.hpp"
 
-template<unsigned D>
-class Drawable;
-template<unsigned R, unsigned C>
-class Matrix;
+using Point2D = Point<2>;
+using Line2D = Line<2>;
+using Polygon2D = Polygon<2>;
+using SimpleCurve2D = SimpleCurve<2>;
+using Curve2D = Curve<2>;
 
-template<unsigned D>
-class Drawer {
+class Drawer : public BaseDrawer<2> {
  public:
     Drawer(const unsigned, const unsigned, const unsigned = 0);
-    ~Drawer();
 
-    void addShape(Drawable<D>*);
-    void swap(const std::vector<Drawable<D>*>&);
-    const std::vector<Drawable<D>*>& getDisplayFile();
-    void clearDisplayFile();
-
-    double getWindowAngle();
-    double getZoomLevel();
-
-    virtual void draw(Point<D>&) = 0;
-    virtual void draw(Line<D>&) = 0;
-    virtual void draw(Polygon<D>&) = 0;
-    virtual void draw(SimpleCurve<D>&) = 0;
-    virtual void draw(Curve<D>&) = 0;
-    void drawAll();
-    void moveVertical(const int);
-    void moveHorizontal(const int);
-    void removeShape(const unsigned long);
-    void translate(const unsigned long, const std::array<double, D>&);
-    void scale(const unsigned long, const std::array<double, D>&);
-    void rotate(const unsigned long, const double, const int, const std::vector<std::string>&);
-    void rotateWindow(long);
-    void update(Drawable<D>*);
-    void updateAll();
-    void highlightObject(const long);
-
-    void setZoom(const double);
-    void setViewport(Point<2>, Point<2>);
-    void zoom(const int);
-    void resizeViewport(const double, const double);
-    void setClippingAlgorithm(const int);
-
-    void drawViewportBorders();
-
- protected:
-    Window window;
-    std::pair<Point<2>, Point<2>> viewport;
-    Polygon<2> wview;
-
- private:
-    std::vector<Drawable<D>*> displayFile;
-    long highlighted = -1;
-    double zoomRate = 0.05;
-    double rotationSpeed = 15;
-    int moveSpeed = 10;
+    void draw(Point2D&);
+    void draw(Line2D&);
+    void draw(Polygon2D&);
+    void draw(SimpleCurve2D&);
+    void draw(Curve2D&);
+    void drawAxis();
 };
-
-#include "Drawer.ipp"
 
 #endif /* DRAWER_HPP */

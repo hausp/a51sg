@@ -1,7 +1,7 @@
 /* created by Ghabriel Nunes<ghabriel.nunes@gmail.com> 
 and Marleson Graf<aszdrick@gmail.com> [2016] */
 
-#include "Drawer.hpp"
+#include "BaseDrawer.hpp"
 #include "Window.hpp"
 
 template<unsigned D>
@@ -38,8 +38,8 @@ Polygon<D>::Polygon(const std::vector<Point<D>>& points)
 }
 
 template<unsigned D>
-void Polygon<D>::draw(Drawer<D>& drawer) {
-    drawer.draw(*this);
+void Polygon<D>::draw(BaseDrawer<D>& BaseDrawer) {
+    BaseDrawer.draw(*this);
 }
 
 template<unsigned D>

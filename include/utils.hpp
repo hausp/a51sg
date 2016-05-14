@@ -7,6 +7,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include <array>
 #include <iostream>
 #include <regex>
+#include <cmath>
 #include "Matrix.hpp"
 
 template<unsigned D>

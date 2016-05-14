@@ -2,13 +2,13 @@
    and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 #include "Point.hpp"
-#include "Drawer.hpp"
+#include "BaseDrawer.hpp"
 #include "Matrix.hpp"
 #include "Window.hpp"
 
 template<unsigned D>
-void Curve<D>::draw(Drawer<D>& drawer) {
-    drawer.draw(*this);
+void Curve<D>::draw(BaseDrawer<D>& BaseDrawer) {
+    BaseDrawer.draw(*this);
 }
 
 template<unsigned D>

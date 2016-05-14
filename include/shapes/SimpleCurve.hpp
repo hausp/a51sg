@@ -42,7 +42,7 @@ class SimpleCurve : public Drawable<D> {
         lines = updater.update(accuracy, coefficients);
     }
 
-    void draw(Drawer<D>&) override;
+    void draw(BaseDrawer<D>&) override;
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;

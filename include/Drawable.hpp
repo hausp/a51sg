@@ -11,7 +11,7 @@
 #include "utils.hpp"
 
 template<unsigned D>
-class Drawer;
+class BaseDrawer;
 template<unsigned D>
 class Point;
 class Window;
@@ -51,7 +51,7 @@ class Drawable {
 
     virtual ~Drawable() { }
 
-    virtual void draw(Drawer<D>&) = 0;
+    virtual void draw(BaseDrawer<D>&) = 0;
     virtual void clip(Window&) = 0;
     virtual void transform(const Matrix<D+1,D+1>&) = 0;
     virtual Point<D> center() const = 0;

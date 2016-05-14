@@ -21,7 +21,7 @@ class Polygon : public Drawable<D> {
     Polygon(const std::string&, const Point<D>&,
             const Point<D>&, const Args&...);
     Polygon(const std::vector<Point<D>>&);
-    void draw(Drawer<D>&) override;
+    void draw(BaseDrawer<D>&) override;
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;

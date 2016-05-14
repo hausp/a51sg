@@ -38,7 +38,7 @@ class Curve : public Drawable<D> {
 
     virtual std::vector<std::vector<Point<D>>> parseParams(const std::vector<Point<D>>&) = 0;
 
-    void draw(Drawer<D>&) override;
+    void draw(BaseDrawer<D>&) override;
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;

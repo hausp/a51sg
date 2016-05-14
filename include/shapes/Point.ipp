@@ -2,7 +2,7 @@
    and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 #include "Point.hpp"
-#include "Drawer.hpp"
+#include "BaseDrawer.hpp"
 #include "Matrix.hpp"
 #include "Window.hpp"
 
@@ -48,8 +48,8 @@ Point<D>::~Point() {
 }
 
 template<unsigned D>
-void Point<D>::draw(Drawer<D>& drawer) {
-    drawer.draw(*this);
+void Point<D>::draw(BaseDrawer<D>& BaseDrawer) {
+    BaseDrawer.draw(*this);
 }
 
 template<unsigned D>

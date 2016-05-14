@@ -1,7 +1,7 @@
 /* created by Ghabriel Nunes<ghabriel.nunes@gmail.com> 
    and Marleson Graf<aszdrick@gmail.com> [2016] */
 
-#include "Drawer.hpp"
+#include "BaseDrawer.hpp"
 #include "Window.hpp"
 
 template<unsigned D>
@@ -29,8 +29,8 @@ Line<D>::Line(const Point<D>& p1, const Point<D>& p2)
 }
 
 template<unsigned D>
-void Line<D>::draw(Drawer<D>& drawer) {
-    drawer.draw(*this);
+void Line<D>::draw(BaseDrawer<D>& BaseDrawer) {
+    BaseDrawer.draw(*this);
 }
 
 template<unsigned D>
