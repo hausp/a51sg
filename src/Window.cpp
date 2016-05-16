@@ -66,15 +66,6 @@ void Window::rotate(const double _angle) {
     angle = fmod(angle + _angle + 360, 360);
 }
 
-Point<2> Window::toViewport(const Viewport& viewport, Point<2>& p) {
-    double width  = viewport.second[0] - viewport.first[0];
-    double height = viewport.second[1] - viewport.first[1];
-    Point<2> pn   = p.ndc();
-    double x = (pn[0] + 1) / 2 * width + viewport.first[0];
-    double y = (1 - (pn[1] + 1)/ 2) * height + viewport.first[1];
-    return Point<2>(x, y);
-}
-
 void Window::zoom(const double zoomRate) {
     if (currentZoom + zoomRate > 0) {
         currentZoom += zoomRate;

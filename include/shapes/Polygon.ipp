@@ -8,13 +8,6 @@ template<unsigned D>
 Polygon<D>::Polygon() : Drawable<D>("", DrawableType::Polygon) { }
 
 template<unsigned D>
-Polygon<D>::Polygon(const Polygon& polygon) : Drawable<D>("", DrawableType::Polygon) {
-    for (auto l : polygon) {
-        vertices.push_back(l);
-    }
-}
-
-template<unsigned D>
 template<typename ...Args>
 Polygon<D>::Polygon(const Point<D>& p1, const Point<D>& p2, const Args&... args)
 : Drawable<D>("", DrawableType::Polygon) {

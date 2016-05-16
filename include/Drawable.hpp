@@ -8,6 +8,7 @@
 #include <string>
 #include <tuple>
 #include "Matrix.hpp"
+#include "Transformation.hpp"
 #include "utils.hpp"
 
 template<unsigned D>

@@ -11,12 +11,16 @@
 template<unsigned R, unsigned C>
 class Matrix;
 
+template<unsigned Dn, unsigned D>
+struct is_valid {
+    bool value = Dn >= D;
+};
+
 template<unsigned D>
 class Point : public Drawable<D> {
  public:
     Point();
     Point(const double);
-    Point(const Point&);
 
     template<typename ...Args>
     Point(typename std::enable_if<sizeof...(Args)+1 == D,
@@ -28,6 +32,9 @@ class Point : public Drawable<D> {
           typename std::enable_if<sizeof...(Args)+1 == D,
           const double>::type,
           Args...);
+
+    template<unsigned Dn>
+    Point(const Point<Dn>&);
 
     ~Point();
 
@@ -55,7 +62,7 @@ class Point : public Drawable<D> {
     typename std::array<double, D>::const_iterator begin() const;
     typename std::array<double, D>::iterator end();
     typename std::array<double, D>::const_iterator end() const;
-    std::array<double, D> toArray();
+    std::array<double, D> toArray() const;
 
  private:
     std::array<double, D> coordinates;

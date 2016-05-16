@@ -23,7 +23,8 @@ class Window {
     void moveHorizontal(const double);
     void moveVertical(const double);
     void rotate(const double);
-    Point<2> toViewport(const Viewport&, Point<2>&);
+    template<unsigned D>
+    Point<D> toViewport(const Viewport&, Point<D>&);
     void zoom(const double);
     double getAngle();
     double getZoomLevel();
@@ -69,11 +70,16 @@ class Window {
         std::vector<Point<2>>&, std::vector<Point<2>>&, std::vector<Point<2>>&);
     void athertonStep(const std::vector<Point<2>>&, const std::vector<Point<2>>&,
         const std::vector<Point<2>>&, const Point<2>&, std::vector<Point<2>>&);
-    // void athertonStepPolygon(const std::list<Point<2>>&, const std::vector<Point<2>>&,
-        // const std::vector<Point<2>>&, const Point<2>&, const Point<2>&, std::vector<Point<2>>&);
-    // void athertonStepWindow(const std::list<Point<2>>&, const std::vector<Point<2>>&,
-        // const std::vector<Point<2>>&, const Point<2>&, const Point<2>&,
-        // std::vector<Point<2>>&);
 };
+
+template<unsigned D>
+Point<D> Window::toViewport(const Viewport& viewport, Point<D>& p) {
+    double width  = viewport.second[0] - viewport.first[0];
+    double height = viewport.second[1] - viewport.first[1];
+    auto& pn = p.ndc();
+    double x = (pn[0] + 1) / 2 * width + viewport.first[0];
+    double y = (1 - (pn[1] + 1)/ 2) * height + viewport.first[1];
+    return Point<D>(x, y);
+}
 
 #endif /* WINDOW_HPP */

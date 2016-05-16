@@ -17,13 +17,6 @@ Point<D>::Point(const double value) : Drawable<D>("", DrawableType::Point) {
 }
 
 template<unsigned D>
-Point<D>::Point(const Point& point) : Drawable<D>("", DrawableType::Point) {
-    for (unsigned i = 0; i < D; i++) {
-        coordinates[i] = point.coordinates[i];
-    }
-}
-
-template<unsigned D>
 template<typename... Args>
 Point<D>::Point(typename std::enable_if<sizeof...(Args)+1 == D,
       const double>::type c,
@@ -39,6 +32,19 @@ Point<D>::Point(const std::string& name,
       const double>::type c,
       Args... args) : Drawable<D>(name, DrawableType::Point) {
     init(0, c, args...);
+}
+
+template<unsigned D>
+template<unsigned Dn>
+Point<D>::Point(const Point<Dn>& p)
+: Drawable<D>("", DrawableType::Point) {
+    for (unsigned i = 0; i < D; i++) {
+        if (i < Dn) {
+            coordinates[i] = p[i];
+        } else {
+            coordinates[i] = 0;
+        }
+    }
 }
 
 template<unsigned D>
@@ -191,7 +197,7 @@ typename std::array<double, D>::const_iterator Point<D>::end() const {
 }
 
 template<unsigned D>
-std::array<double, D> Point<D>::toArray() {
+std::array<double, D> Point<D>::toArray() const {
     return coordinates;
 }
 
