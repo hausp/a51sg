@@ -14,12 +14,18 @@ template<unsigned D>
 class Polygon : public Drawable<D> {
  public:
     Polygon();
+
     template<typename ...Args>
     Polygon(const Point<D>&, const Point<D>&, const Args&...);
+
     template<typename ...Args>
     Polygon(const std::string&, const Point<D>&,
             const Point<D>&, const Args&...);
+
     Polygon(const std::vector<Point<D>>&);
+
+    template<unsigned Dn>
+    Polygon(const Polygon<Dn>&);
 
     void draw(BaseDrawer<D>&) override;
     void clip(Window&) override;

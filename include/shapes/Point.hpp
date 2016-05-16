@@ -5,6 +5,7 @@
 #define POINT_HPP
 
 #include <array>
+#include <memory>
 #include <vector>
 #include "Drawable.hpp"
 
@@ -36,8 +37,6 @@ class Point : public Drawable<D> {
     template<unsigned Dn>
     Point(const Point<Dn>&);
 
-    ~Point();
-
     void draw(BaseDrawer<D>&) override;
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;
@@ -66,7 +65,7 @@ class Point : public Drawable<D> {
 
  private:
     std::array<double, D> coordinates;
-    Point<D>* normalized_point = NULL;
+    std::shared_ptr<Point<D>> normalized_point;
 
     template<typename ...Args>
     void init(unsigned pos, const double, const Args...);

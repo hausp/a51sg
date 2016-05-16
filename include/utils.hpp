@@ -16,6 +16,14 @@ template<unsigned D>
 class Line;
 
 #define RECENT_COMPILER 1
+#define TRACE(x) std::cout << (#x) << " = " << (x) << std::endl
+#define TRACE_L(x,y) std::cout << (x) << " = " << (y) << std::endl
+#define TRACE_IT(x) \
+    unsigned counter = 0; \
+    for (auto& elem : (x)) { \
+        std::cout << (#x) << "[" << std::to_string(counter++) << "] = " << elem << std::endl; \
+    }
+#define ECHO(x) std::cout << x << std::endl
 
 using color_t = std::tuple<unsigned, unsigned, unsigned, double>;
 

@@ -39,18 +39,8 @@ template<unsigned Dn>
 Point<D>::Point(const Point<Dn>& p)
 : Drawable<D>("", DrawableType::Point) {
     for (unsigned i = 0; i < D; i++) {
-        if (i < Dn) {
-            coordinates[i] = p[i];
-        } else {
-            coordinates[i] = 0;
-        }
+        coordinates[i] = (i < Dn) ? p[i] : 0;
     }
-}
-
-template<unsigned D>
-Point<D>::~Point() {
-    if (normalized_point)
-        delete normalized_point;
 }
 
 template<unsigned D>
@@ -75,7 +65,8 @@ Point<D> Point<D>::center() const {
 
 template<unsigned D>
 Point<D>& Point<D>::ndc() {
-    if (!normalized_point) normalized_point = new Point<D>(*this);
+    if (!normalized_point)
+        normalized_point = std::make_shared<Point<D>>(*this);
     return *normalized_point;
 }
 

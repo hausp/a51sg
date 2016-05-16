@@ -240,74 +240,6 @@ void Window::athertonStep(const std::vector<Point<2>>& win,
     }
 }
 
-/*void Window::athertonStepPolygon(const std::list<Point<2>>& win,
-    const std::vector<Point<2>>& auxList, const std::vector<Point<2>>& artifVert,
-    const Point<2>& point, const Point<2>& target, std::vector<Point<2>>& result) {
-
-    bool store = false;
-    unsigned i = 0;
-    while (true) {
-        if (auxList[i] == point) {
-            store = true;
-        }
-        if (!store) {
-            i = (i + 1) % auxList.size();
-            continue;
-        }
-        result.push_back(auxList[i]);
-
-        bool stop = false;
-        for (auto vertex : artifVert) {
-            if (vertex == auxList[i]) {
-                stop = true;
-                break;
-            }
-        }
-        if (stop) {
-            athertonStepWindow(win, auxList, artifVert, auxList[i], point, result);
-            break;
-        }
-        i = (i + 1) % auxList.size();
-    }
-}
-
-void Window::athertonStepWindow(const std::list<Point<2>>& win,
-    const std::vector<Point<2>>& auxList, const std::vector<Point<2>>& artifVert,
-    const Point<2>& point, const Point<2>& target, std::vector<Point<2>>& result) {
-
-    bool process = false;
-    unsigned i = 0;
-    while (true) {
-        if (auxList[i] == point) {
-            process = true;
-            i = (i + 1) % auxList.size();
-            continue;
-        }
-        if (!process) {
-            i = (i + 1) % auxList.size();
-            continue;
-        }
-        result.push_back(auxList[i]);
-
-        if (auxList[i] == target) {
-            break;
-        }
-
-        bool stop = false;
-        for (auto vertex : artifVert) {
-            if (vertex == auxList[i]) {
-                stop = true;
-                break;
-            }
-        }
-        if (stop) {
-            athertonStepPolygon(win, auxList, artifVert, auxList[i], point, result);
-            break;
-        }
-        i = (i + 1) % auxList.size();
-    }
-}*/
-
 void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
     std::vector<Point<2>>& incomingList, std::vector<Point<2>>& auxList,
     std::vector<Point<2>>& artificialVertices) {
@@ -414,17 +346,10 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
                     // point over border
                     if (next[0] >= -1 && next[0] <= 1 && next[1] >= -1 && next[1] <= 1) {
                         // next inside window, current may be incoming
-                        if ((previous[0] < -1 && current[0] == -1)
-                            || (previous[0] > 1 && current[0] == 1)
-                            || (previous[1] < -1 && current[1] == -1)
-                            || (previous[1] > 1 && current[1] == 1)) {
-                            // current IS incoming
-                            // SOMEONE PLIS FIX THIS UGLY IF WITH MATH
-                            // PREVIOUS SHALL BE OUTSIDE WINDOW AND "BEHIND" CURRENT
-                            isIncoming = true;
-                        } else {
-                            // Prevents doubleIntersection doin' shit
-                            isIncoming = false;
+                        isIncoming = false;
+                        for (unsigned coord = 0; coord <= 1; coord++) {
+                            auto magnitude = abs(previous[coord]);
+                            isIncoming = isIncoming || (magnitude > 1 && current[coord] == magnitude/previous[coord]);
                         }
                     } else {
                         // next outside window, current may be outcoming

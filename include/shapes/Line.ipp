@@ -8,13 +8,6 @@ template<unsigned D>
 Line<D>::Line() : Drawable<D>("", DrawableType::Line) { }
 
 template<unsigned D>
-Line<D>::Line(const Line& line) : Drawable<D>("", DrawableType::Line) {
-    for (auto p : line) {
-        pointList.push_back(p);
-    }
-}
-
-template<unsigned D>
 Line<D>::Line(const std::string& name, const Point<D>& p1, const Point<D>& p2)
 : Drawable<D>(name, DrawableType::Line) {
     pointList.push_back(p1);
@@ -26,6 +19,14 @@ Line<D>::Line(const Point<D>& p1, const Point<D>& p2)
 : Drawable<D>("", DrawableType::Line) {
     pointList.push_back(p1);
     pointList.push_back(p2);
+}
+
+template<unsigned D>
+template<unsigned Dn>
+Line<D>::Line(const Line<Dn>& line) : Drawable<D>("", DrawableType::Line) {
+    for (auto& p : line) {
+        pointList.push_back(Point<D>(p));
+    }
 }
 
 template<unsigned D>
