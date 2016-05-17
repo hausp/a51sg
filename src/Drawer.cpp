@@ -10,10 +10,10 @@ Drawer::Drawer(const unsigned width, const unsigned height, const unsigned borde
     viewport = std::make_pair(Point2D(border, border),
                               Point2D(width - border, height - border));
 
-    wview = {Point2D(0, 0),
-             Point2D(0, height - 2 * border),
-             Point2D(width - 2 * border, height - 2 * border),
-             Point2D(width - 2 * border, 0)};
+    wview = {Point3D(0, 0, 1),
+             Point3D(0, height - 2 * border, 1),
+             Point3D(width - 2 * border, height - 2 * border, 1),
+             Point3D(width - 2 * border, 0, 1)};
 
     wview.setVisible(true);
     wview.update(window.normalizerMatrix(), window);
@@ -25,30 +25,30 @@ void Drawer::addShape(Drawable3D* d) {
     update(d);
 }
 
-void Drawer::draw(Point2D p) {
+void Drawer::draw(Point3D& p) {
     if (!p.isVisible()) return;
     cairo::set_color(p.getColor());
-    Point2D pv = window.toViewport(viewport, p);
+    auto pv = window.toViewport(viewport, p.ndc());
     cairo::point(pv[0], pv[1]);
 }
 
-void Drawer::draw(Line2D ln) {
+void Drawer::draw(Line3D& ln) {
     if (!ln.isVisible()) return;
     cairo::set_color(ln.getColor());
-    auto p1 = window.toViewport(viewport, ln[0]);
-    auto p2 = window.toViewport(viewport, ln[1]);
+    auto p1 = window.toViewport(viewport, ln[0].ndc());
+    auto p2 = window.toViewport(viewport, ln[1].ndc());
     cairo::move_to(p1[0], p1[1]);
     cairo::line_to(p2[0], p2[1]);
     cairo::stroke();
 }
 
-void Drawer::draw(Polygon2D p) {
+void Drawer::draw(Polygon3D& p) {
     if (!p.isVisible()) return;
     cairo::set_color(p.getColor());
     auto& points = p.ndc();
-    for (auto point : points) {
-        point = window.toViewport(viewport, point);
-        cairo::line_to(point[0], point[1]);
+    for (auto& point : points) {
+        auto newPoint = window.toViewport(viewport, point.ndc());
+        cairo::line_to(newPoint[0], newPoint[1]);
     }
     cairo::close_path();
     if (p.isFilled()) {
@@ -58,23 +58,23 @@ void Drawer::draw(Polygon2D p) {
     }
 }
 
-void Drawer::draw(SimpleCurve2D c) {
+void Drawer::draw(SimpleCurve3D& c) {
     if (!c.isVisible()) return;
     cairo::set_color(c.getColor());
-    Line2D* lastLine = nullptr;
+    Line3D* lastLine = nullptr;
     for (auto& line : c) {
         Point2D newPoint;
         if (line.isVisible()) {
-            newPoint = window.toViewport(viewport, line[0]);
+            newPoint = window.toViewport(viewport, line[0].ndc());
             lastLine = &line;
             cairo::line_to(newPoint[0], newPoint[1]);                
         } else if (lastLine != nullptr) {
-            newPoint = window.toViewport(viewport, (*lastLine)[1]);
+            newPoint = window.toViewport(viewport, (*lastLine)[1].ndc());
             lastLine = nullptr;
-            cairo::line_to(newPoint[0], newPoint[1]);                
+            cairo::line_to(newPoint[0], newPoint[1]);
         }
     }
-    cairo::stroke();        
+    cairo::stroke();
 }
 
 void Drawer::draw(Curve3D& curve) {

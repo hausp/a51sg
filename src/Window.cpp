@@ -15,7 +15,8 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 Window::Window(const Point<2>& min, const Point<2>& max)
 : min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2),
-  vpn(new Line<3>((min + max)/2, Point<3>((min + max)/2) + Point<3>(0, 0, 230))) {
+  // vpn(new Line<3>((min + max)/2, Point<3>((min + max)/2) + Point<3>(0, 0, 1))) {
+  vpn(new Line<3>({0, 0, 0}, {0, 0, 1})) {
     defaultWidth  = max[0] - min[0];
     defaultHeight = max[1] - min[1];
 
@@ -73,6 +74,15 @@ void Window::rotate(const double _angle) {
     angle = fmod(angle + _angle + 360, 360);
 }
 
+Point<2> Window::toViewport(const Viewport& viewport, Point<2>& p) {
+    double width  = viewport.second[0] - viewport.first[0];
+    double height = viewport.second[1] - viewport.first[1];
+    auto& pn = p.ndc();
+    double x = (pn[0] + 1) / 2 * width + viewport.first[0];
+    double y = (1 - (pn[1] + 1)/ 2) * height + viewport.first[1];
+    return Point<2>(x, y);
+}
+
 void Window::zoom(const double zoomRate) {
     if (currentZoom + zoomRate > 0) {
         currentZoom += zoomRate;
@@ -101,21 +111,17 @@ Point<2> Window::parallelProjection(Point<2> p) const {
 }
 
 Point<2> Window::parallelProjection(Point<3> p) const {
-    // TRACE(*vpn);
-    auto vrp = (*vpn).operator[](0);
+    auto vrp = (*vpn)[0];
     auto transformation = utils::translationMatrix((-vrp).toArray());
 
     Point<3> xAxis(1, 0, 0);
     Point<3> yAxis(0, 1, 0);
     auto vector = (*vpn)[1] - (*vpn)[0];
-    TRACE(vector);
-    double tx = acos((xAxis * vector) / vector.norm());
-    double ty = acos((yAxis * vector) / vector.norm());
-    transformation *= utils::rotationMatrix<3>(tx, utils::RotationPlane::X);
-    transformation *= utils::rotationMatrix<3>(ty, utils::RotationPlane::Y);
-    TRACE(p);
+    double tx = acos((xAxis * vector) / vector.norm()) * 180 / M_PI;
+    double ty = acos((yAxis * vector) / vector.norm()) * 180 / M_PI;
+    transformation *= utils::rotationMatrix<3>(90 - tx, utils::RotationPlane::X);
+    transformation *= utils::rotationMatrix<3>(90 - ty, utils::RotationPlane::Y);
     p *= transformation;
-    TRACE(p);
     return p;
 }
 

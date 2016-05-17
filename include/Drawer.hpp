@@ -35,10 +35,10 @@ class Drawer : public SuperDrawer {
     void setZoom(const double);
     void setViewport(Point2D, Point2D);
     void addShape(Drawable3D*);
-    void draw(Point2D);
-    void draw(Line2D);
-    void draw(Polygon2D);
-    void draw(SimpleCurve2D);
+    void draw(Point3D&);
+    void draw(Line3D&);
+    void draw(Polygon3D&);
+    void draw(SimpleCurve3D&);
     void draw(Curve3D&);
     void drawAll();
     void moveVertical(const int);
@@ -58,7 +58,7 @@ class Drawer : public SuperDrawer {
  private:
     Window window;
     std::pair<Point2D, Point2D> viewport;
-    Polygon2D wview;
+    Polygon3D wview;
 
     double zoomRate = 0.05;
     double rotationSpeed = 15;

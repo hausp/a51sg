@@ -33,10 +33,16 @@ class BaseDrawer {
     const std::vector<Drawable<D>*>& getDisplayFile();
     void clearDisplayFile();
 
-    virtual void draw(Point<2>) = 0;
-    virtual void draw(Line<2>) = 0;
-    virtual void draw(Polygon<2>) = 0;
-    virtual void draw(SimpleCurve<2>) = 0;
+    virtual void draw(Point<2>&) {}
+    virtual void draw(Line<2>&) {}
+    virtual void draw(Polygon<2>&) {}
+    virtual void draw(SimpleCurve<2>&) {}
+    virtual void draw(Curve<2>&) {}
+
+    virtual void draw(Point<3>&) = 0;
+    virtual void draw(Line<3>&) = 0;
+    virtual void draw(Polygon<3>&) = 0;
+    virtual void draw(SimpleCurve<3>&) = 0;
     virtual void draw(Curve<3>&) = 0;
 
     void drawAll();

@@ -44,8 +44,8 @@ Point<D>::Point(const Point<Dn>& p)
 }
 
 template<unsigned D>
-void Point<D>::draw(BaseDrawer<D>& BaseDrawer) {
-    BaseDrawer.draw(*this);
+void Point<D>::draw(BaseDrawer<D>& drawer) {
+    drawer.draw(*this);
 }
 
 template<unsigned D>
@@ -79,7 +79,6 @@ template<unsigned D>
 void Point<D>::update(const Matrix<3,3>& matrix, const Window& window) {
     ndc() = window.parallelProjection(*this);
     ndc() *= matrix;
-    TRACE(ndc());
 }
 
 template<unsigned D>

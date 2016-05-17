@@ -39,8 +39,8 @@ Polygon<D>::Polygon(const Polygon<Dn>& polygon) : Drawable<D>("", DrawableType::
 }
 
 template<unsigned D>
-void Polygon<D>::draw(BaseDrawer<D>& BaseDrawer) {
-    BaseDrawer.draw(*this);
+void Polygon<D>::draw(BaseDrawer<D>& drawer) {
+    drawer.draw(*this);
 }
 
 template<unsigned D>
