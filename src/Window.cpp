@@ -15,9 +15,15 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 Window::Window(const Point<2>& min, const Point<2>& max)
 : min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2),
-  vpn(new Line<3>((min + max)/2, (min + max)/2 + Point<3>(0, 0, 200))) {
+  vpn(new Line<3>((min + max)/2, Point<3>((min + max)/2) + Point<3>(0, 0, 230))) {
     defaultWidth  = max[0] - min[0];
     defaultHeight = max[1] - min[1];
+
+    // this->min = parallelProjection(this->min);
+    // this->min *= normalizerMatrix();
+
+    // this->max = parallelProjection(this->max);
+    // this->max *= normalizerMatrix();
 }
 
 Matrix<3, 3> Window::normalizerMatrix() {
@@ -101,11 +107,15 @@ Point<2> Window::parallelProjection(Point<3> p) const {
 
     Point<3> xAxis(1, 0, 0);
     Point<3> yAxis(0, 1, 0);
-    double tx = acos((xAxis * p) / p.norm());
-    double ty = acos((yAxis * p) / p.norm());
+    auto vector = (*vpn)[1] - (*vpn)[0];
+    TRACE(vector);
+    double tx = acos((xAxis * vector) / vector.norm());
+    double ty = acos((yAxis * vector) / vector.norm());
     transformation *= utils::rotationMatrix<3>(tx, utils::RotationPlane::X);
     transformation *= utils::rotationMatrix<3>(ty, utils::RotationPlane::Y);
+    TRACE(p);
     p *= transformation;
+    TRACE(p);
     return p;
 }
 

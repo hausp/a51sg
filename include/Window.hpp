@@ -87,6 +87,4 @@ Point<D> Window::toViewport(const Viewport& viewport, Point<D>& p) {
     return Point<D>(x, y);
 }
 
-#include "Window.ipp"
-
 #endif /* WINDOW_HPP */

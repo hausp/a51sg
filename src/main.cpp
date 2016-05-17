@@ -38,11 +38,4 @@ int main(int argc, char** argv) {
 
     // Start GTK+
     gtk::main();
-
-//     Point<3> scientist{6, 6, 6};
-//     Point<2> sinner = scientist;
-//     std::cout << "sinner = {" << sinner[0] << ", " << sinner[1] << "}" << std::endl;
-//     scientist = sinner;
-//     std::cout << "scientist = {" << scientist[0] << ", " << scientist[1] << ", "
-//     << scientist[2] << "}" << std::endl;
 }
