@@ -220,3 +220,16 @@ Point<R>& operator*=(Point<R>& p, const Matrix<R+1,C>& m) {
     }
     return p;
 }
+
+template<unsigned D>
+std::ostream& operator<<(std::ostream& stream, const Point<D>& p) {
+    stream << '(';
+    for (unsigned i = 0; i < D; i++) {
+        if (i > 0) {
+            stream << ',';
+        }
+        stream << p[i];
+    }
+    stream << ')';
+    return stream;
+}

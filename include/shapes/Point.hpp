@@ -6,6 +6,7 @@
 
 #include <array>
 #include <memory>
+#include <ostream>
 #include <vector>
 #include "Drawable.hpp"
 
@@ -77,6 +78,9 @@ Matrix<1,R+1> operator*(const Point<R>&, const Matrix<R+1,C>&);
 
 template<unsigned R, unsigned C>
 Point<R>& operator*=(Point<R>&, const Matrix<R+1,C>&);
+
+template<unsigned D>
+std::ostream& operator<<(std::ostream& stream, const Point<D>& p);
 
 #include "Point.ipp"
 

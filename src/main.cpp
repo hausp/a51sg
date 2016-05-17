@@ -21,7 +21,6 @@ int main(int argc, char** argv) {
     Interface gui(canvasWidth, canvasHeight);
 
     // BaseDrawer - the cool stuff goes here
-    // Default values to window - length(600), height(600)
     Drawer BaseDrawer(canvasWidth, canvasHeight, 20);
     
     // Controller - being God
