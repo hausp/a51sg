@@ -64,9 +64,9 @@ Point<D> Point<D>::center() const {
 }
 
 template<unsigned D>
-Point<D>& Point<D>::ndc() {
+Point<2>& Point<D>::ndc() {
     if (!normalized_point)
-        normalized_point = std::make_shared<Point<D>>(*this);
+        normalized_point = std::make_shared<Point<2>>(*this);
     return *normalized_point;
 }
 
@@ -76,14 +76,23 @@ std::vector<Point<D>> Point<D>::points() const {
 }
 
 template<unsigned D>
-void Point<D>::update(const Matrix<D+1,D+1>& matrix) {
-    ndc() = Point<D>(*this);
+void Point<D>::update(const Matrix<3,3>& matrix, const Window& window) {
+    ndc() = window.parallelProjection(*this);
     ndc() *= matrix;
 }
 
 template<unsigned D>
 const size_t Point<D>::dimension() const {
     return coordinates.size();
+}
+
+template<unsigned D>
+double Point<D>::norm() const {
+    double result = 0;
+    for (unsigned i = 0; i < D; i++) {
+        result += (*this)[i] * (*this)[i];
+    }
+    return sqrt(result);
 }
 
 template<unsigned D>
@@ -153,6 +162,20 @@ template<unsigned D>
 Point<D> Point<D>::operator-(const Point<D>& p) const {
     Point<D> r = *this;
     return r -= p;
+}
+
+template<unsigned D>
+Point<D> Point<D>::operator-() const {
+    return Point<D>() - *this;
+}
+
+template<unsigned D>
+double Point<D>::operator*(const Point<D>& p) const {
+    double sum = 0;
+    for (unsigned i = 0; i < D; i++) {
+        sum += (*this)[i] * p[i];
+    }
+    return sum;
 }
 
 template<unsigned D>

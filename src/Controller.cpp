@@ -8,7 +8,6 @@
 #include "gtk.hpp"
 #include "BezierCurve.hpp"
 #include "BSplineCurve.hpp"
-#include "BaseDrawer.hpp"
 #include "Drawer.hpp"
 #include "FileManager.hpp"
 #include "ForwardDifferenceAlgorithm.hpp"
@@ -18,8 +17,8 @@
 #include "Line.hpp"
 #include "Polygon.hpp"
 
-Controller::Controller(Interface& interface, Drawer& BaseDrawer) 
-: interface(interface), BaseDrawer(BaseDrawer) {
+Controller::Controller(Interface& interface, Drawer& drawer) 
+: interface(interface), drawer(drawer) {
     fileManager = std::shared_ptr<FileManager>(new FileManager());
 }
 
@@ -28,14 +27,14 @@ Controller::~Controller() { }
 // -------------------------- Window Navigation --------------------------- //
 
 void Controller::moveVertical(const int direction) {
-    BaseDrawer.moveVertical(direction);
-    BaseDrawer.drawAll();
+    drawer.moveVertical(direction);
+    drawer.drawAll();
     interface.queueDraw();
 }
 
 void Controller::moveHorizontal(const int direction) {
-    BaseDrawer.moveHorizontal(direction);
-    BaseDrawer.drawAll();
+    drawer.moveHorizontal(direction);
+    drawer.drawAll();
     interface.queueDraw();
 }
 
@@ -44,12 +43,12 @@ void Controller::setZoom() {
     std::string z = gtk_entry_get_text(GTK_ENTRY(zoomLevel));
     // std::regex numeric("^\\d+");
     // if (!std::regex_match(z, numeric)) return;
-    BaseDrawer.setZoom(stoi(z)/100.0);
+    drawer.setZoom(stoi(z)/100.0);
 }
 
 void Controller::zoom(const int d) {
-    BaseDrawer.zoom(d);
-    BaseDrawer.drawAll();
+    drawer.zoom(d);
+    drawer.drawAll();
     interface.queueDraw();
 }
 
@@ -89,20 +88,20 @@ void Controller::createPoint() {
     }
 
     if (name != "") {
-        Point2D* p;
+        Point3D* p;
         #if !RECENT_COMPILER
         try {
         #endif
-            p = new Point2D(name, stoi(entries[0]), stoi(entries[1]));
+            p = new Point3D(name, stoi(entries[0]), stoi(entries[1]), 1);
         #if !RECENT_COMPILER
         } catch(...) {
             return;
         }
         #endif
-        BaseDrawer.addShape(p);
+        drawer.addShape(p);
         interface.addShape(p->getFormattedName());
         interface.closeDialog();
-        BaseDrawer.draw(*p);
+        drawer.draw(*p);
         interface.queueDraw();
     }
 }
@@ -116,22 +115,22 @@ void Controller::createLine() {
     }
 
     if (name != "") {
-        Point2D p1, p2;
+        Point3D p1, p2;
         #if !RECENT_COMPILER
         try {
         #endif
-            p1 = Point2D(stoi(entries[0]), stoi(entries[1]));
-            p2 = Point2D(stoi(entries[2]), stoi(entries[3]));
+            p1 = Point3D(stoi(entries[0]), stoi(entries[1]), 1);
+            p2 = Point3D(stoi(entries[2]), stoi(entries[3]), 1);
         #if !RECENT_COMPILER
         } catch(...) {
             return;
         }
         #endif
-        Line2D* line = new Line2D(name, p1, p2);
-        BaseDrawer.addShape(line);
+        auto line = new Line3D(name, p1, p2);
+        drawer.addShape(line);
         interface.addShape(line->getFormattedName());
         interface.closeDialog();
-        BaseDrawer.draw(*line);
+        drawer.draw(*line);
         interface.queueDraw();
     }
 }
@@ -145,25 +144,25 @@ void Controller::createPolygon() {
     }
 
     if (name != "") {
-        std::vector<Point<2>> polygonPoints;
+        std::vector<Point3D> polygonPoints;
         #if !RECENT_COMPILER
         try {
         #endif
         for (unsigned i = 0; i < entries.size() - 1; i += 2) {
-            polygonPoints.push_back(Point2D(stoi(entries[i]), stoi(entries[i + 1])));
+            polygonPoints.push_back(Point3D(stoi(entries[i]), stoi(entries[i + 1]), 1));
         }
         #if !RECENT_COMPILER
         } catch(...) {
             return;
         }
         #endif
-        Polygon2D* polygon = new Polygon2D(polygonPoints);
+        auto polygon = new Polygon3D(polygonPoints);
         polygon->setName(name);
         polygon->setFilled(filledPolygon);
-        BaseDrawer.addShape(polygon);
+        drawer.addShape(polygon);
         interface.addShape(polygon->getFormattedName());
         interface.closeDialog();
-        BaseDrawer.draw(*polygon);
+        drawer.draw(*polygon);
         interface.queueDraw();
     }
 }
@@ -177,12 +176,12 @@ void Controller::createCurve() {
     }
 
     if (name != "") {
-        std::vector<Point<2>> curvePoints;
+        std::vector<Point3D> curvePoints;
         #if !RECENT_COMPILER
         try {
         #endif
         for (unsigned i = 0; i < entries.size() - 1; i += 2) {
-            curvePoints.push_back(Point2D(stoi(entries[i]), stoi(entries[i + 1])));
+            curvePoints.push_back(Point3D(stoi(entries[i]), stoi(entries[i + 1]), 1));
         }
         #if !RECENT_COMPILER
         } catch(...) {
@@ -190,18 +189,19 @@ void Controller::createCurve() {
         }
         #endif
 
-        Curve<2>* curve;
+        Curve<3>* curve;
 
         if (interface.getSelectedRadio() == 0) {
-            curve = new BezierCurve<2>(ForwardDifferenceAlgorithm<2>(), 0.05, curvePoints);
+            curve = new BezierCurve<3>(ForwardDifferenceAlgorithm<3>(), 0.05, curvePoints);
         } else {
-            curve = new BSplineCurve<2>(ForwardDifferenceAlgorithm<2>(), 0.05, curvePoints);
+            curve = new BSplineCurve<3>(ForwardDifferenceAlgorithm<3>(), 0.05, curvePoints);
         }
         curve->setName(name);
-        BaseDrawer.addShape(curve);
+        drawer.addShape(curve);
         interface.addShape(curve->getFormattedName());
         interface.closeDialog();
-        BaseDrawer.draw(*curve);
+        drawer.draw(*curve);
+        // drawer.draw(*Curve<2>(curve));
         interface.queueDraw();
     }
     // std::vector<Point<2>> points = {Point<2>(100, 100), Point<2>(200, 400), 
@@ -211,8 +211,8 @@ void Controller::createCurve() {
 
 void Controller::removeObject(const long index) {
     interface.removeShape(index);
-    BaseDrawer.removeShape(index);
-    BaseDrawer.drawAll();
+    drawer.removeShape(index);
+    drawer.drawAll();
     interface.queueDraw();
 }
 
@@ -231,14 +231,14 @@ void Controller::finishTranslation() {
     #if !RECENT_COMPILER
     try {
     #endif
-        BaseDrawer.translate(currentIndex, {stod(entries[0]), stod(entries[1])});
+        drawer.translate(currentIndex, {stod(entries[0]), stod(entries[1])});
     #if !RECENT_COMPILER
     } catch(...) {
         return;
     }
     #endif
     interface.closeDialog();
-    BaseDrawer.drawAll();
+    drawer.drawAll();
     interface.queueDraw();
 }
 
@@ -257,14 +257,14 @@ void Controller::finishScaling() {
     #if !RECENT_COMPILER
     try {
     #endif
-        BaseDrawer.scale(currentIndex, {stod(entries[0]), stod(entries[1])});
+        drawer.scale(currentIndex, {stod(entries[0]), stod(entries[1])});
     #if !RECENT_COMPILER
     } catch(...) {
         return;
     }
     #endif
     interface.closeDialog();
-    BaseDrawer.drawAll();
+    drawer.drawAll();
     interface.queueDraw();
 }
 
@@ -294,16 +294,16 @@ void Controller::finishRotation() {
     }
     #endif
     entries.pop_back();
-    BaseDrawer.rotate(currentIndex, angle, type, entries);
+    drawer.rotate(currentIndex, angle, type, entries);
     interface.closeDialog();
-    BaseDrawer.drawAll();
+    drawer.drawAll();
     interface.queueDraw();
 }
 
 void Controller::rotateWindow(long direction) {
-    BaseDrawer.rotateWindow(direction);
-    interface.updateAngle(BaseDrawer.getWindowAngle());
-    BaseDrawer.drawAll();
+    drawer.rotateWindow(direction);
+    interface.updateAngle(drawer.getWindowAngle());
+    drawer.drawAll();
     interface.queueDraw();
 }
 
@@ -329,8 +329,8 @@ void Controller::rowSelected(GtkListBox* const list,
                              GtkListBoxRow* const row) {
     if (row) {
         long index = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
-        BaseDrawer.highlightObject(index);
-        BaseDrawer.drawAll();
+        drawer.highlightObject(index);
+        drawer.drawAll();
         interface.queueDraw();
     }
 }
@@ -345,32 +345,33 @@ void Controller::saveFileDialog() {
 
 void Controller::openFile(const std::string& filename) {
     clearObjects();
-    auto displayFile = fileManager->fromObj2D(filename);
+    // auto displayFile = fileManager->fromObj2D(filename);
+    std::vector<Drawable<3>*> displayFile;
     for (auto shape : displayFile) {
         interface.addShape(shape->getFormattedName());
     }
-    BaseDrawer.swap(displayFile);
-    BaseDrawer.drawAll();
+    drawer.swap(displayFile);
+    drawer.drawAll();
     interface.queueDraw();
 }
 
 void Controller::saveFile(const std::string& filename) {
-    auto content = fileManager->toObj(BaseDrawer.getDisplayFile());
+    auto content = fileManager->toObj(drawer.getDisplayFile());
     std::ofstream output(filename);
     output << content << std::endl;
 }
 
 void Controller::clearObjects() {
-    interface.clearObjects(BaseDrawer.getDisplayFile().size());
-    BaseDrawer.clearDisplayFile();
-    BaseDrawer.drawAll();
+    interface.clearObjects(drawer.getDisplayFile().size());
+    drawer.clearDisplayFile();
+    drawer.drawAll();
     interface.queueDraw();
 }
 
 void Controller::clippingSelection() {
     auto result = interface.clippingSelection();
     if (result > -1) {
-        BaseDrawer.setClippingAlgorithm(result);    
+        drawer.setClippingAlgorithm(result);    
     }
 }
 
@@ -379,7 +380,7 @@ void Controller::clippingSelection() {
 bool Controller::configure_event(GtkWidget* const widget,
                                  GdkEventConfigure* const event) {
     bool r = cairo::update(widget);
-    BaseDrawer.resizeViewport(gtk_widget_get_allocated_width(widget),
+    drawer.resizeViewport(gtk_widget_get_allocated_width(widget),
                           gtk_widget_get_allocated_height(widget));
     return r;
 }

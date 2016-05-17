@@ -30,8 +30,8 @@ Line<D>::Line(const Line<Dn>& line) : Drawable<D>("", DrawableType::Line) {
 }
 
 template<unsigned D>
-void Line<D>::draw(BaseDrawer<D>& BaseDrawer) {
-    BaseDrawer.draw(*this);
+void Line<D>::draw(BaseDrawer<D>& drawer) {
+    drawer.draw(*this);
 }
 
 template<unsigned D>
@@ -56,9 +56,9 @@ std::vector<Point<D>> Line<D>::points() const {
 }
 
 template<unsigned D>
-void Line<D>::update(const Matrix<D+1,D+1>& matrix) {
-    (*this)[0].update(matrix);
-    (*this)[1].update(matrix);
+void Line<D>::update(const Matrix<3,3>& matrix, const Window& window) {
+    (*this)[0].update(matrix, window);
+    (*this)[1].update(matrix, window);
 }
 
 template<unsigned D>
@@ -100,4 +100,10 @@ typename std::vector<Point<D>>::iterator Line<D>::end() {
 template<unsigned D>
 typename std::vector<Point<D>>::const_iterator Line<D>::end() const {
     return pointList.cend();
+}
+
+template<unsigned D>
+std::ostream& operator<<(std::ostream& stream, const Line<D>& line) {
+    stream << '(' << line[0] << ',' << line[1] << ')';
+    return stream;
 }

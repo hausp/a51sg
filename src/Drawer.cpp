@@ -16,23 +16,23 @@ Drawer::Drawer(const unsigned width, const unsigned height, const unsigned borde
              Point2D(width - 2 * border, 0)};
 
     wview.setVisible(true);
-    wview.update(window.normalizerMatrix());
+    wview.update(window.normalizerMatrix(), window);
     wview.setColor(177, 0, 0);
 }
 
-void Drawer::addShape(Drawable2D* d) {
+void Drawer::addShape(Drawable3D* d) {
     SuperDrawer::addShape(d);
     update(d);
 }
 
-void Drawer::draw(Point2D& p) {
+void Drawer::draw(Point2D p) {
     if (!p.isVisible()) return;
     cairo::set_color(p.getColor());
     Point2D pv = window.toViewport(viewport, p);
     cairo::point(pv[0], pv[1]);
 }
 
-void Drawer::draw(Line2D& ln) {
+void Drawer::draw(Line2D ln) {
     if (!ln.isVisible()) return;
     cairo::set_color(ln.getColor());
     auto p1 = window.toViewport(viewport, ln[0]);
@@ -42,7 +42,7 @@ void Drawer::draw(Line2D& ln) {
     cairo::stroke();
 }
 
-void Drawer::draw(Polygon2D& p) {
+void Drawer::draw(Polygon2D p) {
     if (!p.isVisible()) return;
     cairo::set_color(p.getColor());
     auto& points = p.ndc();
@@ -58,7 +58,7 @@ void Drawer::draw(Polygon2D& p) {
     }
 }
 
-void Drawer::draw(SimpleCurve2D& c) {
+void Drawer::draw(SimpleCurve2D c) {
     if (!c.isVisible()) return;
     cairo::set_color(c.getColor());
     Line2D* lastLine = nullptr;
@@ -77,7 +77,7 @@ void Drawer::draw(SimpleCurve2D& c) {
     cairo::stroke();        
 }
 
-void Drawer::draw(Curve2D& curve) {
+void Drawer::draw(Curve3D& curve) {
     for (auto& c : curve) {
         c.setColor(curve.getColor());
         draw(c);
@@ -122,7 +122,7 @@ void Drawer::rotateWindow(long direction) {
     updateAll();
 }
 
-void Drawer::translate(const unsigned long index, const std::array<double, 2>& ds) {
+void Drawer::translate(const unsigned long index, const std::array<double, 3>& ds) {
     if (index < displayFile.size()) {
         SuperDrawer::translate(index, ds);
         update(displayFile[index]);
@@ -130,7 +130,7 @@ void Drawer::translate(const unsigned long index, const std::array<double, 2>& d
     }
 }
 
-void Drawer::scale(const unsigned long index, const std::array<double, 2>& ss) {
+void Drawer::scale(const unsigned long index, const std::array<double, 3>& ss) {
     if (index < displayFile.size()) {
         SuperDrawer::scale(index, ss);
         update(displayFile[index]);
@@ -148,7 +148,6 @@ void Drawer::rotate(const unsigned long index, const double angle,
                 axis = shape->center();
                 break;
             case 1:
-                axis = {0, 0};
                 break;
             case 2:
                 axis = {stod(entries[0]), stod(entries[1])};
@@ -178,21 +177,23 @@ void Drawer::setClippingAlgorithm(const int algorithm) {
     window.setClippingAlgorithm(algorithm);
 }
 
-void Drawer::swap(const std::vector<Drawable2D*>& newDisplayFile) {
+void Drawer::swap(const std::vector<Drawable3D*>& newDisplayFile) {
     SuperDrawer::swap(newDisplayFile);
     updateAll();
 }
 
-void Drawer::update(Drawable2D* shape) {
-    shape->update(window.normalizerMatrix());
-    shape->clip(window);
+void Drawer::update(Drawable3D* shape) {
+    shape->update(window.normalizerMatrix(), window);
+    // shape->clip(window);
 }
 
 void Drawer::updateAll() {
+    // normalizedDisplayFile.clear();
     auto normalizer = window.normalizerMatrix();
     for (auto shape : displayFile) {
-        shape->update(normalizer);
-        shape->clip(window);
+        // normalizedDisplayFile.push_back();
+        shape->update(normalizer, window);
+        // shape->clip(window);
     }
 }
 

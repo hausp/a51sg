@@ -27,6 +27,13 @@ class Curve : public Drawable<D> {
     : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), 
       updater(updater), methodMatrix(matrix) {}
 
+    template<unsigned Dn>
+    Curve(const Curve<Dn>& curve) : Drawable<D>("", DrawableType::Curve) {
+        for (auto& c : curve) {
+            curves.push_back(c);
+        }
+    }
+
     template<typename Iterable>
     void build(const Iterable& params) {
         auto paramGroups = parseParams(params);
@@ -43,7 +50,7 @@ class Curve : public Drawable<D> {
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;
     std::vector<Point<D>> points() const override;
-    void update(const Matrix<D+1,D+1>&) override;
+    void update(const Matrix<3,3>&, const Window&) override;
 
     typename std::vector<SimpleCurve<D>>::iterator begin();
     typename std::vector<SimpleCurve<D>>::const_iterator begin() const;

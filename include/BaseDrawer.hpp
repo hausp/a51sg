@@ -4,16 +4,22 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #ifndef BASE_DRAWER_HPP
 #define BASE_DRAWER_HPP
 
+#include <array>
+#include <cstdlib>
 #include <vector>
-#include "Curve.hpp"
-#include "Line.hpp"
-#include "Point.hpp"
-#include "Polygon.hpp"
-#include "SimpleCurve.hpp"
-#include "Window.hpp"
 
 template<unsigned D>
 class Drawable;
+template<unsigned D>
+class Point;
+template<unsigned D>
+class Line;
+template<unsigned D>
+class Polygon;
+template<unsigned D>
+class SimpleCurve;
+template<unsigned D>
+class Curve;
 template<unsigned R, unsigned C>
 class Matrix;
 
@@ -27,11 +33,11 @@ class BaseDrawer {
     const std::vector<Drawable<D>*>& getDisplayFile();
     void clearDisplayFile();
 
-    virtual void draw(Point<D>&) = 0;
-    virtual void draw(Line<D>&) = 0;
-    virtual void draw(Polygon<D>&) = 0;
-    virtual void draw(SimpleCurve<D>&) = 0;
-    virtual void draw(Curve<D>&) = 0;
+    virtual void draw(Point<2>) = 0;
+    virtual void draw(Line<2>) = 0;
+    virtual void draw(Polygon<2>) = 0;
+    virtual void draw(SimpleCurve<2>) = 0;
+    virtual void draw(Curve<3>&) = 0;
 
     void drawAll();
     void removeShape(const size_t);
@@ -43,6 +49,7 @@ class BaseDrawer {
 
  protected:
     std::vector<Drawable<D>*> displayFile;
+    std::vector<Drawable<2>*> normalizedDisplayFile;
  private:
     long highlighted = -1;
 };

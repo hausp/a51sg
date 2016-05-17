@@ -2,11 +2,12 @@
    and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 #include <cmath>
-#include <iostream>
 #include "BaseDrawer.hpp"
+#include "Curve.hpp"
 #include "Drawable.hpp"
 #include "Matrix.hpp"
 #include "Point.hpp"
+#include "SimpleCurve.hpp"
 
 template<unsigned D>
 BaseDrawer<D>::BaseDrawer() { }
@@ -79,7 +80,7 @@ void BaseDrawer<D>::rotate(const size_t index, const double angle, const Point<D
     if (index < displayFile.size()) {
         auto& shape = displayFile[index];
         auto m = utils::translationMatrix((axis * -1).toArray());
-        m *= utils::rotationMatrix<2>(angle);
+        m *= utils::rotationMatrix<D>(angle);
         m *= utils::translationMatrix(axis.toArray());
         shape->transform(m);
     }

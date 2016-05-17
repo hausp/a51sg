@@ -41,9 +41,9 @@ std::vector<Point<D>> Curve<D>::points() const {
 }
 
 template<unsigned D>
-void Curve<D>::update(const Matrix<D+1,D+1>& matrix) {
+void Curve<D>::update(const Matrix<3,3>& matrix, const Window& window) {
     for (auto& c : curves) {
-        c.update(matrix);
+        c.update(matrix, window);
     }
 }
 

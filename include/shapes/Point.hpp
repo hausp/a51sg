@@ -42,10 +42,12 @@ class Point : public Drawable<D> {
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;
-    Point<D>& ndc();
+    Point<2>& ndc();
     std::vector<Point<D>> points() const override;
-    void update(const Matrix<D+1,D+1>&) override;
+    void update(const Matrix<3,3>&, const Window& window) override;
     const size_t dimension() const;
+    double norm() const;
+
     double& operator[](size_t);
     const double& operator[](size_t) const;
     bool operator==(const Point<D>&) const;
@@ -56,6 +58,8 @@ class Point : public Drawable<D> {
     Point<D>& operator/=(const double);
     Point<D> operator+(const Point<D>&) const;
     Point<D> operator-(const Point<D>&) const;
+    Point<D> operator-() const;
+    double operator*(const Point<D>&) const;
     Point<D> operator*(const double) const;
     Point<D> operator/(const double) const;
     typename std::array<double, D>::iterator begin();
@@ -66,7 +70,7 @@ class Point : public Drawable<D> {
 
  private:
     std::array<double, D> coordinates;
-    std::shared_ptr<Point<D>> normalized_point;
+    std::shared_ptr<Point<2>> normalized_point;
 
     template<typename ...Args>
     void init(unsigned pos, const double, const Args...);

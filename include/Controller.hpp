@@ -65,7 +65,7 @@ class Controller {
 
  private:
  	Interface& interface;
- 	Drawer& BaseDrawer;
+ 	Drawer& drawer;
  	std::shared_ptr<FileManager> fileManager;
  	long currentIndex;
  	bool filledPolygon;

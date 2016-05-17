@@ -36,4 +36,4 @@ class Transformation {
 
 #include "Transformation.ipp"
 
-#endif /* TTRANSFORMATION_HPP */
+#endif /* TRANSFORMATION_HPP */

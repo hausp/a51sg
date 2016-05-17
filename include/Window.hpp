@@ -5,10 +5,11 @@
 #define WINDOW_HPP
 
 #include <list>
+#include <memory>
 #include "Point.hpp"
 
-template<unsigned D>
-class Line;
+// template<unsigned D>
+// class Line;
 template<unsigned D>
 class Polygon;
 template<unsigned D>
@@ -43,6 +44,9 @@ class Window {
     void clip(Curve<D>&) {}
     void setClippingAlgorithm(const int);
 
+    Point<2> parallelProjection(Point<2> p) const;
+    Point<2> parallelProjection(Point<3> p) const;
+
  private:
     Point<2> min;
     Point<2> max;
@@ -51,6 +55,7 @@ class Window {
     double defaultWidth;
     double defaultHeight;
     unsigned lcAlgorithm;
+    std::unique_ptr<Line<3>> vpn;
 
     void clipCS(Line<2>&);
     void clipLB(Line<2>&);
@@ -81,5 +86,7 @@ Point<D> Window::toViewport(const Viewport& viewport, Point<D>& p) {
     double y = (1 - (pn[1] + 1)/ 2) * height + viewport.first[1];
     return Point<D>(x, y);
 }
+
+#include "Window.ipp"
 
 #endif /* WINDOW_HPP */

@@ -6,6 +6,9 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 #include <vector>
 #include "BaseDrawer.hpp"
+#include "Point.hpp"
+#include "Polygon.hpp"
+#include "Window.hpp"
 
 using Point2D = Point<2>;
 using Line2D = Line<2>;
@@ -17,10 +20,11 @@ using Curve2D = Curve<2>;
 using Point3D = Point<3>;
 using Line3D = Line<3>;
 using Polygon3D = Polygon<3>;
+using Drawable3D = Drawable<3>;
 using SimpleCurve3D = SimpleCurve<3>;
 using Curve3D = Curve<3>;
 
-using SuperDrawer = BaseDrawer<2>;
+using SuperDrawer = BaseDrawer<3>;
 
 class Drawer : public SuperDrawer {
  public:
@@ -30,12 +34,12 @@ class Drawer : public SuperDrawer {
     double getZoomLevel();
     void setZoom(const double);
     void setViewport(Point2D, Point2D);
-    void addShape(Drawable2D*);
-    void draw(Point2D&);
-    void draw(Line2D&);
-    void draw(Polygon2D&);
-    void draw(SimpleCurve2D&);
-    void draw(Curve2D&);
+    void addShape(Drawable3D*);
+    void draw(Point2D);
+    void draw(Line2D);
+    void draw(Polygon2D);
+    void draw(SimpleCurve2D);
+    void draw(Curve3D&);
     void drawAll();
     void moveVertical(const int);
     void moveHorizontal(const int);
@@ -43,11 +47,11 @@ class Drawer : public SuperDrawer {
     void rotate(const unsigned long, const double, const int,
                 const std::vector<std::string>&);
     void rotateWindow(long);
-    void scale(const unsigned long, const std::array<double, 2>&);
+    void scale(const unsigned long, const std::array<double, 3>&);
     void setClippingAlgorithm(const int);
-    void swap(const std::vector<Drawable2D*>&);
-    void translate(const unsigned long, const std::array<double, 2>&);
-    void update(Drawable2D*);
+    void swap(const std::vector<Drawable3D*>&);
+    void translate(const unsigned long, const std::array<double, 3>&);
+    void update(Drawable3D*);
     void updateAll();
     void zoom(const int);
 

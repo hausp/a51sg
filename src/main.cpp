@@ -9,6 +9,7 @@
 #include "Drawer.hpp"
 #include "Matrix.hpp"
 #include "Point.hpp"
+#include "Line.hpp"
 
 int main(int argc, char** argv) {
  	// Init GTK+ with command line options
@@ -20,11 +21,11 @@ int main(int argc, char** argv) {
     // Graphical Interface - managing ugly buttons and boxes
     Interface gui(canvasWidth, canvasHeight);
 
-    // BaseDrawer - the cool stuff goes here
-    Drawer BaseDrawer(canvasWidth, canvasHeight, 20);
+    // Drawer - the cool stuff goes here
+    Drawer drawer(canvasWidth, canvasHeight, 20);
     
     // Controller - being God
-    Controller controller(gui, BaseDrawer);
+    Controller controller(gui, drawer);
 
     // Set controller to receive GTK+ signals
     signals::set_receiver(&controller);

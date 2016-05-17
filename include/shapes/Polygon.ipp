@@ -32,7 +32,7 @@ Polygon<D>::Polygon(const std::vector<Point<D>>& points)
 
 template<unsigned D>
 template<unsigned Dn>
-Polygon<D>::Polygon(const Polygon<Dn>& polygon) {
+Polygon<D>::Polygon(const Polygon<Dn>& polygon) : Drawable<D>("", DrawableType::Polygon) {
     for (auto& p : polygon) {
         vertices.push_back(Point<D>(p));
     }
@@ -74,10 +74,10 @@ std::vector<Point<D>> Polygon<D>::points() const {
 }
 
 template<unsigned D>
-void Polygon<D>::update(const Matrix<D+1,D+1>& matrix) {
+void Polygon<D>::update(const Matrix<3,3>& matrix, const Window& window) {
     ndcVertices.clear();
     for (auto& vertex : vertices) {
-        vertex.update(matrix);
+        vertex.update(matrix, window);
         ndcVertices.push_back(vertex.ndc());
     }
 }

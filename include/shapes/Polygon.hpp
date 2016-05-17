@@ -32,7 +32,7 @@ class Polygon : public Drawable<D> {
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;
     std::vector<Point<D>> points() const override;
-    void update(const Matrix<D+1,D+1>&) override;
+    void update(const Matrix<3,3>&, const Window&) override;
     const size_t numberOfPoints() const;
     Point<D>& operator[](size_t);
     const Point<D>& operator[](size_t) const;

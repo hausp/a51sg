@@ -42,12 +42,19 @@ class SimpleCurve : public Drawable<D> {
         lines = updater.update(accuracy, coefficients);
     }
 
+    template<unsigned Dn>
+    SimpleCurve(const SimpleCurve<Dn>& c) : Drawable<D>("", DrawableType::Curve) {
+        for (auto& line : c) {
+            lines.push_back(line);
+        }
+    }
+
     void draw(BaseDrawer<D>&) override;
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;
     std::vector<Point<D>> points() const override;
-    void update(const Matrix<D+1,D+1>&) override;
+    void update(const Matrix<3,3>&, const Window&) override;
 
     typename std::vector<Line<D>>::iterator begin();
     typename std::vector<Line<D>>::const_iterator begin() const;

@@ -3,6 +3,7 @@
 
 #include "Point.hpp"
 #include "BaseDrawer.hpp"
+#include "Line.hpp"
 #include "Matrix.hpp"
 #include "Window.hpp"
 
@@ -13,7 +14,7 @@ void SimpleCurve<D>::draw(BaseDrawer<D>& BaseDrawer) {
 
 template<unsigned D>
 void SimpleCurve<D>::clip(Window& window) {
-    window.clip(*this);
+    // window.clip(*this);
 }
 
 template<unsigned D>
@@ -39,9 +40,9 @@ std::vector<Point<D>> SimpleCurve<D>::points() const {
 }
 
 template<unsigned D>
-void SimpleCurve<D>::update(const Matrix<D+1,D+1>& matrix) {
+void SimpleCurve<D>::update(const Matrix<3,3>& matrix, const Window& window) {
     for (auto& line : lines) {
-        line.update(matrix);
+        line.update(matrix, window);
     }
 }
 

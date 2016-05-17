@@ -14,7 +14,8 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #define YMAX 1
 
 Window::Window(const Point<2>& min, const Point<2>& max)
-: min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2) {
+: min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2),
+  vpn(new Line<3>((min + max)/2, (min + max)/2 + Point<3>(0, 0, 200))) {
     defaultWidth  = max[0] - min[0];
     defaultHeight = max[1] - min[1];
 }
@@ -88,6 +89,26 @@ double Window::getZoomLevel() {
 void Window::setClippingAlgorithm(const int algorithm) {
     lcAlgorithm = algorithm;
 }
+
+Point<2> Window::parallelProjection(Point<2> p) const {
+    return p;
+}
+
+Point<2> Window::parallelProjection(Point<3> p) const {
+    // TRACE(*vpn);
+    auto vrp = (*vpn).operator[](0);
+    auto transformation = utils::translationMatrix((-vrp).toArray());
+
+    Point<3> xAxis(1, 0, 0);
+    Point<3> yAxis(0, 1, 0);
+    double tx = acos((xAxis * p) / p.norm());
+    double ty = acos((yAxis * p) / p.norm());
+    transformation *= utils::rotationMatrix<3>(tx, utils::RotationPlane::X);
+    transformation *= utils::rotationMatrix<3>(ty, utils::RotationPlane::Y);
+    p *= transformation;
+    return p;
+}
+
 
 void Window::clip(Point<2>& p) {
     auto pn = p.ndc();
