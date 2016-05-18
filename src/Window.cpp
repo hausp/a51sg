@@ -232,19 +232,9 @@ void Window::clip(Curve<3>& curve) {
 }
 
 void Window::clip(Wireframe<3>& wireframe) {
-    std::vector<Point<2>> newPoints;
-    auto points = wireframe.points();
-    for (auto& point : points) {
-        newPoints.push_back(point.ndc());
-    }
-    Polygon<2> flatPolygon(newPoints);
-    flatPolygon.ndc() = newPoints;
-    clip(flatPolygon);
-
-    wireframe.setVisible(flatPolygon.isVisible());
-    wireframe.edges().clear();
-    for (unsigned i = 0; i < points.size() - 1; i++) {
-        wireframe.edges().push_back(Line<3>(points[i], points[i+1]));
+    auto& edges = wireframe.edges();
+    for (auto& edge : edges) {
+        clip(edge);
     }
 }
 

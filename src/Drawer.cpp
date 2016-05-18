@@ -18,12 +18,6 @@ Drawer::Drawer(const unsigned width, const unsigned height, const unsigned borde
     wview.setVisible(true);
     wview.update(window.normalizerMatrix(), window);
     wview.setColor(177, 0, 0);
-
-    Wireframe<3>* test = new Wireframe<3>(Point<3>(50, 50, 0),
-                                          Point<3>(100, 50, 50),
-                                          Point<3>(50, 100, 100),
-                                          Point<3>(150, 150, 150));
-    addShape(test);
 }
 
 void Drawer::addShape(Drawable3D* d) {
