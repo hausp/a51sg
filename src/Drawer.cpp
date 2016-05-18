@@ -150,7 +150,7 @@ void Drawer::scale(const unsigned long index, const std::array<double, 3>& ss) {
 void Drawer::rotate(const unsigned long index, const double angle,
                     const int type, const std::vector<std::string>& entries) {
     if (index < displayFile.size()) {
-        Point2D axis;
+        Point3D axis;
         auto& shape = displayFile[index];
         switch (type) {
             case 0:
@@ -159,7 +159,9 @@ void Drawer::rotate(const unsigned long index, const double angle,
             case 1:
                 break;
             case 2:
-                axis = {stod(entries[0]), stod(entries[1])};
+                Point3D p1 = {stod(entries[0]), stod(entries[1]), stod(entries[2])};
+                Point3D p2 = {stod(entries[3]), stod(entries[4]), stod(entries[5])};
+                axis = p2 - p1;
                 break;
         }
         SuperDrawer::rotate(index, angle, axis);

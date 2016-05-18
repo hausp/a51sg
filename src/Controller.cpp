@@ -318,26 +318,24 @@ void Controller::rotateObject(const long index) {
 
 void Controller::finishRotation() {
     auto entries = interface.getEntries();
-    auto type = interface.getSelectedRadio();
 
     int i = entries.size();
     while (--i >= 0) {
         if (!utils::regex_match(entries[i], utils::REGEX_REAL)) return;
-        if (type != 2) break;
     }
 
     double angle;
     #if !RECENT_COMPILER
     try {
     #endif
-        angle = stod(entries.back());
+    angle = stod(entries.back());
     #if !RECENT_COMPILER
     } catch(...) {
         return;
     }
     #endif
     entries.pop_back();
-    drawer.rotate(currentIndex, angle, type, entries);
+    drawer.rotate(currentIndex, angle, 2, entries);
     interface.closeDialog();
     drawer.drawAll();
     interface.queueDraw();

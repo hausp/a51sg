@@ -79,10 +79,20 @@ template<unsigned D>
 void BaseDrawer<D>::rotate(const size_t index, const double angle, const Point<D>& axis) {
     if (index < displayFile.size()) {
         auto& shape = displayFile[index];
-        auto m = utils::translationMatrix((axis * -1).toArray());
-        m *= utils::rotationMatrix<D>(angle);
-        m *= utils::translationMatrix(axis.toArray());
-        shape->transform(m);
+        // auto m = utils::translationMatrix((axis * -1).toArray());
+        // m *= utils::rotationMatrix<D>(angle);
+        // m *= utils::translationMatrix(axis.toArray());
+        Point<3> xAxis(1, 0, 0);
+        Point<3> yAxis(0, 1, 0);
+        double tx = acos((xAxis * axis) / axis.norm()) * 180 / M_PI;
+        double ty = acos((yAxis * axis) / axis.norm()) * 180 / M_PI;
+        auto transformation = utils::rotationMatrix<3>(tx, utils::RotationPlane::X);
+        transformation *= utils::rotationMatrix<3>(ty, utils::RotationPlane::Y);
+
+        transformation *= utils::rotationMatrix<3>(angle, utils::RotationPlane::Z);
+        transformation *= utils::rotationMatrix<3>(-ty, utils::RotationPlane::Y);        
+        transformation *= utils::rotationMatrix<3>(-tx, utils::RotationPlane::X);
+        shape->transform(transformation);
     }
 }
 
