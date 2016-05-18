@@ -66,6 +66,10 @@ namespace signals {
         receiver->curvePressed();
     }
 
+    void wireframe_pressed() {
+        receiver->wireframePressed();
+    }
+
     void point_ok() {
         receiver->createPoint();
     }
@@ -82,6 +86,10 @@ namespace signals {
         receiver->createCurve();
     }
 
+    void wireframe_ok() {
+        receiver->createWireframe();
+    }
+
     void vertex_ok(GtkWidget* button) {
         bool filled = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
         receiver->vertexOk(filled);
@@ -89,6 +97,10 @@ namespace signals {
 
     void curve_vertex_ok() {
         receiver->curveVertexOk();
+    }
+
+    void wsetup_ok() {
+        receiver->wireframeSetupOk();
     }
 
     void remove_object(const long index) {

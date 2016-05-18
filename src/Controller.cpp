@@ -70,6 +70,10 @@ void Controller::curvePressed() {
     interface.buildVertexWindow("Create Curve", false);
 }
 
+void Controller::wireframePressed() {
+    interface.buildWireframeSetup();
+}
+
 void Controller::vertexOk(bool filled) {
     filledPolygon = filled;
     interface.buildPolygonWindow();
@@ -77,6 +81,10 @@ void Controller::vertexOk(bool filled) {
 
 void Controller::curveVertexOk() {
     interface.buildCurveWindow();
+}
+
+void Controller::wireframeSetupOk() {
+    interface.buildWireframeWindow();
 }
 
 void Controller::createPoint() {
@@ -207,6 +215,11 @@ void Controller::createCurve() {
     // std::vector<Point<2>> points = {Point<2>(100, 100), Point<2>(200, 400), 
     //                                 Point<2>(300, 400), Point<2>(400, 100)};
     
+}
+
+void Controller::createWireframe() {
+    ECHO("TODO");
+    interface.closeDialog();
 }
 
 void Controller::removeObject(const long index) {

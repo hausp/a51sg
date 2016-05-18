@@ -31,10 +31,12 @@ class Controller {
 	void linePressed();
 	void polygonPressed();
 	void curvePressed();
+	void wireframePressed();
 	void createPoint();
 	void createLine();
 	void createPolygon();
 	void createCurve();
+	void createWireframe();
 
 	void removeObject(const long);
 	void translateObject(const long);
@@ -50,6 +52,7 @@ class Controller {
 	void objectOptions(GtkWidget* const, GdkEventButton* const);
 	void vertexOk(bool);
 	void curveVertexOk();
+	void wireframeSetupOk();
 	void rowSelected(GtkListBox* const, GtkListBoxRow* const);
 	void openFileDialog();
 	void saveFileDialog();

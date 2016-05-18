@@ -65,6 +65,7 @@ GtkWidget* Interface::buildSidebar() {
     auto line      = gtk::new_button("\u2571", NULL, signals::line_pressed);
     auto polygon   = gtk::new_button("\u25B2", NULL, signals::polygon_pressed);
     auto curve     = gtk::new_button("C", NULL, signals::curve_pressed);
+    auto wireframe = gtk::new_button("W", NULL, signals::wireframe_pressed);
     auto up        = gtk::new_button("\u25B2", NULL, signals::up);
     auto left      = gtk::new_button("\u25C0", NULL, signals::left);
     auto right     = gtk::new_button("\u25B6", NULL, signals::right);
@@ -83,6 +84,7 @@ GtkWidget* Interface::buildSidebar() {
     gtk_widget_modify_font(line, config);
     gtk_widget_modify_font(polygon, config);
     gtk_widget_modify_font(curve, config);
+    gtk_widget_modify_font(wireframe, config);
     gtk_widget_modify_font(rotateA, config);
     gtk_widget_modify_font(rotateC, config);
 
@@ -111,7 +113,8 @@ GtkWidget* Interface::buildSidebar() {
     gtk_grid_attach(GTK_GRID(objgrid), point, 0, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(objgrid), line, 1, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(objgrid), polygon, 2, 0, 1, 1);
-    gtk_grid_attach(GTK_GRID(objgrid), curve, 3, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(objgrid), curve, 0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(objgrid), wireframe, 1, 1, 1, 1);
 
     gtk_grid_attach(GTK_GRID(navGrid), up, 1, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(navGrid), left, 0, 1, 1, 1);
@@ -175,6 +178,17 @@ void Interface::buildCurveWindow() {
     buildCreationWindow("Create Curve", n, 4, signals::curve_ok);
 }
 
+void Interface::buildWireframeWindow() {
+    std::string value = gtk_entry_get_text(GTK_ENTRY(numVertices));
+    int n = 0;
+    if (utils::regex_match(value, "^\\d+")) {
+        n = stoi(value);
+    }
+    if (n < 2) return;
+    gtk_widget_destroy(dialog);
+    buildWireframeCreationWindow(n);
+}
+
 void Interface::buildVertexWindow(const char* title, bool isPolygon) {
     dialog         = gtk::new_dialog(window, title, 10);
     auto mainbox   = gtk::new_box(GTK_ORIENTATION_VERTICAL, dialog, 10);
@@ -195,6 +209,26 @@ void Interface::buildVertexWindow(const char* title, bool isPolygon) {
         gtk::new_button("Ok", buttonbox, signals::curve_vertex_ok);
         gtk::box_push_back(vertexbox, gtk_label_new("Number of curves:"));
     }
+
+    gtk::box_push_back(mainbox, buttonbox);
+
+    gtk::box_push_back(vertexbox, numVertices);
+
+    gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
+
+    gtk_widget_show_all(dialog);
+}
+
+void Interface::buildWireframeSetup() {
+    dialog         = gtk::new_dialog(window, "Create Wireframe", 10);
+    auto mainbox   = gtk::new_box(GTK_ORIENTATION_VERTICAL, dialog, 10);
+    auto vertexbox = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, NULL, 3);
+    auto buttonbox = gtk::new_button_box();
+    numVertices    = gtk::new_entry("", 0, 3, 3);
+    
+    gtk::box_push_back(mainbox, vertexbox);
+    gtk::new_button("Ok", buttonbox, signals::wsetup_ok);
+    gtk::box_push_back(vertexbox, gtk_label_new("Number of lines:"));
 
     gtk::box_push_back(mainbox, buttonbox);
 
@@ -253,6 +287,59 @@ void Interface::buildCreationWindow(const char* name, int points,
     gtk_widget_show_all(dialog);
 
     int size = m * (gtk_widget_get_allocated_height(frames.back()) + 6);
+    gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scwin), size);
+}
+
+void Interface::buildWireframeCreationWindow(int lines) {
+    dialog         = gtk::new_dialog(window, "Create Wireframe", 6);
+    auto mainbox   = gtk::new_box(GTK_ORIENTATION_VERTICAL, dialog, 3);
+    auto namebox   = gtk::new_box(GTK_ORIENTATION_HORIZONTAL);
+    auto buttonbox = gtk::new_button_box();
+    auto scwin     = gtk::new_scrolled_window();
+    auto pointbox  = gtk::new_box(GTK_ORIENTATION_VERTICAL, scwin, 0, true);
+    shapeName      = gtk::new_entry("", 0, 255, 10);
+    std::string frameName("Line");
+    const char* labels[6] = {"x1:", "y1:", "z1:", "x2:", "y2:", "z2:"};
+    std::vector<GtkWidget*> frames;
+    std::vector<GtkWidget*> lineboxes;
+
+    gtk::box_push_back(mainbox, namebox);
+    gtk::box_push_back(mainbox, scwin, true, true);
+    gtk::box_push_back(mainbox, buttonbox, 3);
+    gtk::box_push_back(namebox, gtk_label_new("Name:"), shapeName, true, true);
+
+    auto okButton = gtk::new_button("Ok", buttonbox, signals::wireframe_ok);
+    gtk_widget_set_can_default(okButton, true);
+    gtk_window_set_default(GTK_WINDOW(dialog), okButton);
+    gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
+
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scwin),
+                                   GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+    entries.clear();
+
+    if (lines > 1) frameName += " 1";
+    for (int i = 0; i < lines; i++) {
+        frames.push_back(gtk::new_frame(frameName.c_str()));
+        lineboxes.push_back(gtk::new_box(GTK_ORIENTATION_VERTICAL,
+                                          frames.back(), 2, false, 3));
+
+        gtk_box_pack_start(GTK_BOX(pointbox), frames.back(), false, false, 0);
+        for (int k = 0; k < 2; k++) {
+            auto pbox = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, NULL, 2, false, 3);
+            gtk::box_push_back(lineboxes.back(), pbox);
+            for (int j = 0; j < 3; j++) {
+                entries.push_back(gtk::new_entry("", 1, 5, 5));
+                gtk_entry_set_activates_default(GTK_ENTRY(entries.back()), true);
+                gtk::box_push_back(pbox, gtk_label_new(labels[(k * 3) + j]));
+                gtk::box_push_back(pbox, entries.back(), true, true, 5);
+            }
+        }
+        frameName = "Line " + std::to_string(i+2);
+    }
+
+    gtk_widget_show_all(dialog);
+
+    int size = (3 - (lines % 2 == 0)) * (gtk_widget_get_allocated_height(frames.back()) + 6);
     gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scwin), size);
 }
 

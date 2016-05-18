@@ -28,12 +28,15 @@ namespace signals {
     void line_pressed();
     void polygon_pressed();
     void curve_pressed();
+    void wireframe_pressed();
     void point_ok();
     void line_ok();
     void polygon_ok();
     void curve_ok();
+    void wireframe_ok();
     void vertex_ok(GtkWidget*);
     void curve_vertex_ok();
+    void wsetup_ok();
 
     void remove_object(const long);
     void translate_object(const long);
