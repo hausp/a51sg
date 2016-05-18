@@ -16,6 +16,7 @@
 #include "Point.hpp"
 #include "Line.hpp"
 #include "Polygon.hpp"
+#include "Wireframe.hpp"
 
 Controller::Controller(Interface& interface, Drawer& drawer) 
 : interface(interface), drawer(drawer) {
@@ -218,8 +219,37 @@ void Controller::createCurve() {
 }
 
 void Controller::createWireframe() {
-    ECHO("TODO");
-    interface.closeDialog();
+    auto entries = interface.getEntries();
+    std::string name = interface.getShapeName();
+
+    for (auto entry : entries) {
+        if (!utils::regex_match(entry, utils::REGEX_INTEGER)) return;
+    }
+
+    if (name != "") {
+        std::vector<Line3D> wireframeEdges;
+        #if !RECENT_COMPILER
+        try {
+        #endif
+        for (unsigned i = 0; i < entries.size() - 5; i += 6) {
+            wireframeEdges.push_back(Line3D(
+                Point3D(stoi(entries[i]), stoi(entries[i + 1]), stoi(entries[i + 2])),
+                Point3D(stoi(entries[i + 3]), stoi(entries[i + 4]), stoi(entries[i + 5]))
+            ));
+        }
+        #if !RECENT_COMPILER
+        } catch(...) {
+            return;
+        }
+        #endif
+        auto wireframe = new Wireframe<3>(wireframeEdges);
+        wireframe->setName(name);
+        drawer.addShape(wireframe);
+        interface.addShape(wireframe->getFormattedName());
+        interface.closeDialog();
+        drawer.draw(*wireframe);
+        interface.queueDraw();
+    }
 }
 
 void Controller::removeObject(const long index) {
