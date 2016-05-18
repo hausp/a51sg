@@ -119,8 +119,8 @@ void Controller::createLine() {
         #if !RECENT_COMPILER
         try {
         #endif
-            p1 = Point3D(stoi(entries[0]), stoi(entries[1]), 1);
-            p2 = Point3D(stoi(entries[2]), stoi(entries[3]), 1);
+            p1 = Point3D(stoi(entries[0]), stoi(entries[1]), stoi(entries[2]));
+            p2 = Point3D(stoi(entries[3]), stoi(entries[4]), stoi(entries[5]));
         #if !RECENT_COMPILER
         } catch(...) {
             return;
@@ -148,8 +148,8 @@ void Controller::createPolygon() {
         #if !RECENT_COMPILER
         try {
         #endif
-        for (unsigned i = 0; i < entries.size() - 1; i += 2) {
-            polygonPoints.push_back(Point3D(stoi(entries[i]), stoi(entries[i + 1]), 1));
+        for (unsigned i = 0; i < entries.size() - 1; i += 3) {
+            polygonPoints.push_back(Point3D(stoi(entries[i]), stoi(entries[i + 1]), stoi(entries[i + 2])));
         }
         #if !RECENT_COMPILER
         } catch(...) {
@@ -180,8 +180,8 @@ void Controller::createCurve() {
         #if !RECENT_COMPILER
         try {
         #endif
-        for (unsigned i = 0; i < entries.size() - 1; i += 2) {
-            curvePoints.push_back(Point3D(stoi(entries[i]), stoi(entries[i + 1]), 1));
+        for (unsigned i = 0; i < entries.size() - 1; i += 3) {
+            curvePoints.push_back(Point3D(stoi(entries[i]), stoi(entries[i + 1]), stoi(entries[i + 2])));
         }
         #if !RECENT_COMPILER
         } catch(...) {
@@ -231,7 +231,7 @@ void Controller::finishTranslation() {
     #if !RECENT_COMPILER
     try {
     #endif
-        drawer.translate(currentIndex, {stod(entries[0]), stod(entries[1])});
+        drawer.translate(currentIndex, {stod(entries[0]), stod(entries[1]), stod(entries[2])});
     #if !RECENT_COMPILER
     } catch(...) {
         return;
@@ -257,7 +257,7 @@ void Controller::finishScaling() {
     #if !RECENT_COMPILER
     try {
     #endif
-        drawer.scale(currentIndex, {stod(entries[0]), stod(entries[1])});
+        drawer.scale(currentIndex, {stod(entries[0]), stod(entries[1]), stod(entries[2])});
     #if !RECENT_COMPILER
     } catch(...) {
         return;

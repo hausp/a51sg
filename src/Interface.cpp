@@ -215,7 +215,7 @@ void Interface::buildCreationWindow(const char* name, int points,
     auto pointbox  = gtk::new_box(GTK_ORIENTATION_VERTICAL, scwin, 0, true);
     shapeName      = gtk::new_entry("", 0, 255, 10);
     std::string frameName("Point");
-    const char* labels[2] = {"x:", "y:"};
+    const char* labels[3] = {"x:", "y:", "z:"};
     std::vector<GtkWidget*> frames;
     std::vector<GtkWidget*> pointboxes;
 
@@ -241,7 +241,7 @@ void Interface::buildCreationWindow(const char* name, int points,
 
         gtk_box_pack_start(GTK_BOX(pointbox), frames.back(), false, false, 0);
 
-        for (int j = 0; j < 2; j++) {
+        for (int j = 0; j < 3; j++) {
             entries.push_back(gtk::new_entry("", 1, 5, 5));
             gtk_entry_set_activates_default(GTK_ENTRY(entries.back()), true);
             gtk::box_push_back(pointboxes.back(), gtk_label_new(labels[j]));
@@ -263,10 +263,12 @@ void Interface::buildPointWindow(GtkWidget* const parent, const std::string titl
     auto buttonbox     = gtk::new_button_box();
     auto xbox          = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, NULL);
     auto ybox          = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, NULL);
+    auto zbox          = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, NULL);
     auto labelX        = "X " + label + ":";
     auto labelY        = "Y " + label + ":";
+    auto labelZ        = "Z " + label + ":";
 
-    gtk::box_push_back(mainbox, xbox, ybox, buttonbox);
+    gtk::box_push_back(mainbox, xbox, ybox, zbox, buttonbox);
 
     entries.clear();
 
@@ -279,6 +281,11 @@ void Interface::buildPointWindow(GtkWidget* const parent, const std::string titl
 
     gtk::box_push_back(ybox, gtk_label_new(labelY.c_str()));
     gtk::box_push_back(ybox, entries.back(), true, true);
+
+    entries.push_back(gtk::new_entry("", 0, 5, 5));
+
+    gtk::box_push_back(zbox, gtk_label_new(labelZ.c_str()));
+    gtk::box_push_back(zbox, entries.back(), true, true);
 
     gtk::new_button("Ok", buttonbox, ok);
     gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
@@ -307,19 +314,21 @@ void Interface::buildRotationWindow() {
                                           "Arbitrary Point");
 
     entries.assign({gtk::new_entry("", 1, 5, 5), gtk::new_entry("", 1, 5, 5),
-                    gtk::new_entry("", 0, 5, 5)});
+                    gtk::new_entry("", 1, 5, 5), gtk::new_entry("", 0, 5, 5)});
     
     gtk::new_button("Ok", buttonbox, signals::finish_rotation);
     gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
 
     gtk_widget_set_sensitive(entries[0], false);
     gtk_widget_set_sensitive(entries[1], false);
+    gtk_widget_set_sensitive(entries[2], false);
 
     gtk::box_push_back(mainbox, topbox, optFrame, ptFrame, buttonbox);
-    gtk::box_push_back(topbox, gtk_label_new("Rotation Degree:"), entries[2]);
+    gtk::box_push_back(topbox, gtk_label_new("Rotation Degree:"), entries[3]);
     gtk::box_push_back(optbox, radioButtons[0], radioButtons[1], radioButtons[2]);
     gtk::box_push_back(pointbox, gtk_label_new("X:"), 3, entries[0], true,
-                                 gtk_label_new("Y:"), 3, entries[1], true);
+                                 gtk_label_new("Y:"), 3, entries[1], true,
+                                 gtk_label_new("Z:"), 3, entries[2], true);
 
     for (auto radio : radioButtons) {
         g_signal_connect(radio, "toggled", G_CALLBACK(signals::update_entries), NULL);
