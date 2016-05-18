@@ -21,6 +21,7 @@ enum class DrawableType {
     Line,
     Polygon,
     Curve,
+    Wireframe,
     Undefined
 };
 
@@ -30,6 +31,7 @@ namespace {
     {DrawableType::Line, "Line"},
     {DrawableType::Polygon, "Polygon"},
     {DrawableType::Curve, "Curve"},
+    {DrawableType::Wireframe, "Wireframe"},
     {DrawableType::Undefined, "Undefined"}};
 }
 

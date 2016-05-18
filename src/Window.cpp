@@ -7,6 +7,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include "Line.hpp"
 #include "Polygon.hpp"
 #include "Window.hpp"
+#include "Wireframe.hpp"
 
 #define XMIN -1
 #define YMIN -1
@@ -15,16 +16,9 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 Window::Window(const Point<2>& min, const Point<2>& max)
 : min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2),
-  // vpn(new Line<3>((min + max)/2, Point<3>((min + max)/2) + Point<3>(0, 0, 1))) {
   vpn(new Line<3>({0, 0, 0}, {0, 0, 1})) {
     defaultWidth  = max[0] - min[0];
     defaultHeight = max[1] - min[1];
-
-    // this->min = parallelProjection(this->min);
-    // this->min *= normalizerMatrix();
-
-    // this->max = parallelProjection(this->max);
-    // this->max *= normalizerMatrix();
 }
 
 Matrix<3, 3> Window::normalizerMatrix() {
@@ -197,6 +191,65 @@ void Window::clip(Curve<2>& curve) {
     }
 }
 
+// void Window::clip(Point<3>& p) {
+
+// }
+
+void Window::clip(Line<3>& ln) {
+    Line<2> flatLine(ln[0].ndc(), ln[1].ndc());
+    clip(flatLine);
+    ln.setVisible(flatLine.isVisible());
+    ln[0].ndc() = flatLine[0];
+    ln[1].ndc() = flatLine[1];
+}
+
+void Window::clip(Polygon<3>& p) {
+    std::vector<Point<2>> newPoints;
+    auto points = p.points();
+    for (auto& point : points) {
+        newPoints.push_back(point.ndc());
+    }
+    Polygon<2> flatPolygon(newPoints);
+    flatPolygon.ndc() = newPoints;
+    clip(flatPolygon);
+    p.setVisible(flatPolygon.isVisible());
+    for (unsigned i = 0; i < points.size(); i++) {
+        p[i].ndc() = flatPolygon[i];
+    }
+
+    p.ndc().clear();
+    for (auto& point : flatPolygon.ndc()) {
+        p.ndc().push_back(point);
+    }
+}
+
+void Window::clip(SimpleCurve<3>& c) {
+    
+}
+
+void Window::clip(Curve<3>& curve) {
+    
+}
+
+void Window::clip(Wireframe<3>& wireframe) {
+    std::vector<Point<2>> newPoints;
+    auto points = wireframe.points();
+    for (auto& point : points) {
+        newPoints.push_back(point.ndc());
+    }
+    Polygon<2> flatPolygon(newPoints);
+    flatPolygon.ndc() = newPoints;
+    clip(flatPolygon);
+
+    wireframe.setVisible(flatPolygon.isVisible());
+    wireframe.edges().clear();
+    for (unsigned i = 0; i < points.size() - 1; i++) {
+        wireframe.edges().push_back(Line<3>(points[i], points[i+1]));
+    }
+}
+
+
+
 void Window::athertonStep(const std::vector<Point<2>>& win,
     const std::vector<Point<2>>& auxList, const std::vector<Point<2>>& artifVert,
     const Point<2>& point, std::vector<Point<2>>& result) {
@@ -282,7 +335,7 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
     std::vector<Point<2>>& artificialVertices) {
     unsigned size = p.numberOfPoints();
     const int INVALID_VALUE = 2;
-    auto pn = p.ndc();
+    std::vector<Point<2>> pn = p.ndc();
     for (unsigned i = 0; i < size; i++) {
         auto& previous = pn[(i - 1 + size) % size];
         auto& current = pn[i];

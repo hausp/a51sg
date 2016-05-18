@@ -9,6 +9,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include "Point.hpp"
 #include "Polygon.hpp"
 #include "Window.hpp"
+#include "Wireframe.hpp"
 
 using Point2D = Point<2>;
 using Line2D = Line<2>;
@@ -23,6 +24,7 @@ using Polygon3D = Polygon<3>;
 using Drawable3D = Drawable<3>;
 using SimpleCurve3D = SimpleCurve<3>;
 using Curve3D = Curve<3>;
+using Wireframe3D = Wireframe<3>;
 
 using SuperDrawer = BaseDrawer<3>;
 
@@ -35,12 +37,15 @@ class Drawer : public SuperDrawer {
     void setZoom(const double);
     void setViewport(Point2D, Point2D);
     void addShape(Drawable3D*);
+
     void draw(Point3D&);
     void draw(Line3D&);
     void draw(Polygon3D&);
     void draw(SimpleCurve3D&);
     void draw(Curve3D&);
+    void draw(Wireframe3D&);
     void drawAll();
+
     void moveVertical(const int);
     void moveHorizontal(const int);
     void resizeViewport(const double, const double);

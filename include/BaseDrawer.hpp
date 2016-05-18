@@ -20,6 +20,8 @@ template<unsigned D>
 class SimpleCurve;
 template<unsigned D>
 class Curve;
+template<unsigned D>
+class Wireframe;
 template<unsigned R, unsigned C>
 class Matrix;
 
@@ -44,6 +46,7 @@ class BaseDrawer {
     virtual void draw(Polygon<3>&) = 0;
     virtual void draw(SimpleCurve<3>&) = 0;
     virtual void draw(Curve<3>&) = 0;
+    virtual void draw(Wireframe<3>&) = 0;
 
     void drawAll();
     void removeShape(const size_t);

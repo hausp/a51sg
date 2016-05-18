@@ -10,6 +10,7 @@
 #include "Matrix.hpp"
 #include "Point.hpp"
 #include "Line.hpp"
+#include "Wireframe.hpp"
 
 int main(int argc, char** argv) {
  	// Init GTK+ with command line options
