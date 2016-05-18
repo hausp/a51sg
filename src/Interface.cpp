@@ -390,36 +390,47 @@ void Interface::buildScalingWindow() {
 
 void Interface::buildRotationWindow() {
     dialog         = gtk::new_dialog(window, "Rotate object", 10);
-    auto optFrame  = gtk::new_frame("Rotation Axis", 0, 0.5);
-    auto ptFrame   = gtk::new_frame("Point", 0, 0.5);
+    //auto optFrame  = gtk::new_frame("Rotation Axis", 0, 0.5);
+    //auto ptFrame   = gtk::new_frame("Point", 0, 0.5);
+    auto lnFrame   = gtk::new_frame("Rotation axis", 0, 0.5);
     auto mainbox   = gtk::new_box(GTK_ORIENTATION_VERTICAL, dialog, 3);
     auto topbox    = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, NULL, 3);
-    auto optbox    = gtk::new_box(GTK_ORIENTATION_VERTICAL, optFrame, 3, true, 5);
-    auto pointbox  = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, ptFrame, 3, false, 5);
+    //auto optbox    = gtk::new_box(GTK_ORIENTATION_VERTICAL, optFrame, 3, true, 5);
+    //auto pointbox  = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, ptFrame, 3, false, 5);
+    auto linebox   = gtk::new_box(GTK_ORIENTATION_VERTICAL, lnFrame, 3, false, 5);
+    auto psbox     = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, NULL, 3, false, 5);
+    auto pfbox     = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, NULL, 3, false, 5);
     auto buttonbox = gtk::new_button_box();
-    radioButtons   = gtk::new_radio_group("Object Center", "World Center", 
-                                          "Arbitrary Point");
+    // radioButtons   = gtk::new_radio_group("Object Center", "World Center", 
+    //                                       "Arbitrary Point");
 
     entries.assign({gtk::new_entry("", 1, 5, 5), gtk::new_entry("", 1, 5, 5),
-                    gtk::new_entry("", 1, 5, 5), gtk::new_entry("", 0, 5, 5)});
+                    gtk::new_entry("", 1, 5, 5), gtk::new_entry("", 1, 5, 5),
+                    gtk::new_entry("", 1, 5, 5), gtk::new_entry("", 1, 5, 5),
+                    gtk::new_entry("", 0, 5, 5)});
     
     gtk::new_button("Ok", buttonbox, signals::finish_rotation);
     gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
 
-    gtk_widget_set_sensitive(entries[0], false);
-    gtk_widget_set_sensitive(entries[1], false);
-    gtk_widget_set_sensitive(entries[2], false);
+    // gtk_widget_set_sensitive(entries[0], false);
+    // gtk_widget_set_sensitive(entries[1], false);
+    // gtk_widget_set_sensitive(entries[2], false);
 
-    gtk::box_push_back(mainbox, topbox, optFrame, ptFrame, buttonbox);
-    gtk::box_push_back(topbox, gtk_label_new("Rotation Degree:"), entries[3]);
-    gtk::box_push_back(optbox, radioButtons[0], radioButtons[1], radioButtons[2]);
-    gtk::box_push_back(pointbox, gtk_label_new("X:"), 3, entries[0], true,
-                                 gtk_label_new("Y:"), 3, entries[1], true,
-                                 gtk_label_new("Z:"), 3, entries[2], true);
+    //gtk::box_push_back(mainbox, topbox, optFrame, lnFrame, buttonbox);
+    gtk::box_push_back(mainbox, topbox, lnFrame, buttonbox);
+    gtk::box_push_back(topbox, gtk_label_new("Rotation Degree:"), entries[6]);
+    //gtk::box_push_back(optbox, radioButtons[0], radioButtons[1], radioButtons[2]);
+    gtk::box_push_back(linebox, psbox, pfbox);
+    gtk::box_push_back(psbox, gtk_label_new("x:"), 3, entries[0], true,
+                              gtk_label_new("y:"), 3, entries[1], true,
+                              gtk_label_new("z:"), 3, entries[2], true);
+    gtk::box_push_back(pfbox, gtk_label_new("x:"), 3, entries[3], true,
+                              gtk_label_new("y:"), 3, entries[4], true,
+                              gtk_label_new("z:"), 3, entries[5], true);
 
-    for (auto radio : radioButtons) {
-        g_signal_connect(radio, "toggled", G_CALLBACK(signals::update_entries), NULL);
-    }
+    // for (auto radio : radioButtons) {
+    //     g_signal_connect(radio, "toggled", G_CALLBACK(signals::update_entries), NULL);
+    // }
 
     gtk_widget_show_all(dialog);
 }
