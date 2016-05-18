@@ -19,7 +19,7 @@ void SimpleCurve<D>::clip(Window& window) {
 
 template<unsigned D>
 void SimpleCurve<D>::transform(const Matrix<D+1,D+1>& matrix) {
-    for (auto& line : lines) {
+    for (auto& line : lineList) {
         line.transform(matrix);
     }
 }
@@ -32,36 +32,41 @@ Point<D> SimpleCurve<D>::center() const {
 template<unsigned D>
 std::vector<Point<D>> SimpleCurve<D>::points() const {
     std::vector<Point<D>> points;
-    points.reserve(lines.size());
-    for (auto line : lines) {
+    points.reserve(lineList.size());
+    for (auto line : lineList) {
         points.push_back(line[0]);
     }
     return points;
 }
 
 template<unsigned D>
+std::vector<Line<D>>& SimpleCurve<D>::lines() {
+    return lineList;
+}
+
+template<unsigned D>
 void SimpleCurve<D>::update(const Matrix<3,3>& matrix, const Window& window) {
-    for (auto& line : lines) {
+    for (auto& line : lineList) {
         line.update(matrix, window);
     }
 }
 
 template<unsigned D>
 typename std::vector<Line<D>>::iterator SimpleCurve<D>::begin() {
-    return lines.begin();
+    return lineList.begin();
 }
 
 template<unsigned D>
 typename std::vector<Line<D>>::const_iterator SimpleCurve<D>::begin() const {
-    return lines.cbegin();
+    return lineList.cbegin();
 }
 
 template<unsigned D>
 typename std::vector<Line<D>>::iterator SimpleCurve<D>::end() {
-    return lines.end();
+    return lineList.end();
 }
 
 template<unsigned D>
 typename std::vector<Line<D>>::const_iterator SimpleCurve<D>::end() const {
-    return lines.cend();
+    return lineList.cend();
 }

@@ -39,13 +39,13 @@ class SimpleCurve : public Drawable<D> {
         for (unsigned i = 0; i < D; i++) {
             coefficients[i] = methodMatrix * geometryVectors[i];
         }
-        lines = updater.update(accuracy, coefficients);
+        lineList = updater.update(accuracy, coefficients);
     }
 
     template<unsigned Dn>
     SimpleCurve(const SimpleCurve<Dn>& c) : Drawable<D>("", DrawableType::Curve) {
         for (auto& line : c) {
-            lines.push_back(line);
+            lineList.push_back(line);
         }
     }
 
@@ -54,6 +54,7 @@ class SimpleCurve : public Drawable<D> {
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;
     std::vector<Point<D>> points() const override;
+    std::vector<Line<D>>& lines();
     void update(const Matrix<3,3>&, const Window&) override;
 
     typename std::vector<Line<D>>::iterator begin();
@@ -65,7 +66,7 @@ class SimpleCurve : public Drawable<D> {
     double accuracy;
     Matrix<4,4> methodMatrix;
     std::vector<Matrix<4,1>> geometryVectors;
-    std::vector<Line<D>> lines;
+    std::vector<Line<D>> lineList;
 };
 
 #include "SimpleCurve.ipp"

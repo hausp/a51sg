@@ -34,7 +34,7 @@ class Window {
     void clip(SimpleCurve<2>&);
     void clip(Curve<2>&);
 
-    // void clip(Point<3>&);
+    void clip(Point<3>&);
     void clip(Line<3>&);
     void clip(Polygon<3>&);
     void clip(SimpleCurve<3>&);

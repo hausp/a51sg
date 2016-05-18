@@ -191,9 +191,11 @@ void Window::clip(Curve<2>& curve) {
     }
 }
 
-// void Window::clip(Point<3>& p) {
-
-// }
+void Window::clip(Point<3>& p) {
+    Point<2> flatPoint(p.ndc());
+    clip(flatPoint);
+    p.setVisible(flatPoint.isVisible());
+}
 
 void Window::clip(Line<3>& ln) {
     Line<2> flatLine(ln[0].ndc(), ln[1].ndc());
@@ -224,11 +226,16 @@ void Window::clip(Polygon<3>& p) {
 }
 
 void Window::clip(SimpleCurve<3>& c) {
-    
+    auto& lines = c.lines();
+    for (auto& line : lines) {
+        clip(line);
+    }
 }
 
 void Window::clip(Curve<3>& curve) {
-    
+    for (auto& c : curve) {
+        clip(c);
+    }
 }
 
 void Window::clip(Wireframe<3>& wireframe) {
