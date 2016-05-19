@@ -35,6 +35,7 @@ namespace {
 namespace utils {
 
     const std::string REGEX_INTEGER = "^(\\+|-)?\\d+";
+    const std::string REGEX_INTEGER_UNSIGNED = "^\\d+";
     const std::string REGEX_REAL_UNSIGNED = "^\\d+(\\.\\d+)?";
     const std::string REGEX_REAL = "^(\\+|-)?\\d+(\\.\\d+)?";
     const Matrix<4,4> BEZIER_MATRIX = {

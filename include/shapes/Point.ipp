@@ -12,14 +12,14 @@ Point<D>::Point() : Drawable<D>("", DrawableType::Point) {
 }
 
 template<unsigned D>
-Point<D>::Point(const double value) : Drawable<D>("", DrawableType::Point) {
+Point<D>::Point(double value) : Drawable<D>("", DrawableType::Point) {
     coordinates.fill(value);
 }
 
 template<unsigned D>
 template<typename... Args>
 Point<D>::Point(typename std::enable_if<sizeof...(Args)+1 == D,
-      const double>::type c,
+      double>::type c,
       const Args... args) 
 : Drawable<D>(std::string(""), DrawableType::Point) {
     init(0, c, args...);
@@ -29,7 +29,7 @@ template<unsigned D>
 template<typename... Args>
 Point<D>::Point(const std::string& name,
       typename std::enable_if<sizeof...(Args)+1 == D,
-      const double>::type c,
+      double>::type c,
       Args... args) : Drawable<D>(name, DrawableType::Point) {
     init(0, c, args...);
 }
@@ -82,7 +82,7 @@ void Point<D>::update(const Matrix<3,3>& matrix, const Window& window) {
 }
 
 template<unsigned D>
-const size_t Point<D>::dimension() const {
+size_t Point<D>::dimension() const {
     return coordinates.size();
 }
 
@@ -101,7 +101,7 @@ double& Point<D>::operator[](size_t index) {
 }
 
 template<unsigned D>
-const double& Point<D>::operator[](size_t index) const {
+double Point<D>::operator[](size_t index) const {
     return coordinates[index];
 }
 
@@ -137,7 +137,7 @@ Point<D>& Point<D>::operator-=(const Point<D>& p) {
 }
 
 template<unsigned D>
-Point<D>& Point<D>::operator*=(const double v) {
+Point<D>& Point<D>::operator*=(double v) {
     for (unsigned i = 0; i < D; i++) {
         (*this)[i] *= v;
     }
@@ -145,7 +145,7 @@ Point<D>& Point<D>::operator*=(const double v) {
 }
 
 template<unsigned D>
-Point<D>& Point<D>::operator/=(const double v) {
+Point<D>& Point<D>::operator/=(double v) {
     for (unsigned i = 0; i < D; i++) {
         (*this)[i] /= v;
     }
@@ -179,13 +179,13 @@ double Point<D>::operator*(const Point<D>& p) const {
 }
 
 template<unsigned D>
-Point<D> Point<D>::operator*(const double v) const {
+Point<D> Point<D>::operator*(double v) const {
     Point<D> r = *this;
     return r *= v;
 }
 
 template<unsigned D>
-Point<D> Point<D>::operator/(const double v) const {
+Point<D> Point<D>::operator/(double v) const {
     Point<D> r = *this;
     return r /= v;
 }
@@ -217,7 +217,7 @@ std::array<double, D> Point<D>::toArray() const {
 
 template<unsigned D>
 template<typename ...Args>
-void Point<D>::init(unsigned pos, const double c, const Args... args) {
+void Point<D>::init(unsigned pos, double c, const Args... args) {
     coordinates[pos] = c;
     init(++pos, args...);
 }

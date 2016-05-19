@@ -50,21 +50,21 @@ void BaseDrawer<D>::drawAll() {
 }
 
 template<unsigned D>
-void BaseDrawer<D>::removeShape(const size_t index) {
+void BaseDrawer<D>::removeShape(size_t index) {
     if (index < displayFile.size()) {
         displayFile.erase(displayFile.begin() + index);
     }
 }
 
 template<unsigned D>
-void BaseDrawer<D>::translate(const size_t index, const std::array<double, D>& ds) {
+void BaseDrawer<D>::translate(size_t index, const std::array<double, D>& ds) {
     if (index < displayFile.size()) {
         displayFile[index]->transform(utils::translationMatrix(ds));
     }
 }
 
 template<unsigned D>
-void BaseDrawer<D>::scale(const size_t index, const std::array<double, D>& ss) {
+void BaseDrawer<D>::scale(size_t index, const std::array<double, D>& ss) {
     if (index < displayFile.size()) {
         auto& shape = displayFile[index];
         auto center = shape->center();
@@ -76,7 +76,7 @@ void BaseDrawer<D>::scale(const size_t index, const std::array<double, D>& ss) {
 }
 
 template<unsigned D>
-void BaseDrawer<D>::rotate(const size_t index, const double angle, const Point<D>& axis) {
+void BaseDrawer<D>::rotate(size_t index, double angle, const Point<D>& axis) {
     if (index < displayFile.size()) {
         auto& shape = displayFile[index];
         // auto m = utils::translationMatrix((axis * -1).toArray());
@@ -97,7 +97,7 @@ void BaseDrawer<D>::rotate(const size_t index, const double angle, const Point<D
 }
 
 template<unsigned D>
-void BaseDrawer<D>::highlightObject(const long index) {
+void BaseDrawer<D>::highlightObject(long index) {
     if (highlighted != -1) {
         displayFile[highlighted]->setColor(0, 0, 0);
     }

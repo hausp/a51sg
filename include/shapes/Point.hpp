@@ -22,17 +22,17 @@ template<unsigned D>
 class Point : public Drawable<D> {
  public:
     Point();
-    Point(const double);
+    Point(double);
 
     template<typename ...Args>
     Point(typename std::enable_if<sizeof...(Args)+1 == D,
-          const double>::type,
+          double>::type,
           const Args...);
 
     template<typename ...Args>
     Point(const std::string& name,
           typename std::enable_if<sizeof...(Args)+1 == D,
-          const double>::type,
+          double>::type,
           Args...);
 
     template<unsigned Dn>
@@ -45,23 +45,23 @@ class Point : public Drawable<D> {
     Point<2>& ndc();
     std::vector<Point<D>> points() const override;
     void update(const Matrix<3,3>&, const Window& window) override;
-    const size_t dimension() const;
+    size_t dimension() const;
     double norm() const;
 
     double& operator[](size_t);
-    const double& operator[](size_t) const;
+    double operator[](size_t) const;
     bool operator==(const Point<D>&) const;
     bool operator!=(const Point<D>&) const;
     Point<D>& operator+=(const Point<D>&);
     Point<D>& operator-=(const Point<D>&);
-    Point<D>& operator*=(const double);
-    Point<D>& operator/=(const double);
+    Point<D>& operator*=(double);
+    Point<D>& operator/=(double);
     Point<D> operator+(const Point<D>&) const;
     Point<D> operator-(const Point<D>&) const;
     Point<D> operator-() const;
     double operator*(const Point<D>&) const;
-    Point<D> operator*(const double) const;
-    Point<D> operator/(const double) const;
+    Point<D> operator*(double) const;
+    Point<D> operator/(double) const;
     typename std::array<double, D>::iterator begin();
     typename std::array<double, D>::const_iterator begin() const;
     typename std::array<double, D>::iterator end();
@@ -73,7 +73,7 @@ class Point : public Drawable<D> {
     std::shared_ptr<Point<2>> normalized_point;
 
     template<typename ...Args>
-    void init(unsigned pos, const double, const Args...);
+    void init(unsigned pos, double, const Args...);
     void init(unsigned);
 };
 

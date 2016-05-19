@@ -30,7 +30,7 @@ Matrix<3, 3> Window::normalizerMatrix() {
     return normalizer;
 }
 
-void Window::moveHorizontal(const double displacement) {
+void Window::moveHorizontal(double displacement) {
     auto m = utils::rotationMatrix<2>(-angle);
     m *= utils::translationMatrix(std::array<double, 2>{displacement, 0});
     m *= utils::rotationMatrix<2>(angle);
@@ -47,7 +47,7 @@ void Window::moveHorizontal(const double displacement) {
     // max[1] += dy * c - dx * s;
 }
 
-void Window::moveVertical(const double displacement) {
+void Window::moveVertical(double displacement) {
     auto m = utils::rotationMatrix<2>(-angle);
     m *= utils::translationMatrix(std::array<double, 2>{0, displacement});
     m *= utils::rotationMatrix<2>(angle);
@@ -64,7 +64,7 @@ void Window::moveVertical(const double displacement) {
     // max[1] += dy * c - dx * s;
 }
 
-void Window::rotate(const double _angle) {
+void Window::rotate(double _angle) {
     angle = fmod(angle + _angle + 360, 360);
 }
 
@@ -77,7 +77,7 @@ Point<2> Window::toViewport(const Viewport& viewport, Point<2>& p) {
     return Point<2>(x, y);
 }
 
-void Window::zoom(const double zoomRate) {
+void Window::zoom(double zoomRate) {
     if (currentZoom + zoomRate > 0) {
         currentZoom += zoomRate;
         double factor = 1 / (2 * currentZoom);
@@ -96,7 +96,7 @@ double Window::getZoomLevel() {
     return currentZoom;
 }
 
-void Window::setClippingAlgorithm(const int algorithm) {
+void Window::setClippingAlgorithm(int algorithm) {
     lcAlgorithm = algorithm;
 }
 
@@ -331,7 +331,7 @@ void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
     std::vector<Point<2>>& incomingList, std::vector<Point<2>>& auxList,
     std::vector<Point<2>>& artificialVertices) {
     unsigned size = p.numberOfPoints();
-    const int INVALID_VALUE = 2;
+    int INVALID_VALUE = 2;
     std::vector<Point<2>> pn = p.ndc();
     for (unsigned i = 0; i < size; i++) {
         auto& previous = pn[(i - 1 + size) % size];

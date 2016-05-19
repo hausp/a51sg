@@ -49,11 +49,11 @@ class BaseDrawer {
     virtual void draw(Wireframe<3>&) = 0;
 
     void drawAll();
-    void removeShape(const size_t);
-    void translate(const size_t, const std::array<double, D>&);
-    void scale(const size_t, const std::array<double, D>&);
-    void rotate(const size_t, const double, const Point<D>&);
-    void highlightObject(const long);
+    void removeShape(size_t);
+    void translate(size_t, const std::array<double, D>&);
+    void scale(size_t, const std::array<double, D>&);
+    void rotate(size_t, double, const Point<D>&);
+    void highlightObject(long);
     void swap(const std::vector<Drawable<D>*>&);
 
  protected:

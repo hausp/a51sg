@@ -41,7 +41,7 @@ class Interface {
         }
         return radioList;
     }*/
-    const int getSelectedRadio() {
+    int getSelectedRadio() {
         if (radioButtons.size() > 0 && GTK_IS_TOGGLE_BUTTON(radioButtons[0])) {
             for (unsigned i = 0; i < radioButtons.size(); i++) {
                 if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioButtons[i]))) {
@@ -71,7 +71,7 @@ class Interface {
     int clippingSelection();
 
     void addShape(const std::string& name);
-    void removeShape(const long);
+    void removeShape(long);
     void clearObjects(long);
 
     void buildFileDialog(const GtkFileChooserAction&, const std::string&,

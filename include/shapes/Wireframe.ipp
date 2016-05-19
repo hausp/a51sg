@@ -86,7 +86,7 @@ std::vector<Line<D>>& Wireframe<D>::edges() {
 }
 
 template<unsigned D>
-const size_t Wireframe<D>::numberOfPoints() const {
+size_t Wireframe<D>::numberOfPoints() const {
     return edgeList.size();
 }
 

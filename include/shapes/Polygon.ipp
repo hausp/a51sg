@@ -83,7 +83,7 @@ void Polygon<D>::update(const Matrix<3,3>& matrix, const Window& window) {
 }
 
 template<unsigned D>
-const size_t Polygon<D>::numberOfPoints() const {
+size_t Polygon<D>::numberOfPoints() const {
     return vertices.size();
 }
 

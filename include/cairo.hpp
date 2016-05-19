@@ -14,10 +14,10 @@ namespace cairo {
     void destroy();
     bool draw(cairo_t*);
     void fill();
-    void line_to(const double, const double);
-    void move_to(const double, const double);
-    void point(const double, const double);
-    void rectangle(const double, const double, const double, const double);
+    void line_to(double, double);
+    void move_to(double, double);
+    void point(double, double);
+    void rectangle(double, double, double, double);
     void set_color(double, double, double, double = 1);
     void set_color(const color_t&);
     void stroke();

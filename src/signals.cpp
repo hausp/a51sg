@@ -103,11 +103,11 @@ namespace signals {
         receiver->wireframeSetupOk();
     }
 
-    void remove_object(const long index) {
+    void remove_object(long index) {
         receiver->removeObject(index);
     }
 
-    void translate_object(const long index) {
+    void translate_object(long index) {
         receiver->translateObject(index);
     }
 
@@ -115,7 +115,7 @@ namespace signals {
         receiver->finishTranslation();
     }
 
-    void scale_object(const long index) {
+    void scale_object(long index) {
         receiver->scaleObject(index);
     }
 
@@ -123,7 +123,7 @@ namespace signals {
         receiver->finishScaling();
     }
 
-    void rotate_object(const long index) {
+    void rotate_object(long index) {
         receiver->rotateObject(index);
     }
 

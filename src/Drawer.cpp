@@ -116,12 +116,12 @@ double Drawer::getZoomLevel() {
     return window.getZoomLevel();
 }
 
-void Drawer::moveHorizontal(const int direction) {
+void Drawer::moveHorizontal(int direction) {
     window.moveHorizontal(direction * moveSpeed);
     updateAll();
 }
 
-void Drawer::moveVertical(const int direction) {
+void Drawer::moveVertical(int direction) {
     window.moveVertical(direction * moveSpeed);
     updateAll();
 }
@@ -147,8 +147,8 @@ void Drawer::scale(const unsigned long index, const std::array<double, 3>& ss) {
     }
 }
 
-void Drawer::rotate(const unsigned long index, const double angle,
-                    const int type, const std::vector<std::string>& entries) {
+void Drawer::rotate(const unsigned long index, double angle,
+                    int type, const std::vector<std::string>& entries) {
     if (index < displayFile.size()) {
         Point3D axis;
         auto& shape = displayFile[index];
@@ -170,13 +170,13 @@ void Drawer::rotate(const unsigned long index, const double angle,
     }
 }
 
-void Drawer::resizeViewport(const double length, const double height) {
+void Drawer::resizeViewport(double length, double height) {
     //viewport.second[0] = length;
     //viewport.second[1] = height;
     draw(wview);
 }
 
-void Drawer::setZoom(const double rate) {
+void Drawer::setZoom(double rate) {
     zoomRate = rate;
 }
 
@@ -184,7 +184,7 @@ void Drawer::setViewport(Point2D v1, Point2D v2) {
     viewport = std::make_pair(v1, v2);
 }
 
-void Drawer::setClippingAlgorithm(const int algorithm) {
+void Drawer::setClippingAlgorithm(int algorithm) {
     window.setClippingAlgorithm(algorithm);
 }
 
@@ -206,7 +206,7 @@ void Drawer::updateAll() {
     }
 }
 
-void Drawer::zoom(const int d) {
+void Drawer::zoom(int d) {
     window.zoom(d * zoomRate);
     updateAll();
 }

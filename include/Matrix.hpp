@@ -72,7 +72,7 @@ public:
 		return r -= m;
 	}
 
-	Matrix<N,M> operator*(const double value) const {
+	Matrix<N,M> operator*(double value) const {
 		Matrix<N,M> r;
 		for (unsigned i = 0; i < N; i++) {
 			for (unsigned j = 0; j < M; j++) {

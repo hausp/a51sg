@@ -21,10 +21,10 @@ class Controller {
  	~Controller();
 
 	// Window Navigation
-	void moveVertical(const int);
-	void moveHorizontal(const int);
+	void moveVertical(int);
+	void moveHorizontal(int);
 	void setZoom();
-	void zoom(const int);
+	void zoom(int);
 	
 	// Shapes stuff
 	void pointPressed();
@@ -38,12 +38,12 @@ class Controller {
 	void createCurve();
 	void createWireframe();
 
-	void removeObject(const long);
-	void translateObject(const long);
+	void removeObject(long);
+	void translateObject(long);
 	void finishTranslation();
-	void scaleObject(const long);
+	void scaleObject(long);
 	void finishScaling();
-	void rotateObject(const long);
+	void rotateObject(long);
 	void finishRotation();
 	void rotateWindow(long);
 

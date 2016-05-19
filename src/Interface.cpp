@@ -518,7 +518,7 @@ void Interface::addShape(const std::string& name) {
     gtk_widget_show(label);
 }
 
-void Interface::removeShape(const long index) {
+void Interface::removeShape(long index) {
     auto selected_row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(objList), index);
     gtk_container_remove(GTK_CONTAINER(objList), GTK_WIDGET(selected_row));
 }

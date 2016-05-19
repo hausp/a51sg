@@ -21,11 +21,11 @@ class Window {
  public:
     Window(const Point<2>&, const Point<2>&);
     Matrix<3, 3> normalizerMatrix();
-    void moveHorizontal(const double);
-    void moveVertical(const double);
-    void rotate(const double);
+    void moveHorizontal(double);
+    void moveVertical(double);
+    void rotate(double);
     Point<2> toViewport(const Viewport&, Point<2>&);
-    void zoom(const double);
+    void zoom(double);
     double getAngle();
     double getZoomLevel();
     void clip(Point<2>&);
@@ -49,7 +49,7 @@ class Window {
     void clip(Polygon<D>&) {}
     template<unsigned D>
     void clip(Curve<D>&) {}
-    void setClippingAlgorithm(const int);
+    void setClippingAlgorithm(int);
 
     Point<2> parallelProjection(Point<2> p) const;
     Point<2> parallelProjection(Point<3> p) const;

@@ -38,16 +38,16 @@ namespace cairo {
         cairo_fill(cr);
     }
 
-    void line_to(const double x, const double y) {
+    void line_to(double x, double y) {
         cairo_set_line_width(cr, 2);
         cairo_line_to(cr, x, y);
     }
 
-    void move_to(const double x, const double y) {
+    void move_to(double x, double y) {
         cairo_move_to(cr, x, y);
     }
 
-    void point(const double x, const double y) {
+    void point(double x, double y) {
         cairo_set_line_width(cr, 2);
         cairo_rectangle(cr, x - 1, y - 1, 2, 2);
         cairo_fill(cr);
@@ -57,8 +57,8 @@ namespace cairo {
         //cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
     }
 
-    void rectangle(const double x, const double y, 
-                   const double l, const double h) {
+    void rectangle(double x, double y, 
+                   double l, double h) {
         cairo_rectangle(cr, x, y, l, h);
     }
 

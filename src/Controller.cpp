@@ -27,13 +27,13 @@ Controller::~Controller() { }
 
 // -------------------------- Window Navigation --------------------------- //
 
-void Controller::moveVertical(const int direction) {
+void Controller::moveVertical(int direction) {
     drawer.moveVertical(direction);
     drawer.drawAll();
     interface.queueDraw();
 }
 
-void Controller::moveHorizontal(const int direction) {
+void Controller::moveHorizontal(int direction) {
     drawer.moveHorizontal(direction);
     drawer.drawAll();
     interface.queueDraw();
@@ -42,12 +42,11 @@ void Controller::moveHorizontal(const int direction) {
 void Controller::setZoom() {
     GtkWidget* zoomLevel = interface.getZoomLevel();
     std::string z = gtk_entry_get_text(GTK_ENTRY(zoomLevel));
-    // std::regex numeric("^\\d+");
-    // if (!std::regex_match(z, numeric)) return;
+    if (!utils::regex_match(z, utils::REGEX_INTEGER_UNSIGNED)) return;
     drawer.setZoom(stoi(z)/100.0);
 }
 
-void Controller::zoom(const int d) {
+void Controller::zoom(int d) {
     drawer.zoom(d);
     drawer.drawAll();
     interface.queueDraw();
@@ -101,7 +100,7 @@ void Controller::createPoint() {
         #if !RECENT_COMPILER
         try {
         #endif
-            p = new Point3D(name, stoi(entries[0]), stoi(entries[1]), 1);
+            p = new Point3D(name, stoi(entries[0]), stoi(entries[1]), stoi(entries[2]));
         #if !RECENT_COMPILER
         } catch(...) {
             return;
@@ -252,14 +251,14 @@ void Controller::createWireframe() {
     }
 }
 
-void Controller::removeObject(const long index) {
+void Controller::removeObject(long index) {
     interface.removeShape(index);
     drawer.removeShape(index);
     drawer.drawAll();
     interface.queueDraw();
 }
 
-void Controller::translateObject(const long index) {
+void Controller::translateObject(long index) {
     currentIndex = index;
     interface.buildTranslationWindow();
 }
@@ -285,7 +284,7 @@ void Controller::finishTranslation() {
     interface.queueDraw();
 }
 
-void Controller::scaleObject(const long index) {
+void Controller::scaleObject(long index) {
     currentIndex = index;
     interface.buildScalingWindow();
 }
@@ -311,7 +310,7 @@ void Controller::finishScaling() {
     interface.queueDraw();
 }
 
-void Controller::rotateObject(const long index) {
+void Controller::rotateObject(long index) {
     currentIndex = index;
     interface.buildRotationWindow();
 }
@@ -387,7 +386,6 @@ void Controller::saveFileDialog() {
 void Controller::openFile(const std::string& filename) {
     clearObjects();
     auto displayFile = fileManager->fromObj3D(filename);
-    // std::vector<Drawable<3>*> displayFile;
     for (auto shape : displayFile) {
         interface.addShape(shape->getFormattedName());
     }

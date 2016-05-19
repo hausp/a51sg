@@ -38,12 +38,12 @@ namespace signals {
     void curve_vertex_ok();
     void wsetup_ok();
 
-    void remove_object(const long);
-    void translate_object(const long);
+    void remove_object(long);
+    void translate_object(long);
     void finish_translation();
-    void scale_object(const long);
+    void scale_object(long);
     void finish_scaling();
-    void rotate_object(const long);
+    void rotate_object(long);
     void finish_rotation();
     void rotate_window(long);
     void update_entries();

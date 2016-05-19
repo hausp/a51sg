@@ -34,7 +34,7 @@ class Drawer : public SuperDrawer {
 
     double getWindowAngle();
     double getZoomLevel();
-    void setZoom(const double);
+    void setZoom(double);
     void setViewport(Point2D, Point2D);
     void addShape(Drawable3D*);
 
@@ -46,19 +46,19 @@ class Drawer : public SuperDrawer {
     void draw(Wireframe3D&);
     void drawAll();
 
-    void moveVertical(const int);
-    void moveHorizontal(const int);
-    void resizeViewport(const double, const double);
-    void rotate(const unsigned long, const double, const int,
+    void moveVertical(int);
+    void moveHorizontal(int);
+    void resizeViewport(double, double);
+    void rotate(const unsigned long, double, int,
                 const std::vector<std::string>&);
     void rotateWindow(long);
     void scale(const unsigned long, const std::array<double, 3>&);
-    void setClippingAlgorithm(const int);
+    void setClippingAlgorithm(int);
     void swap(const std::vector<Drawable3D*>&);
     void translate(const unsigned long, const std::array<double, 3>&);
     void update(Drawable3D*);
     void updateAll();
-    void zoom(const int);
+    void zoom(int);
 
  private:
     Window window;
