@@ -20,7 +20,7 @@ using Viewport = std::pair<Point<2>, Point<2>>;
 class Window {
  public:
     Window(const Point<2>&, const Point<2>&);
-    Matrix<3, 3> normalizerMatrix();
+    Matrix<3,3> normalizerMatrix();
     void moveHorizontal(double);
     void moveVertical(double);
     void rotate(double);
@@ -51,7 +51,7 @@ class Window {
     void clip(Curve<D>&) {}
     void setClippingAlgorithm(int);
 
-    Point<2> parallelProjection(Point<2> p) const;
+    Point<2> parallelProjection(const Point<2>& p) const;
     Point<2> parallelProjection(Point<3> p) const;
 
  private:

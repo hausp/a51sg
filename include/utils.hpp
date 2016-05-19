@@ -23,7 +23,7 @@ class Line;
     for (auto& elem : (x)) { \
         std::cout << (#x) << "[" << std::to_string(counter++) << "] = " << elem << std::endl; \
     }
-#define ECHO(x) std::cout << x << std::endl
+#define ECHO(x) std::cout << (x) << std::endl
 
 using color_t = std::tuple<unsigned, unsigned, unsigned, double>;
 

@@ -21,9 +21,9 @@ Window::Window(const Point<2>& min, const Point<2>& max)
     defaultHeight = max[1] - min[1];
 }
 
-Matrix<3, 3> Window::normalizerMatrix() {
+Matrix<3,3> Window::normalizerMatrix() {
     Point<2> center = (min + max)/-2;
-    Matrix<3, 3> normalizer = utils::translationMatrix(center.toArray());
+    Matrix<3,3> normalizer = utils::translationMatrix(center.toArray());
     normalizer *= utils::rotationMatrix<2>(-angle);
     std::array<double, 2> s = {2/(max[0] - min[0]), 2/(max[1] - min[1])};
     normalizer *= utils::scalingMatrix(s);
@@ -36,15 +36,6 @@ void Window::moveHorizontal(double displacement) {
     m *= utils::rotationMatrix<2>(angle);
     min *= m;
     max *= m;
-    // double a = angle * M_PI / 180;
-    // double s = sin(a);
-    // double c = cos(a);
-    // double dx = displacement;
-    // double dy = 0;
-    // min[0] += dx * c + dy * s;
-    // min[1] += dy * c - dx * s;
-    // max[0] += dx * c + dy * s;
-    // max[1] += dy * c - dx * s;
 }
 
 void Window::moveVertical(double displacement) {
@@ -53,15 +44,6 @@ void Window::moveVertical(double displacement) {
     m *= utils::rotationMatrix<2>(angle);
     min *= m;
     max *= m;
-    // double a = angle * M_PI / 180;
-    // double s = sin(a);
-    // double c = cos(a);
-    // double dx = 0;
-    // double dy = displacement;
-    // min[0] += dx * c + dy * s;
-    // min[1] += dy * c - dx * s;
-    // max[0] += dx * c + dy * s;
-    // max[1] += dy * c - dx * s;
 }
 
 void Window::rotate(double _angle) {
@@ -100,7 +82,7 @@ void Window::setClippingAlgorithm(int algorithm) {
     lcAlgorithm = algorithm;
 }
 
-Point<2> Window::parallelProjection(Point<2> p) const {
+Point<2> Window::parallelProjection(const Point<2>& p) const {
     return p;
 }
 
@@ -529,7 +511,7 @@ void Window::listInsert(std::list<Point<2>>& list, unsigned reference,
 
 void Window::clockwiseSort(Polygon<2>& p) {
     unsigned size = p.numberOfPoints();
-    int order = 0;
+    double order = 0;
     for (unsigned i = 0; i < size; i++) {
         auto& next = p[(i + 1) % size];
         auto& current = p[i];
@@ -647,32 +629,6 @@ void Window::clipLB(Line<2>& ln) {
         p1[1] += u1 * dy;
     }
 }
-    // for (unsigned i = 0; i < 4; i++) {
-    //     std::cout << "p[" << i << "] = " << p[i] << std::endl;
-    // }
-    // for (unsigned i = 0; i < 4; i++) {
-    //     std::cout << "q[" << i << "] = " << q[i] << std::endl;
-    // }
-    // for (unsigned i = 0; i < 4; i++) {
-    //     std::cout << "r[" << i << "] = " << q[i]/p[i] << std::endl;
-    // }
-    // std::cout << "u1 = " << u1 << std::endl;
-    // std::cout << "u2 = " << u2 << std::endl;
-
-    // if (u1 != 0 && u1 != 1) {
-    //     std::cout << "(" << p1[0] << "," << p1[1] << ") -> (" << x1 << "," << y1 << ")" << std::endl;
-    //     p1 = Point<2>(x1, y1);
-    // } else {
-    //     std::cout << "(" << p1[0] << "," << p1[1] << ")" << std::endl;
-    // }
-
-    // if (u2 != 0 && u2 != 1) {
-    //     std::cout << "(" << p2[0] << "," << p2[1] << ") -> (" << x2 << "," << y2 << ")" << std::endl;
-    //     p2 = Point<2>(x2, y2);
-    // } else {
-    //     std::cout << "(" << p2[0] << "," << p2[1] << ")" << std::endl;
-    // }
-// }
 
 void Window::clipNLN(Line<2>& ln) {
     auto& p1 = ln[0].ndc();

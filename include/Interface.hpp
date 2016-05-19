@@ -34,13 +34,6 @@ class Interface {
         return sentries;
     }
 
-    /*const std::vector<bool> getRadioButtons() const {
-        std::vector<bool> radioList;
-        for (auto r : radioButtons) {
-            radioList.push_back(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(r)));
-        }
-        return radioList;
-    }*/
     int getSelectedRadio() {
         if (radioButtons.size() > 0 && GTK_IS_TOGGLE_BUTTON(radioButtons[0])) {
             for (unsigned i = 0; i < radioButtons.size(); i++) {
