@@ -386,8 +386,8 @@ void Controller::saveFileDialog() {
 
 void Controller::openFile(const std::string& filename) {
     clearObjects();
-    // auto displayFile = fileManager->fromObj2D(filename);
-    std::vector<Drawable<3>*> displayFile;
+    auto displayFile = fileManager->fromObj3D(filename);
+    // std::vector<Drawable<3>*> displayFile;
     for (auto shape : displayFile) {
         interface.addShape(shape->getFormattedName());
     }

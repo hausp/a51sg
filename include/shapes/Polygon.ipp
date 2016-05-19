@@ -133,3 +133,17 @@ template<unsigned D>
 std::vector<Point<D>>& Polygon<D>::ndc() {
     return ndcVertices;
 }
+
+template<unsigned D>
+std::ostream& operator<<(std::ostream& stream, const Polygon<D>& polygon) {
+    auto points = polygon.points();
+    stream << '(';
+    bool first = true;
+    for (auto& p : points) {
+        if (!first) stream << ',';
+        first = false;
+        stream << p;
+    }
+    stream << ')';
+    return stream;
+}

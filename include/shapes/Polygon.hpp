@@ -54,6 +54,9 @@ class Polygon : public Drawable<D> {
     void init(const Point<D>&);
 };
 
+template<unsigned D>
+std::ostream& operator<<(std::ostream&, const Polygon<D>&);
+
 #include "Polygon.ipp"
 
 #endif /* POLYGON_HPP */

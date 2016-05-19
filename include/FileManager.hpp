@@ -58,7 +58,7 @@ public:
 
 		std::stringstream result;
 		for (auto vertex : vertices) {
-			result << "v " << vertex[0] << " " << vertex[1] << " 0" << std::endl;
+			result << "v " << vertex[0] << " " << vertex[1] << " " << vertex[2] << std::endl;
 		}
 		result << definitions.str();
 		return result.str();
