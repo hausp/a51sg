@@ -12,31 +12,44 @@
 #include "Line.hpp"
 #include "Wireframe.hpp"
 
+#include "BaseVector.hpp"
+#include "BaseMatrix.hpp"
+
 int main(int argc, char** argv) {
- 	// Init GTK+ with command line options
-    gtk::init(argc, argv);
+ 	// // Init GTK+ with command line options
+  //   gtk::init(argc, argv);
 
-    unsigned canvasWidth = 500;
-    unsigned canvasHeight = 500;
+  //   unsigned canvasWidth = 500;
+  //   unsigned canvasHeight = 500;
 
-    // Graphical Interface - managing ugly buttons and boxes
-    Interface gui(canvasWidth, canvasHeight);
+  //   // Graphical Interface - managing ugly buttons and boxes
+  //   Interface gui(canvasWidth, canvasHeight);
 
-    // Drawer - the cool stuff goes here
-    Drawer drawer(canvasWidth, canvasHeight, 20);
+  //   // Drawer - the cool stuff goes here
+  //   Drawer drawer(canvasWidth, canvasHeight, 20);
     
-    // Controller - being God
-    Controller controller(gui, drawer);
+  //   // Controller - being God
+  //   Controller controller(gui, drawer);
 
-    // Set controller to receive GTK+ signals
-    signals::set_receiver(&controller);
+  //   // Set controller to receive GTK+ signals
+  //   signals::set_receiver(&controller);
 	
-    // Build graphical environment
-    gui.build();
+  //   // Build graphical environment
+  //   gui.build();
 
-    // Show GUI
-    gui.show();
+  //   // Show GUI
+  //   gui.show();
 
-    // Start GTK+
-    gtk::main();
+  //   // Start GTK+
+  //   gtk::main();
+
+    BaseVector v1 {0, 1, 2, 3};
+    BaseVector v2 {3, 2, 1, 0};
+    BaseVector v3 = v1 + v2;
+    std::cout << v3 << std::endl;
+
+    BaseMatrix m1 {{0,0,0},{1,1,1},{2,2,2}};
+    BaseMatrix m2 {{2,2,2,2},{1,1,1,1},{0,0,0,0}};
+    BaseMatrix m3 = m1 * m2;
+    std::cout << m3 << std::endl;
 }

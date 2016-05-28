@@ -10,6 +10,8 @@
 #include <vector>
 #include "Drawable.hpp"
 
+#define double_if typename std::enable_if<sizeof...(Args)+1 == D, double>::type
+
 template<unsigned R, unsigned C>
 class Matrix;
 
@@ -25,15 +27,10 @@ class Point : public Drawable<D> {
     Point(double);
 
     template<typename ...Args>
-    Point(typename std::enable_if<sizeof...(Args)+1 == D,
-          double>::type,
-          const Args...);
+    Point(double_if, const Args...);
 
     template<typename ...Args>
-    Point(const std::string& name,
-          typename std::enable_if<sizeof...(Args)+1 == D,
-          double>::type,
-          Args...);
+    Point(const std::string& name, double_if, Args...);
 
     template<unsigned Dn>
     Point(const Point<Dn>&);
