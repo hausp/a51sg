@@ -13,12 +13,12 @@ class BaseVector {
     BaseVector();
     explicit BaseVector(size_t);
     BaseVector(size_t, double);
-    //BaseVector(const BaseVector&);
     BaseVector(std::initializer_list<double>);
 
     ~BaseVector();
 
-    const size_t dimension() const;
+    size_t dimension() const;
+    double norm() const;
 
     double& operator[](size_t);
     const double& operator[](size_t) const;
@@ -43,6 +43,7 @@ class BaseVector {
     BaseVector operator-(double) const;
     BaseVector operator*(double) const;
     BaseVector operator/(double) const;
+    BaseVector operator-() const;
 
     double operator*(const BaseVector&) const;
 

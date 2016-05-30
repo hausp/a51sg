@@ -2,105 +2,24 @@
    and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 #include <cmath>
-#include "BaseDrawer.hpp"
-#include "Curve.hpp"
 #include "Drawable.hpp"
-#include "Matrix.hpp"
-#include "Point.hpp"
-#include "SimpleCurve.hpp"
+#include "BaseDrawer.hpp"
 
-template<unsigned D>
-BaseDrawer<D>::BaseDrawer() { }
-
-template<unsigned D>
-BaseDrawer<D>::~BaseDrawer<D>() {
-    for (auto shape : displayFile) {
-        delete shape;
-    }
-}
-
-template<unsigned D>
-void BaseDrawer<D>::addShape(Drawable<D>* d) {
-    displayFile.push_back(d);
-}
-
-template<unsigned D>
-void BaseDrawer<D>::swap(const std::vector<Drawable<D>*>& newDisplayFile) {
-    for (auto shape : displayFile) {
-        delete shape;
-    }
-    displayFile = newDisplayFile;
-}
-
-template<unsigned D>
-const std::vector<Drawable<D>*>& BaseDrawer<D>::getDisplayFile() {
-    return displayFile;
-}
-
-template<unsigned D>
-void BaseDrawer<D>::clearDisplayFile() {
-    displayFile.clear();
-}
-
-template<unsigned D>
-void BaseDrawer<D>::drawAll() {
-    for (auto shape : displayFile) {
-        shape->draw(*this);
-    }
-}
-
-template<unsigned D>
-void BaseDrawer<D>::removeShape(size_t index) {
+template<size_t D>
+void BaseDrawer::translate(size_t index, const std::array<double, D>& ds) {
     if (index < displayFile.size()) {
-        displayFile.erase(displayFile.begin() + index);
+        //displayFile[index]->transform(utils::translationMatrix(ds));
     }
 }
 
-template<unsigned D>
-void BaseDrawer<D>::translate(size_t index, const std::array<double, D>& ds) {
-    if (index < displayFile.size()) {
-        displayFile[index]->transform(utils::translationMatrix(ds));
-    }
-}
-
-template<unsigned D>
-void BaseDrawer<D>::scale(size_t index, const std::array<double, D>& ss) {
+template<size_t D>
+void BaseDrawer::scale(size_t index, const std::array<double, D>& ss) {
     if (index < displayFile.size()) {
         auto& shape = displayFile[index];
         auto center = shape->center();
-        auto m = utils::translationMatrix((center * -1).toArray());
-        m *= utils::scalingMatrix(ss);
-        m *= utils::translationMatrix(center.toArray());
-        shape->transform(m);
+        // auto m = utils::translationMatrix((-center).toArray());
+        // m *= utils::scalingMatrix(ss);
+        // m *= utils::translationMatrix(center.toArray());
+        // shape->transform(BaseTransformation(m));
     }
-}
-
-template<unsigned D>
-void BaseDrawer<D>::rotate(size_t index, double angle, const Point<D>& axis) {
-    if (index < displayFile.size()) {
-        auto& shape = displayFile[index];
-        // auto m = utils::translationMatrix((axis * -1).toArray());
-        // m *= utils::rotationMatrix<D>(angle);
-        // m *= utils::translationMatrix(axis.toArray());
-        Point<3> xAxis(1, 0, 0);
-        Point<3> yAxis(0, 1, 0);
-        double tx = acos((xAxis * axis) / axis.norm()) * 180 / M_PI;
-        double ty = acos((yAxis * axis) / axis.norm()) * 180 / M_PI;
-        auto transformation = utils::rotationMatrix<3>(tx, utils::RotationPlane::X);
-        transformation *= utils::rotationMatrix<3>(ty, utils::RotationPlane::Y);
-
-        transformation *= utils::rotationMatrix<3>(angle, utils::RotationPlane::Z);
-        transformation *= utils::rotationMatrix<3>(-ty, utils::RotationPlane::Y);        
-        transformation *= utils::rotationMatrix<3>(-tx, utils::RotationPlane::X);
-        shape->transform(transformation);
-    }
-}
-
-template<unsigned D>
-void BaseDrawer<D>::highlightObject(long index) {
-    if (highlighted != -1) {
-        displayFile[highlighted]->setColor(0, 0, 0);
-    }
-    displayFile[index]->setColor(48, 160, 255);
-    highlighted = index;
 }

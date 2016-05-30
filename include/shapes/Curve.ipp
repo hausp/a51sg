@@ -5,6 +5,8 @@
 #include "BaseDrawer.hpp"
 #include "Matrix.hpp"
 #include "Window.hpp"
+#include "BaseVector.hpp"
+#include "BaseTransformation.hpp"
 
 template<unsigned D>
 void Curve<D>::draw(BaseDrawer<D>& BaseDrawer) {

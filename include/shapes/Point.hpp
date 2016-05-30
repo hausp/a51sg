@@ -8,23 +8,23 @@
 #include <memory>
 #include <ostream>
 #include <vector>
+#include "BaseVector.hpp"
 #include "Drawable.hpp"
+
+class Window;
+class BaseDrawer;
+class BaseTransformation;
 
 #define double_if typename std::enable_if<sizeof...(Args)+1 == D, double>::type
 
 template<unsigned R, unsigned C>
 class Matrix;
 
-template<unsigned Dn, unsigned D>
-struct is_valid {
-    bool value = Dn >= D;
-};
-
 template<unsigned D>
-class Point : public Drawable<D> {
+class Point : public Point<D-1> {
  public:
     Point();
-    Point(double);
+    explicit Point(double);
 
     template<typename ...Args>
     Point(double_if, const Args...);
@@ -35,20 +35,6 @@ class Point : public Drawable<D> {
     template<unsigned Dn>
     Point(const Point<Dn>&);
 
-    void draw(BaseDrawer<D>&) override;
-    void clip(Window&) override;
-    void transform(const Matrix<D+1,D+1>&) override;
-    Point<D> center() const override;
-    Point<2>& ndc();
-    std::vector<Point<D>> points() const override;
-    void update(const Matrix<3,3>&, const Window& window) override;
-    size_t dimension() const;
-    double norm() const;
-
-    double& operator[](size_t);
-    double operator[](size_t) const;
-    bool operator==(const Point<D>&) const;
-    bool operator!=(const Point<D>&) const;
     Point<D>& operator+=(const Point<D>&);
     Point<D>& operator-=(const Point<D>&);
     Point<D>& operator*=(double);
@@ -56,32 +42,64 @@ class Point : public Drawable<D> {
     Point<D> operator+(const Point<D>&) const;
     Point<D> operator-(const Point<D>&) const;
     Point<D> operator-() const;
-    double operator*(const Point<D>&) const;
     Point<D> operator*(double) const;
     Point<D> operator/(double) const;
-    typename std::array<double, D>::iterator begin();
-    typename std::array<double, D>::const_iterator begin() const;
-    typename std::array<double, D>::iterator end();
-    typename std::array<double, D>::const_iterator end() const;
+    double operator*(const Point<D>&) const;
     std::array<double, D> toArray() const;
 
- private:
-    std::array<double, D> coordinates;
-    std::shared_ptr<Point<2>> normalized_point;
+    using BaseVector::operator*;
 
+ private:
     template<typename ...Args>
     void init(unsigned pos, double, const Args...);
     void init(unsigned);
 };
+
+template<>
+class Point<2> : virtual public Drawable, virtual public BaseVector {
+ public:
+    Point();
+    Point(double, double);
+    Point(const std::string&, double, double);
+    explicit Point(double);
+
+    void draw(BaseDrawer&) override;
+    void clip(Window&) override;
+    void transform(const BaseTransformation&) override;
+    BaseVector center() const override;
+    Point<2>& ndc();
+    std::vector<BaseVector> points() const override;
+    void update(const BaseTransformation&, const Window& window) override;
+
+    Point<2>& operator+=(const Point<2>&);
+    Point<2>& operator-=(const Point<2>&);
+    Point<2>& operator*=(double);
+    Point<2>& operator/=(double);
+    Point<2> operator+(const Point<2>&) const;
+    Point<2> operator-(const Point<2>&) const;
+    Point<2> operator-() const;
+    Point<2> operator*(double) const;
+    Point<2> operator/(double) const;
+    double operator*(const Point<2>&) const;
+    std::array<double, 2> toArray() const;
+
+    using BaseVector::operator*;
+
+ private:
+    std::shared_ptr<Point<2>> normalized_point;
+};
+
+template<>
+class Point<1> { };
+
+template<>
+class Point<0> { };
 
 template<unsigned R, unsigned C>
 Matrix<1,R+1> operator*(const Point<R>&, const Matrix<R+1,C>&);
 
 template<unsigned R, unsigned C>
 Point<R>& operator*=(Point<R>&, const Matrix<R+1,C>&);
-
-template<unsigned D>
-std::ostream& operator<<(std::ostream& stream, const Point<D>& p);
 
 #include "Point.ipp"
 

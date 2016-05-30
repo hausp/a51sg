@@ -8,10 +8,12 @@
 #include "Drawable.hpp"
 #include "Point.hpp"
 
+class BaseVector;
+class BaseTransformation;
 class Window;
 
 template<unsigned D>
-class Polygon : public Drawable<D> {
+class Polygon : public Drawable {
  public:
     Polygon();
 
@@ -27,12 +29,12 @@ class Polygon : public Drawable<D> {
     template<unsigned Dn>
     Polygon(const Polygon<Dn>&);
 
-    void draw(BaseDrawer<D>&) override;
+    void draw(BaseDrawer&) override;
     void clip(Window&) override;
-    void transform(const Matrix<D+1,D+1>&) override;
-    Point<D> center() const override;
-    std::vector<Point<D>> points() const override;
-    void update(const Matrix<3,3>&, const Window&) override;
+    void transform(const BaseTransformation&) override;
+    BaseVector center() const override;
+    std::vector<BaseVector> points() const override;
+    void update(const BaseTransformation&, const Window&) override;
     size_t numberOfPoints() const;
     Point<D>& operator[](size_t);
     const Point<D>& operator[](size_t) const;
@@ -57,6 +59,6 @@ class Polygon : public Drawable<D> {
 template<unsigned D>
 std::ostream& operator<<(std::ostream&, const Polygon<D>&);
 
-#include "Polygon.ipp"
+//#include "Polygon.ipp"
 
 #endif /* POLYGON_HPP */

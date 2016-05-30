@@ -7,13 +7,11 @@
 #include <map>
 #include <string>
 #include <tuple>
-#include "Matrix.hpp"
 #include "utils.hpp"
 
-template<unsigned D>
 class BaseDrawer;
-template<unsigned D>
-class Point;
+class BaseTransformation;
+class BaseVector;
 class Window;
 
 enum class DrawableType {
@@ -35,45 +33,38 @@ namespace {
     {DrawableType::Undefined, "Undefined"}};
 }
 
-
-template<unsigned D>
 class Drawable {
  public:
-    void setColor(const color_t& _color) {
-        color = _color;
-    }
-
-    void setColor(unsigned r, unsigned g, unsigned b, unsigned a = 1) {
-        color = std::make_tuple(r, g, b, a);
-    }
-
-    const color_t& getColor() const {
-        return color;
-    }
-
     virtual ~Drawable() { }
 
-    virtual void draw(BaseDrawer<D>&) = 0;
+    virtual void draw(BaseDrawer&) = 0;
     virtual void clip(Window&) = 0;
-    virtual void transform(const Matrix<D+1,D+1>&) = 0;
-    virtual Point<D> center() const = 0;
-    virtual std::vector<Point<D>> points() const = 0;
-    virtual void update(const Matrix<3,3>&, const Window&) = 0;
+    virtual void transform(const BaseTransformation&) = 0;
+    virtual BaseVector center() const = 0;
+    virtual std::vector<BaseVector> points() const = 0;
+    virtual void update(const BaseTransformation&, const Window&) = 0;
 
-    void setName(const std::string& name) { this->name = name; }
-    const std::string& getName() const { return name; }
-    const DrawableType getType() const { return type; }
     std::string getFormattedName() const {
         return types[type] + "(" + name + ")";
     }
-
-    void setVisible(bool visibility) { visible = visibility; }
+    const std::string& getName() const { return name; }
+    const DrawableType getType() const { return type; }
+    const color_t& getColor() const { return color; }
     bool isVisible() const { return visible; }
+    void setVisible(bool visibility) { visible = visibility; }
+    void setName(const std::string& name) { this->name = name; }
+    void setColor(const color_t& _color) { color = _color; }
+    void setColor(unsigned r, unsigned g, unsigned b, unsigned a = 1) {
+        color = std::make_tuple(r, g, b, a);
+    }
  
  protected:
-    Drawable(const std::string& name, 
-        DrawableType type = DrawableType::Undefined) 
-        : name(name), type(type), color(std::make_tuple(0, 0, 0, 1)) { }
+    Drawable(DrawableType type = DrawableType::Undefined)
+    : name{""}, type{type}, color{std::make_tuple(0, 0, 0, 1)} { }
+
+    Drawable(const std::string& name, DrawableType type = DrawableType::Undefined)
+    : name{name}, type{type}, color{std::make_tuple(0, 0, 0, 1)} { }
+ 
  private:
     std::string name;
     DrawableType type;

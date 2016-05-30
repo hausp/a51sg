@@ -3,25 +3,24 @@
 
 #include "Point.hpp"
 #include "BaseDrawer.hpp"
+#include "BaseTransformation.hpp"
 #include "Matrix.hpp"
 #include "Window.hpp"
 
 template<unsigned D>
-Point<D>::Point() : Drawable<D>("", DrawableType::Point) { 
-    coordinates.fill(0);
-}
+Point<D>::Point()
+: Drawable(DrawableType::Point), BaseVector(D) { }
 
 template<unsigned D>
-Point<D>::Point(double value) : Drawable<D>("", DrawableType::Point) {
-    coordinates.fill(value);
-}
+Point<D>::Point(double value)
+: Drawable(DrawableType::Point), BaseVector(D, value) { }
 
 template<unsigned D>
 template<typename... Args>
 Point<D>::Point(typename std::enable_if<sizeof...(Args)+1 == D,
       double>::type c,
       const Args... args) 
-: Drawable<D>(std::string(""), DrawableType::Point) {
+: Drawable(DrawableType::Point), BaseVector(D) {
     init(0, c, args...);
 }
 
@@ -30,125 +29,44 @@ template<typename... Args>
 Point<D>::Point(const std::string& name,
       typename std::enable_if<sizeof...(Args)+1 == D,
       double>::type c,
-      Args... args) : Drawable<D>(name, DrawableType::Point) {
+      Args... args)
+: Drawable(name, DrawableType::Point), BaseVector(D) {
     init(0, c, args...);
 }
 
 template<unsigned D>
-template<unsigned Dn>
-Point<D>::Point(const Point<Dn>& p)
-: Drawable<D>("", DrawableType::Point) {
-    for (unsigned i = 0; i < D; i++) {
-        coordinates[i] = (i < Dn) ? p[i] : 0;
-    }
-}
-
-template<unsigned D>
-void Point<D>::draw(BaseDrawer<D>& drawer) {
-    drawer.draw(*this);
-}
-
-template<unsigned D>
-void Point<D>::clip(Window& window) {
-    window.clip(*this);
-}
-
-template<unsigned D>
-void Point<D>::transform(const Matrix<D+1,D+1>& matrix) {
-    *this *= matrix;
-}
-
-template<unsigned D>
-Point<D> Point<D>::center() const {
-    return *this;
-}
-
-template<unsigned D>
-Point<2>& Point<D>::ndc() {
-    if (!normalized_point)
-        normalized_point = std::make_shared<Point<2>>(*this);
-    return *normalized_point;
-}
-
-template<unsigned D>
-std::vector<Point<D>> Point<D>::points() const {
-    return {*this};
-}
-
-template<unsigned D>
-void Point<D>::update(const Matrix<3,3>& matrix, const Window& window) {
-    ndc() = window.parallelProjection(*this);
-    ndc() *= matrix;
-}
-
-template<unsigned D>
-size_t Point<D>::dimension() const {
-    return coordinates.size();
-}
-
-template<unsigned D>
-double Point<D>::norm() const {
-    double result = 0;
-    for (unsigned i = 0; i < D; i++) {
-        result += (*this)[i] * (*this)[i];
-    }
-    return sqrt(result);
-}
-
-template<unsigned D>
-double& Point<D>::operator[](size_t index) {
-    return coordinates[index];
-}
-
-template<unsigned D>
-double Point<D>::operator[](size_t index) const {
-    return coordinates[index];
-}
-
-template<unsigned D>
-bool Point<D>::operator==(const Point<D>& p) const {
-    for (unsigned i = 0; i < D; i++) {
-        if ((*this)[i] != p[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-template<unsigned D>
-bool Point<D>::operator!=(const Point<D>& p) const {
-    return !(*this == p);
-}
-
-template<unsigned D>
 Point<D>& Point<D>::operator+=(const Point<D>& p) {
-    for (unsigned i = 0; i < D; i++) {
-        (*this)[i] += p[i];
-    }
+    // for (unsigned i = 0; i < D; i++) {
+    //     (*this)[i] += p[i];
+    // }
+    BaseVector::operator+=(p);
     return *this;
 }
 
 template<unsigned D>
 Point<D>& Point<D>::operator-=(const Point<D>& p) {
-    for (unsigned i = 0; i < D; i++) {
-        (*this)[i] -= p[i];
-    }
+    // for (unsigned i = 0; i < D; i++) {
+    //     (*this)[i] -= p[i];
+    // }
+    BaseVector::operator-=(p);
     return *this;
 }
 
 template<unsigned D>
 Point<D>& Point<D>::operator*=(double v) {
-    for (unsigned i = 0; i < D; i++) {
-        (*this)[i] *= v;
-    }
+    // for (unsigned i = 0; i < D; i++) {
+    //     (*this)[i] *= v;
+    // }
+    BaseVector::operator*=(v);
     return *this;
 }
 
 template<unsigned D>
 Point<D>& Point<D>::operator/=(double v) {
-    for (unsigned i = 0; i < D; i++) {
-        (*this)[i] /= v;
-    }
+    // for (unsigned i = 0; i < D; i++) {
+    //     (*this)[i] /= v;
+    // }
+    BaseVector::operator/=(v);
     return *this;
 }
 
@@ -170,15 +88,6 @@ Point<D> Point<D>::operator-() const {
 }
 
 template<unsigned D>
-double Point<D>::operator*(const Point<D>& p) const {
-    double sum = 0;
-    for (unsigned i = 0; i < D; i++) {
-        sum += (*this)[i] * p[i];
-    }
-    return sum;
-}
-
-template<unsigned D>
 Point<D> Point<D>::operator*(double v) const {
     Point<D> r = *this;
     return r *= v;
@@ -191,39 +100,134 @@ Point<D> Point<D>::operator/(double v) const {
 }
 
 template<unsigned D>
-typename std::array<double, D>::iterator Point<D>::begin() {
-    return coordinates.begin();
-}
-
-template<unsigned D>
-typename std::array<double, D>::const_iterator Point<D>::begin() const {
-    return coordinates.cbegin();
-}
-
-template<unsigned D>
-typename std::array<double, D>::iterator Point<D>::end() {
-    return coordinates.end();
-}
-
-template<unsigned D>
-typename std::array<double, D>::const_iterator Point<D>::end() const {
-    return coordinates.cend();
-}
-
-template<unsigned D>
 std::array<double, D> Point<D>::toArray() const {
-    return coordinates;
+    //return coordinates;
 }
 
 template<unsigned D>
 template<typename ...Args>
 void Point<D>::init(unsigned pos, double c, const Args... args) {
-    coordinates[pos] = c;
+    (*this)[pos] = c;
     init(++pos, args...);
 }
 
 template<unsigned D>
 void Point<D>::init(unsigned) {}
+
+
+//-------------------------------- Point<2> ---------------------------------//
+
+Point<2u>::Point()
+: Drawable(DrawableType::Point), BaseVector(2) { }
+
+Point<2>::Point(double value)
+: Drawable(DrawableType::Point), BaseVector(2, value) { }
+
+Point<2>::Point(double v1, double v2)
+: Drawable(DrawableType::Point), BaseVector(v1, v2) { }
+
+Point<2>::Point(const std::string& name, double v1, double v2)
+: Drawable(name, DrawableType::Point), BaseVector(v1, v2) { }
+
+void Point<2>::draw(BaseDrawer& drawer) {
+    drawer.draw(*this);
+}
+
+void Point<2>::clip(Window& window) {
+    window.clip(*this);
+}
+
+void Point<2>::transform(const BaseTransformation& tr) {
+    ECHO("TODO");
+    //*this *= matrix;
+}
+
+BaseVector Point<2>::center() const {
+    return *this;
+}
+
+Point<2>& Point<2>::ndc() {
+    if (!normalized_point)
+        normalized_point = std::make_shared<Point<2>>(*this);
+    return *normalized_point;
+}
+
+std::vector<BaseVector> Point<2>::points() const {
+    return {*this};
+}
+
+void Point<2>::update(const BaseTransformation& tr, const Window& window) {
+    ECHO("TODO");
+    // ndc() = window.parallelProjection(*this);
+    // ndc() *= matrix;
+}
+
+Point<2>& Point<2>::operator+=(const Point<2>& p) {
+    // for (unsigned i = 0; i < D; i++) {
+    //     (*this)[i] += p[i];
+    // }
+    BaseVector::operator+=(p);
+    return *this;
+}
+
+Point<2>& Point<2>::operator-=(const Point<2>& p) {
+    // for (unsigned i = 0; i < D; i++) {
+    //     (*this)[i] -= p[i];
+    // }
+    BaseVector::operator-=(p);
+    return *this;
+}
+
+Point<2>& Point<2>::operator*=(double v) {
+    // for (unsigned i = 0; i < D; i++) {
+    //     (*this)[i] *= v;
+    // }
+    BaseVector::operator*=(v);
+    return *this;
+}
+
+Point<2>& Point<2>::operator/=(double v) {
+    // for (unsigned i = 0; i < D; i++) {
+    //     (*this)[i] /= v;
+    // }
+    BaseVector::operator/=(v);
+    return *this;
+}
+
+Point<2> Point<2>::operator+(const Point<2>& p) const {
+    Point<2> r = *this;
+    return r += p;
+}
+
+Point<2> Point<2>::operator-(const Point<2>& p) const {
+    Point<2> r = *this;
+    return r -= p;
+}
+
+Point<2> Point<2>::operator-() const {
+    return Point<2>() - *this;
+}
+
+Point<2> Point<2>::operator*(double v) const {
+    Point<2> r = *this;
+    return r *= v;
+}
+
+Point<2> Point<2>::operator/(double v) const {
+    Point<2> r = *this;
+    return r /= v;
+}
+
+double Point<2>::operator*(const Point<2>& p) const {
+    return BaseVector::operator*(p);
+}
+
+std::array<double, 2> Point<2>::toArray() const {
+    ECHO("TODO");
+    //return coordinates;
+}
+
+//------------------------------- non-member --------------------------------//
 
 template<unsigned R, unsigned C>
 Matrix<1,R+1> operator*(const Point<R>& p, const Matrix<R+1,C>& m) {

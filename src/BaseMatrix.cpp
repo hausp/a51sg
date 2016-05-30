@@ -6,8 +6,8 @@
 
 //------------------------------- BaseMatrix --------------------------------//
 
-BaseMatrix::BaseMatrix() : n_rows{2}, n_columns{2} {
-    matrix.resize(4, 0);
+BaseMatrix::BaseMatrix() : n_rows{3}, n_columns{3} {
+    matrix.resize(9, 0);
 }
 
 BaseMatrix::BaseMatrix(size_t n_rows, size_t n_columns)
@@ -15,10 +15,10 @@ BaseMatrix::BaseMatrix(size_t n_rows, size_t n_columns)
     matrix.resize(n_rows * n_columns, 0);
 }
 
-BaseMatrix::BaseMatrix(std::initializer_list<std::initializer_list<double>> list) {
-    n_rows = list.size();
-    n_columns = (*list.begin()).size();
-    for (auto row : list) {
+BaseMatrix::BaseMatrix(std::initializer_list<std::initializer_list<double>> l) {
+    n_rows = l.size();
+    n_columns = (*l.begin()).size();
+    for (auto row : l) {
         for (auto value : row) {
             matrix.push_back(value);
         }
@@ -31,60 +31,6 @@ BaseMatrix::row BaseMatrix::operator[](size_t index) {
 
 BaseMatrix::const_row BaseMatrix::operator[](size_t index) const {
     return const_row{n_columns, matrix.begin() + (n_columns * index)};
-}
-
-BaseMatrix& BaseMatrix::operator+=(const BaseMatrix& rhs) {
-    assert(this->n_rows == rhs.n_rows);
-    assert(this->n_columns == rhs.n_columns);
-    return process(rhs, std::plus<double>());
-}
-
-BaseMatrix& BaseMatrix::operator-=(const BaseMatrix& rhs) {
-    assert(this->n_rows == rhs.n_rows);
-    assert(this->n_columns == rhs.n_columns);
-    return process(rhs, std::minus<double>());
-}
-
-BaseMatrix& BaseMatrix::operator*=(const BaseMatrix& rhs) {
-    assert(this->n_rows == rhs.n_rows);
-    assert(this->n_columns == rhs.n_columns);
-    for (unsigned i = 0; i < this->n_rows; i++) {
-        for (unsigned j = 0; j < rhs.n_columns; j++) {
-            (*this)[i][j] = 0;
-            for (unsigned k = 0; k < this->n_columns; k++) {
-                (*this)[i][j] += (*this)[i][k] * rhs[k][j];
-            }
-        }
-    }
-    return (*this);
-}
-
-BaseMatrix BaseMatrix::operator*(const BaseMatrix& rhs) const {
-    assert(this->n_columns == rhs.n_rows);
-    BaseMatrix temp(this->n_rows, rhs.n_columns);
-    for (unsigned i = 0; i < this->n_rows; i++) {
-        for (unsigned j = 0; j < rhs.n_columns; j++) {
-            temp[i][j] = 0;
-            for (unsigned k = 0; k < this->n_columns; k++) {
-                temp[i][j] += (*this)[i][k] * rhs[k][j];
-            }
-        }
-    }
-    return temp;
-}
-
-BaseMatrix BaseMatrix::operator+(const BaseMatrix& rhs) const {
-    assert(this->n_rows == rhs.n_rows);
-    assert(this->n_columns == rhs.n_columns);
-    BaseMatrix temp = *this;
-    return temp += rhs;
-}
-
-BaseMatrix BaseMatrix::operator-(const BaseMatrix& rhs) const {
-    assert(this->n_rows == rhs.n_rows);
-    assert(this->n_columns == rhs.n_columns);
-    BaseMatrix temp = *this;
-    return temp -= rhs;
 }
 
 BaseMatrix::row BaseMatrix::begin() {
@@ -103,10 +49,64 @@ BaseMatrix::const_row BaseMatrix::end() const {
     return const_row{n_columns, matrix.end()};
 }
 
+BaseMatrix& BaseMatrix::operator+=(const BaseMatrix& rhs) {
+    assert(this->n_rows == rhs.n_rows);
+    assert(this->n_columns == rhs.n_columns);
+    return process(rhs, std::plus<double>());
+}
+
+BaseMatrix& BaseMatrix::operator-=(const BaseMatrix& rhs) {
+    assert(this->n_rows == rhs.n_rows);
+    assert(this->n_columns == rhs.n_columns);
+    return process(rhs, std::minus<double>());
+}
+
+BaseMatrix& BaseMatrix::operator*=(const BaseMatrix& rhs) {
+    assert(this->n_rows == rhs.n_rows);
+    assert(this->n_columns == rhs.n_columns);
+    for (size_t i = 0; i < this->n_rows; i++) {
+        for (size_t j = 0; j < rhs.n_columns; j++) {
+            (*this)[i][j] = 0;
+            for (size_t k = 0; k < this->n_columns; k++) {
+                (*this)[i][j] += (*this)[i][k] * rhs[k][j];
+            }
+        }
+    }
+    return (*this);
+}
+
+BaseMatrix BaseMatrix::operator+(const BaseMatrix& rhs) const {
+    assert(this->n_rows == rhs.n_rows);
+    assert(this->n_columns == rhs.n_columns);
+    BaseMatrix temp = *this;
+    return temp += rhs;
+}
+
+BaseMatrix BaseMatrix::operator-(const BaseMatrix& rhs) const {
+    assert(this->n_rows == rhs.n_rows);
+    assert(this->n_columns == rhs.n_columns);
+    BaseMatrix temp = *this;
+    return temp -= rhs;
+}
+
+BaseMatrix BaseMatrix::operator*(const BaseMatrix& rhs) const {
+    assert(this->n_columns == rhs.n_rows);
+    BaseMatrix temp(this->n_rows, rhs.n_columns);
+    for (size_t i = 0; i < this->n_rows; i++) {
+        for (size_t j = 0; j < rhs.n_columns; j++) {
+            temp[i][j] = 0;
+            for (size_t k = 0; k < this->n_columns; k++) {
+                temp[i][j] += (*this)[i][k] * rhs[k][j];
+            }
+        }
+    }
+    return temp;
+}
+
 BaseMatrix& BaseMatrix::process(const BaseMatrix& m,
             const std::function<double(double,double)>& fn) {
-    for (unsigned i = 0; i < n_rows; i++) {
-        for (unsigned j = 0; j < n_columns; j++) {
+    for (size_t i = 0; i < n_rows; i++) {
+        for (size_t j = 0; j < n_columns; j++) {
             (*this)[i][j] = fn((*this)[i][j], m[i][j]);
         }
     }

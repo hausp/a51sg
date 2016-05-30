@@ -8,6 +8,8 @@
 #include <sstream>
 #include <unordered_map>
 #include <vector>
+#include "BaseVector.hpp"
+#include "Drawable.hpp"
 #include "Point.hpp"
 #include "Line.hpp"
 #include "Polygon.hpp"
@@ -19,9 +21,8 @@ public:
 		std::vector<std::string> args;
 	} command;
 
-	template<unsigned D>
-	std::string toObj(const std::vector<Drawable<D>*>& shapes) {
-		std::vector<Point<D>> vertices;
+	std::string toObj(const std::vector<Drawable*>& shapes) {
+		std::vector<BaseVector> vertices;
 		std::stringstream definitions;
 
 		for (auto& shape : shapes) {
@@ -64,20 +65,20 @@ public:
 		return result.str();
 	}
 
-	std::vector<Drawable<2>*> fromObj2D(const std::string& filename) {
+	std::vector<Drawable*> fromObj2D(const std::string& filename) {
 		return fromObj<2>(filename);
 	}
 
-	std::vector<Drawable<3>*> fromObj3D(const std::string& filename) {
+	std::vector<Drawable*> fromObj3D(const std::string& filename) {
 		return fromObj<3>(filename);
 	}
 
 private:
 
 	template<unsigned D>
-	std::vector<Drawable<D>*> fromObj(const std::string& filename) {
+	std::vector<Drawable*> fromObj(const std::string& filename) {
 		auto commands = parse(filename);
-		std::vector<Drawable<D>*> displayFile;
+		std::vector<Drawable*> displayFile;
 		std::vector<Point<D>> vertices;
 		std::string currShapeName;
 		for (auto& cmd : commands) {

@@ -65,9 +65,9 @@ class BaseMatrix {
     BaseMatrix& operator+=(const BaseMatrix&);
     BaseMatrix& operator-=(const BaseMatrix&);
     BaseMatrix& operator*=(const BaseMatrix&);
-    BaseMatrix operator*(const BaseMatrix&) const;
     BaseMatrix operator+(const BaseMatrix&) const;
     BaseMatrix operator-(const BaseMatrix&) const;
+    BaseMatrix operator*(const BaseMatrix&) const;
 
  private:
     size_t n_rows;

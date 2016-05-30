@@ -9,6 +9,9 @@
 #include "CurveAlgorithm.hpp"
 #include "Drawable.hpp"
 
+class BaseVector;
+class BaseTransformation;
+
 template<unsigned D>
 class Line;
 
@@ -16,7 +19,7 @@ template<unsigned R, unsigned C>
 class Matrix;
 
 template<unsigned D>
-class SimpleCurve : public Drawable<D> {
+class SimpleCurve : public Drawable {
  public:
     template<typename Iterable>
     SimpleCurve(const CurveAlgorithm<D>& updater, double accuracy, const Iterable& params)
@@ -25,7 +28,7 @@ class SimpleCurve : public Drawable<D> {
     template<typename Iterable>
     SimpleCurve(const Matrix<4,4>& matrix, const CurveAlgorithm<D>& updater,
         double accuracy,const Iterable& params)
-    : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), methodMatrix(matrix) {
+    : Drawable("", DrawableType::Curve), accuracy(accuracy), methodMatrix(matrix) {
         geometryVectors.resize(D);
         unsigned j = 0;
         for (Point<D> p : params) {
@@ -43,19 +46,19 @@ class SimpleCurve : public Drawable<D> {
     }
 
     template<unsigned Dn>
-    SimpleCurve(const SimpleCurve<Dn>& c) : Drawable<D>("", DrawableType::Curve) {
+    SimpleCurve(const SimpleCurve<Dn>& c) : Drawable("", DrawableType::Curve) {
         for (auto& line : c) {
             lineList.push_back(line);
         }
     }
 
-    void draw(BaseDrawer<D>&) override;
+    void draw(BaseDrawer&) override;
     void clip(Window&) override;
-    void transform(const Matrix<D+1,D+1>&) override;
-    Point<D> center() const override;
-    std::vector<Point<D>> points() const override;
+    void transform(const BaseTransformation&) override;
+    BaseVector center() const override;
+    std::vector<BaseVector> points() const override;
     std::vector<Line<D>>& lines();
-    void update(const Matrix<3,3>&, const Window&) override;
+    void update(const BaseTransformation&, const Window&) override;
 
     typename std::vector<Line<D>>::iterator begin();
     typename std::vector<Line<D>>::const_iterator begin() const;
@@ -69,6 +72,6 @@ class SimpleCurve : public Drawable<D> {
     std::vector<Line<D>> lineList;
 };
 
-#include "SimpleCurve.ipp"
+//#include "SimpleCurve.ipp"
 
 #endif /* SIMPLE_CURVE_HPP */

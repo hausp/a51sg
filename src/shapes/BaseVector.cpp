@@ -3,6 +3,7 @@
 
 #include "BaseVector.hpp"
 #include <cassert>
+#include <cmath>
 
 BaseVector::BaseVector() {
     coordinates.resize(2, 0);
@@ -24,8 +25,16 @@ BaseVector::~BaseVector() {
     coordinates.clear();
 }
 
-const size_t BaseVector::dimension() const {
+size_t BaseVector::dimension() const {
     return coordinates.size();
+}
+
+double BaseVector::norm() const {
+    double result = 0;
+    for (unsigned i = 0; i < coordinates.size(); i++) {
+        result += (*this)[i] * (*this)[i];
+    }
+    return sqrt(result);
 }
 
 double& BaseVector::operator[](size_t index) {
@@ -143,6 +152,10 @@ double BaseVector::operator*(const BaseVector& rhs) const {
         sum += this->coordinates[i] * rhs.coordinates[i];
     }
     return sum;
+}
+
+BaseVector BaseVector::operator-() const {
+    return BaseVector(dimension()) - *this;
 }
 
 std::ostream& operator<<(std::ostream& out, const BaseVector& rhs) {

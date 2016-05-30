@@ -6,14 +6,19 @@
 
 #include <list>
 #include <memory>
-#include "Point.hpp"
 
-// template<unsigned D>
-// class Line;
+template<unsigned D>
+class Point;
+template<unsigned D>
+class Line;
 template<unsigned D>
 class Polygon;
 template<unsigned D>
 class Curve;
+template<unsigned D>
+class SimpleCurve;
+template<unsigned D>
+class Wireframe;
 
 using Viewport = std::pair<Point<2>, Point<2>>;
 
@@ -55,8 +60,8 @@ class Window {
     Point<2> parallelProjection(Point<3> p) const;
 
  private:
-    Point<2> min;
-    Point<2> max;
+    std::unique_ptr<Point<2>> min;
+    std::unique_ptr<Point<2>> max;
     double angle;
     double currentZoom;
     double defaultWidth;

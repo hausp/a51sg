@@ -4,6 +4,11 @@
 #include <cmath>
 #include "Drawer.hpp"
 #include "cairo.hpp"
+#include "BaseTransformation.hpp"
+#include "Transformation.hpp"
+#include "SimpleCurve.hpp"
+#include "Curve.hpp"
+#include "Wireframe.hpp"
 
 Drawer::Drawer(const unsigned width, const unsigned height, const unsigned border)
 : window(Point2D(0,0), Point2D(width - 2 * border, height - 2 * border)) {
@@ -16,11 +21,11 @@ Drawer::Drawer(const unsigned width, const unsigned height, const unsigned borde
              Point3D(width - 2 * border, 0, 1)};
 
     wview.setVisible(true);
-    wview.update(window.normalizerMatrix(), window);
+    wview.update(Transformation<3>({window.normalizerMatrix()}), window);
     wview.setColor(177, 0, 0);
 }
 
-void Drawer::addShape(Drawable3D* d) {
+void Drawer::addShape(Drawable* d) {
     SuperDrawer::addShape(d);
     update(d);
 }
@@ -150,7 +155,7 @@ void Drawer::scale(const unsigned long index, const std::array<double, 3>& ss) {
 void Drawer::rotate(const unsigned long index, double angle,
                     int type, const std::vector<std::string>& entries) {
     if (index < displayFile.size()) {
-        Point3D axis;
+        BaseVector axis;
         auto& shape = displayFile[index];
         switch (type) {
             case 0:
@@ -188,20 +193,20 @@ void Drawer::setClippingAlgorithm(int algorithm) {
     window.setClippingAlgorithm(algorithm);
 }
 
-void Drawer::swap(const std::vector<Drawable3D*>& newDisplayFile) {
+void Drawer::swap(const std::vector<Drawable*>& newDisplayFile) {
     SuperDrawer::swap(newDisplayFile);
     updateAll();
 }
 
-void Drawer::update(Drawable3D* shape) {
-    shape->update(window.normalizerMatrix(), window);
+void Drawer::update(Drawable* shape) {
+    shape->update(Transformation<3>{window.normalizerMatrix()}, window);
     shape->clip(window);
 }
 
 void Drawer::updateAll() {
     auto normalizer = window.normalizerMatrix();
     for (auto shape : displayFile) {
-        shape->update(normalizer, window);
+        shape->update(Transformation<3>{normalizer}, window);
         shape->clip(window);
     }
 }

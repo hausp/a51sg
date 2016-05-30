@@ -7,15 +7,16 @@
 #include <vector>
 #include "Drawable.hpp"
 #include "CurveAlgorithm.hpp"
+#include "SimpleCurve.hpp"
 
-template<unsigned D>
-class SimpleCurve;
+class BaseVector;
+class BaseTransformation;
 
 template<unsigned R, unsigned C>
 class Matrix;
 
 template<unsigned D>
-class Curve : public Drawable<D> {
+class Curve : public Drawable {
  public:
     template<typename Iterable>
     Curve(const CurveAlgorithm<D>& updater, double accuracy, const Iterable& params)
@@ -24,11 +25,11 @@ class Curve : public Drawable<D> {
     template<typename Iterable>
     Curve(const Matrix<4,4>& matrix, const CurveAlgorithm<D>& updater,
         double accuracy, const Iterable& params)
-    : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), 
+    : Drawable("", DrawableType::Curve), accuracy(accuracy), 
       updater(updater), methodMatrix(matrix) {}
 
     template<unsigned Dn>
-    Curve(const Curve<Dn>& curve) : Drawable<D>("", DrawableType::Curve) {
+    Curve(const Curve<Dn>& curve) : Drawable("", DrawableType::Curve) {
         for (auto& c : curve) {
             curves.push_back(c);
         }
@@ -45,12 +46,12 @@ class Curve : public Drawable<D> {
 
     virtual std::vector<std::vector<Point<D>>> parseParams(const std::vector<Point<D>>&) = 0;
 
-    void draw(BaseDrawer<D>&) override;
+    void draw(BaseDrawer&) override;
     void clip(Window&) override;
-    void transform(const Matrix<D+1,D+1>&) override;
-    Point<D> center() const override;
-    std::vector<Point<D>> points() const override;
-    void update(const Matrix<3,3>&, const Window&) override;
+    void transform(const BaseTransformation&) override;
+    BaseVector center() const override;
+    std::vector<BaseVector> points() const override;
+    void update(const BaseTransformation&, const Window&) override;
 
     typename std::vector<SimpleCurve<D>>::iterator begin();
     typename std::vector<SimpleCurve<D>>::const_iterator begin() const;
@@ -64,6 +65,6 @@ class Curve : public Drawable<D> {
     std::vector<SimpleCurve<D>> curves;
 };
 
-#include "Curve.ipp"
+//#include "Curve.ipp"
 
 #endif /* CURVE_HPP */

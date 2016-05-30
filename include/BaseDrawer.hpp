@@ -8,7 +8,6 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include <cstdlib>
 #include <vector>
 
-template<unsigned D>
 class Drawable;
 template<unsigned D>
 class Point;
@@ -24,15 +23,15 @@ template<unsigned D>
 class Wireframe;
 template<unsigned R, unsigned C>
 class Matrix;
+class BaseVector;
 
-template<unsigned D>
 class BaseDrawer {
  public:
     BaseDrawer();
     ~BaseDrawer();
 
-    void addShape(Drawable<D>*);
-    const std::vector<Drawable<D>*>& getDisplayFile();
+    void addShape(Drawable*);
+    const std::vector<Drawable*>& getDisplayFile();
     void clearDisplayFile();
 
     virtual void draw(Point<2>&) {}
@@ -50,15 +49,17 @@ class BaseDrawer {
 
     void drawAll();
     void removeShape(size_t);
+    template<size_t D>
     void translate(size_t, const std::array<double, D>&);
+    template<size_t D>
     void scale(size_t, const std::array<double, D>&);
-    void rotate(size_t, double, const Point<D>&);
+    void rotate(size_t, double, const BaseVector&);
     void highlightObject(long);
-    void swap(const std::vector<Drawable<D>*>&);
+    void swap(const std::vector<Drawable*>&);
 
  protected:
-    std::vector<Drawable<D>*> displayFile;
-    std::vector<Drawable<2>*> normalizedDisplayFile;
+    std::vector<Drawable*> displayFile;
+    std::vector<Drawable*> normalizedDisplayFile;
  private:
     long highlighted = -1;
 };
