@@ -59,6 +59,6 @@ class Polygon : public Drawable {
 template<unsigned D>
 std::ostream& operator<<(std::ostream&, const Polygon<D>&);
 
-//#include "Polygon.ipp"
+#include "Polygon.ipp"
 
 #endif /* POLYGON_HPP */

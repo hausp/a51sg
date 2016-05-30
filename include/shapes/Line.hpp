@@ -45,6 +45,6 @@ class Line : public Drawable {
 template<unsigned D>
 std::ostream& operator<<(std::ostream&, const Line<D>&);
 
-//#include "Line.ipp"
+#include "Line.ipp"
 
 #endif /* LINE_HPP */

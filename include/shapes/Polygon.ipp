@@ -7,12 +7,12 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include "BaseTransformation.hpp"
 
 template<unsigned D>
-Polygon<D>::Polygon() : Drawable<D>("", DrawableType::Polygon) { }
+Polygon<D>::Polygon() : Drawable(DrawableType::Polygon) { }
 
 template<unsigned D>
 template<typename ...Args>
 Polygon<D>::Polygon(const Point<D>& p1, const Point<D>& p2, const Args&... args)
-: Drawable<D>("", DrawableType::Polygon) {
+: Drawable(DrawableType::Polygon) {
     init(p1, p2, args...);
 }
 
@@ -20,13 +20,13 @@ template<unsigned D>
 template<typename ...Args>
 Polygon<D>::Polygon(const std::string& name, const Point<D>& p1, 
         const Point<D>& p2, const Args&... args)
-: Drawable<D>(name, DrawableType::Polygon) {
+: Drawable(name, DrawableType::Polygon) {
     init(p1, p2, args...);
 }
 
 template<unsigned D>
 Polygon<D>::Polygon(const std::vector<Point<D>>& points)
-: Drawable<D>("", DrawableType::Polygon) {
+: Drawable(DrawableType::Polygon) {
     for (unsigned i = 0; i < points.size(); i++) {
         vertices.push_back(points[i]);
     }
@@ -34,14 +34,14 @@ Polygon<D>::Polygon(const std::vector<Point<D>>& points)
 
 template<unsigned D>
 template<unsigned Dn>
-Polygon<D>::Polygon(const Polygon<Dn>& polygon) : Drawable<D>("", DrawableType::Polygon) {
+Polygon<D>::Polygon(const Polygon<Dn>& polygon) : Drawable(DrawableType::Polygon) {
     for (auto& p : polygon) {
         vertices.push_back(Point<D>(p));
     }
 }
 
 template<unsigned D>
-void Polygon<D>::draw(BaseDrawer<D>& drawer) {
+void Polygon<D>::draw(BaseDrawer& drawer) {
     drawer.draw(*this);
 }
 
@@ -51,14 +51,14 @@ void Polygon<D>::clip(Window& window) {
 }
 
 template<unsigned D>
-void Polygon<D>::transform(const Matrix<D+1,D+1>& matrix) {
+void Polygon<D>::transform(const BaseTransformation& matrix) {
     for (auto& vertex : vertices) {
         vertex.transform(matrix);
     }
 }
 
 template<unsigned D>
-Point<D> Polygon<D>::center() const {
+BaseVector Polygon<D>::center() const {
     Point<D> r;
     for (auto& vertex : vertices) {
         r += vertex;
@@ -67,8 +67,8 @@ Point<D> Polygon<D>::center() const {
 }
 
 template<unsigned D>
-std::vector<Point<D>> Polygon<D>::points() const {
-    std::vector<Point<D>> list;
+std::vector<BaseVector> Polygon<D>::points() const {
+    std::vector<BaseVector> list;
     for (auto& vertex : vertices) {
         list.push_back(vertex);
     }
@@ -76,7 +76,7 @@ std::vector<Point<D>> Polygon<D>::points() const {
 }
 
 template<unsigned D>
-void Polygon<D>::update(const Matrix<3,3>& matrix, const Window& window) {
+void Polygon<D>::update(const BaseTransformation& matrix, const Window& window) {
     ndcVertices.clear();
     for (auto& vertex : vertices) {
         vertex.update(matrix, window);

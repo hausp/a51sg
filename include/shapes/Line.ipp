@@ -7,32 +7,32 @@
 #include "BaseTransformation.hpp"
 
 template<unsigned D>
-Line<D>::Line() : Drawable<D>("", DrawableType::Line) { }
+Line<D>::Line() : Drawable(DrawableType::Line) { }
 
 template<unsigned D>
 Line<D>::Line(const std::string& name, const Point<D>& p1, const Point<D>& p2)
-: Drawable<D>(name, DrawableType::Line) {
+: Drawable(name, DrawableType::Line) {
     pointList.push_back(p1);
     pointList.push_back(p2);
 }
 
 template<unsigned D>
 Line<D>::Line(const Point<D>& p1, const Point<D>& p2) 
-: Drawable<D>("", DrawableType::Line) {
+: Drawable(DrawableType::Line) {
     pointList.push_back(p1);
     pointList.push_back(p2);
 }
 
 template<unsigned D>
 template<unsigned Dn>
-Line<D>::Line(const Line<Dn>& line) : Drawable<D>("", DrawableType::Line) {
+Line<D>::Line(const Line<Dn>& line) : Drawable(DrawableType::Line) {
     for (auto& p : line) {
         pointList.push_back(Point<D>(p));
     }
 }
 
 template<unsigned D>
-void Line<D>::draw(BaseDrawer<D>& drawer) {
+void Line<D>::draw(BaseDrawer& drawer) {
     drawer.draw(*this);
 }
 
@@ -42,25 +42,28 @@ void Line<D>::clip(Window& window) {
 }
 
 template<unsigned D>
-void Line<D>::transform(const Matrix<D+1,D+1>& matrix) {
-    (*this)[0] *= matrix;
-    (*this)[1] *= matrix;
+void Line<D>::transform(const BaseTransformation& matrix) {
+    ECHO("TODO");
+    //(*this)[0] *= matrix;
+    //(*this)[1] *= matrix;
 }
 
 template<unsigned D>
-Point<D> Line<D>::center() const {
+BaseVector Line<D>::center() const {
     return (pointList[0] + pointList[1]) / 2;
 }
 
 template<unsigned D>
-std::vector<Point<D>> Line<D>::points() const {
-    return pointList;
+std::vector<BaseVector> Line<D>::points() const {
+    ECHO("TODO");
+    //return pointList;
 }
 
 template<unsigned D>
-void Line<D>::update(const Matrix<3,3>& matrix, const Window& window) {
-    (*this)[0].update(matrix, window);
-    (*this)[1].update(matrix, window);
+void Line<D>::update(const BaseTransformation& matrix, const Window& window) {
+    ECHO("TODO");
+    // (*this)[0].update(matrix, window);
+    // (*this)[1].update(matrix, window);
 }
 
 template<unsigned D>
