@@ -17,7 +17,7 @@ class BaseVector {
 
     ~BaseVector();
 
-    size_t dimension() const;
+    virtual size_t dimension() const;
     double norm() const;
 
     double& operator[](size_t);

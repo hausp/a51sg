@@ -35,6 +35,11 @@ Point<D>::Point(const std::string& name,
 }
 
 template<unsigned D>
+size_t Point<D>::dimension() const {
+    return D;
+}
+
+template<unsigned D>
 Point<D>& Point<D>::operator+=(const Point<D>& p) {
     // for (unsigned i = 0; i < D; i++) {
     //     (*this)[i] += p[i];
@@ -160,6 +165,10 @@ void Point<2>::update(const BaseMatrix& tr, const Window& window) {
     ECHO("TODO");
     // ndc() = window.parallelProjection(*this);
     // ndc() *= matrix;
+}
+
+size_t Point<2>::dimension() const {
+    return 2;
 }
 
 Point<2>& Point<2>::operator+=(const Point<2>& p) {

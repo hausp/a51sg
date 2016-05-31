@@ -35,6 +35,8 @@ class Point : public Point<D-1> {
     template<unsigned Dn>
     Point(const Point<Dn>&);
 
+    size_t dimension() const;
+
     Point<D>& operator+=(const Point<D>&);
     Point<D>& operator-=(const Point<D>&);
     Point<D>& operator*=(double);
@@ -56,7 +58,7 @@ class Point : public Point<D-1> {
 };
 
 template<>
-class Point<2> : virtual public Drawable, virtual public BaseVector {
+class Point<2> : public virtual Drawable, public virtual BaseVector {
  public:
     Point();
     Point(double, double);
@@ -70,6 +72,8 @@ class Point<2> : virtual public Drawable, virtual public BaseVector {
     Point<2>& ndc();
     std::vector<BaseVector> points() const override;
     void update(const BaseMatrix&, const Window& window) override;
+
+    size_t dimension() const;
 
     Point<2>& operator+=(const Point<2>&);
     Point<2>& operator-=(const Point<2>&);

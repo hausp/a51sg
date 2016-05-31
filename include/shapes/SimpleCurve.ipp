@@ -16,7 +16,7 @@ void SimpleCurve<D>::draw(BaseDrawer& BaseDrawer) {
 
 template<unsigned D>
 void SimpleCurve<D>::clip(Window& window) {
-    // window.clip(*this);
+    window.clip(*this);
 }
 
 template<unsigned D>
