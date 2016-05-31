@@ -4,7 +4,7 @@
 #include <cmath>
 #include "Drawer.hpp"
 #include "cairo.hpp"
-#include "BaseTransformation.hpp"
+#include "BaseMatrix.hpp"
 #include "Transformation.hpp"
 #include "SimpleCurve.hpp"
 #include "Curve.hpp"
@@ -21,7 +21,7 @@ Drawer::Drawer(const unsigned width, const unsigned height, const unsigned borde
              Point3D(width - 2 * border, 0, 1)};
 
     wview.setVisible(true);
-    wview.update(Transformation<3>({window.normalizerMatrix()}), window);
+    wview.update(window.normalizerMatrix(), window);
     wview.setColor(177, 0, 0);
 }
 
@@ -199,14 +199,14 @@ void Drawer::swap(const std::vector<Drawable*>& newDisplayFile) {
 }
 
 void Drawer::update(Drawable* shape) {
-    shape->update(Transformation<3>{window.normalizerMatrix()}, window);
+    shape->update(window.normalizerMatrix(), window);
     shape->clip(window);
 }
 
 void Drawer::updateAll() {
     auto normalizer = window.normalizerMatrix();
     for (auto shape : displayFile) {
-        shape->update(Transformation<3>{normalizer}, window);
+        shape->update(normalizer, window);
         shape->clip(window);
     }
 }

@@ -4,15 +4,15 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include "BaseDrawer.hpp"
 #include "Window.hpp"
 #include "BaseVector.hpp"
-#include "BaseTransformation.hpp"
+#include "BaseMatrix.hpp"
 
 template<unsigned D>
-Wireframe<D>::Wireframe() : Drawable<D>("", DrawableType::Wireframe) { }
+Wireframe<D>::Wireframe() : Drawable(DrawableType::Wireframe) { }
 
 template<unsigned D>
 template<typename ...Args>
 Wireframe<D>::Wireframe(const Point<D>& p1, const Point<D>& p2, const Args&... args)
-: Drawable<D>("", DrawableType::Wireframe) {
+: Drawable(DrawableType::Wireframe) {
     init(p1, p2, args...);
 }
 
@@ -20,13 +20,13 @@ template<unsigned D>
 template<typename ...Args>
 Wireframe<D>::Wireframe(const std::string& name, const Point<D>& p1, 
         const Point<D>& p2, const Args&... args)
-: Drawable<D>(name, DrawableType::Wireframe) {
+: Drawable(name, DrawableType::Wireframe) {
     init(p1, p2, args...);
 }
 
 template<unsigned D>
 Wireframe<D>::Wireframe(const std::vector<Line<D>>& lines)
-: Drawable<D>("", DrawableType::Wireframe) {
+: Drawable(DrawableType::Wireframe) {
     for (unsigned i = 0; i < lines.size(); i++) {
         edgeList.push_back(lines[i]);
     }
@@ -34,14 +34,14 @@ Wireframe<D>::Wireframe(const std::vector<Line<D>>& lines)
 
 template<unsigned D>
 template<unsigned Dn>
-Wireframe<D>::Wireframe(const Wireframe<Dn>& wireframe) : Drawable<D>("", DrawableType::Wireframe) {
+Wireframe<D>::Wireframe(const Wireframe<Dn>& wireframe) : Drawable(DrawableType::Wireframe) {
     for (auto& ln : wireframe) {
         edgeList.push_back(Line<D>(ln));
     }
 }
 
 template<unsigned D>
-void Wireframe<D>::draw(BaseDrawer<D>& drawer) {
+void Wireframe<D>::draw(BaseDrawer& drawer) {
     drawer.draw(*this);
 }
 
@@ -51,14 +51,14 @@ void Wireframe<D>::clip(Window& window) {
 }
 
 template<unsigned D>
-void Wireframe<D>::transform(const Matrix<D+1,D+1>& matrix) {
+void Wireframe<D>::transform(const BaseMatrix& matrix) {
     for (auto& edge : edgeList) {
         edge.transform(matrix);
     }
 }
 
 template<unsigned D>
-Point<D> Wireframe<D>::center() const {
+BaseVector Wireframe<D>::center() const {
     Point<D> r;
     for (auto& edge : edgeList) {
         r += edge[0];
@@ -67,8 +67,8 @@ Point<D> Wireframe<D>::center() const {
 }
 
 template<unsigned D>
-std::vector<Point<D>> Wireframe<D>::points() const {
-    std::vector<Point<D>> list;
+std::vector<BaseVector> Wireframe<D>::points() const {
+    std::vector<BaseVector> list;
     for (auto& edge : edgeList) {
         list.push_back(edge[0]);
     }
@@ -76,7 +76,7 @@ std::vector<Point<D>> Wireframe<D>::points() const {
 }
 
 template<unsigned D>
-void Wireframe<D>::update(const Matrix<3,3>& matrix, const Window& window) {
+void Wireframe<D>::update(const BaseMatrix& matrix, const Window& window) {
     for (auto& edge : edgeList) {
         edge.update(matrix, window);
     }

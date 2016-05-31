@@ -7,10 +7,10 @@
 #include "Matrix.hpp"
 #include "Window.hpp"
 #include "BaseVector.hpp"
-#include "BaseTransformation.hpp"
+#include "BaseMatrix.hpp"
 
 template<unsigned D>
-void SimpleCurve<D>::draw(BaseDrawer<D>& BaseDrawer) {
+void SimpleCurve<D>::draw(BaseDrawer& BaseDrawer) {
     BaseDrawer.draw(*this);
 }
 
@@ -20,20 +20,20 @@ void SimpleCurve<D>::clip(Window& window) {
 }
 
 template<unsigned D>
-void SimpleCurve<D>::transform(const Matrix<D+1,D+1>& matrix) {
+void SimpleCurve<D>::transform(const BaseMatrix& matrix) {
     for (auto& line : lineList) {
         line.transform(matrix);
     }
 }
 
 template<unsigned D>
-Point<D> SimpleCurve<D>::center() const {
+BaseVector SimpleCurve<D>::center() const {
     return Point<D>();
 }
 
 template<unsigned D>
-std::vector<Point<D>> SimpleCurve<D>::points() const {
-    std::vector<Point<D>> points;
+std::vector<BaseVector> SimpleCurve<D>::points() const {
+    std::vector<BaseVector> points;
     points.reserve(lineList.size());
     for (auto line : lineList) {
         points.push_back(line[0]);
@@ -47,7 +47,7 @@ std::vector<Line<D>>& SimpleCurve<D>::lines() {
 }
 
 template<unsigned D>
-void SimpleCurve<D>::update(const Matrix<3,3>& matrix, const Window& window) {
+void SimpleCurve<D>::update(const BaseMatrix& matrix, const Window& window) {
     for (auto& line : lineList) {
         line.update(matrix, window);
     }

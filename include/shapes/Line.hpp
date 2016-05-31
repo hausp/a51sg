@@ -9,7 +9,7 @@
 #include "Point.hpp"
 
 class BaseVector;
-class BaseTransformation;
+class BaseMatrix;
 class BaseDrawer;
 class Window;
 
@@ -25,10 +25,10 @@ class Line : public Drawable {
 
     void draw(BaseDrawer&) override;
     void clip(Window&) override;
-    void transform(const BaseTransformation&) override;
+    void transform(const BaseMatrix&) override;
     BaseVector center() const override;
     std::vector<BaseVector> points() const override;
-    void update(const BaseTransformation&, const Window&) override;
+    void update(const BaseMatrix&, const Window&) override;
     Point<D>& operator[](size_t);
     const Point<D>& operator[](size_t) const;
     bool operator==(const Line<D>&) const;

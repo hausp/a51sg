@@ -9,7 +9,7 @@
 #include "BaseTransformation.hpp"
 
 template<unsigned D>
-void Curve<D>::draw(BaseDrawer<D>& BaseDrawer) {
+void Curve<D>::draw(BaseDrawer& BaseDrawer) {
     BaseDrawer.draw(*this);
 }
 
@@ -19,20 +19,20 @@ void Curve<D>::clip(Window& window) {
 }
 
 template<unsigned D>
-void Curve<D>::transform(const Matrix<D+1,D+1>& matrix) {
+void Curve<D>::transform(const BaseMatrix& matrix) {
     for (auto& c : curves) {
         c.transform(matrix);
     }
 }
 
 template<unsigned D>
-Point<D> Curve<D>::center() const {
+BaseVector Curve<D>::center() const {
     return Point<D>();
 }
 
 template<unsigned D>
-std::vector<Point<D>> Curve<D>::points() const {
-    std::vector<Point<D>> list;
+std::vector<BaseVector> Curve<D>::points() const {
+    std::vector<BaseVector> list;
     for (auto& c : curves) {
         auto cList = c.points();
         for (auto p : cList) {
@@ -43,7 +43,7 @@ std::vector<Point<D>> Curve<D>::points() const {
 }
 
 template<unsigned D>
-void Curve<D>::update(const Matrix<3,3>& matrix, const Window& window) {
+void Curve<D>::update(const BaseMatrix& matrix, const Window& window) {
     for (auto& c : curves) {
         c.update(matrix, window);
     }

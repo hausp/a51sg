@@ -10,7 +10,7 @@
 #include "SimpleCurve.hpp"
 
 class BaseVector;
-class BaseTransformation;
+class BaseMatrix;
 
 template<unsigned R, unsigned C>
 class Matrix;
@@ -48,10 +48,10 @@ class Curve : public Drawable {
 
     void draw(BaseDrawer&) override;
     void clip(Window&) override;
-    void transform(const BaseTransformation&) override;
+    void transform(const BaseMatrix&) override;
     BaseVector center() const override;
     std::vector<BaseVector> points() const override;
-    void update(const BaseTransformation&, const Window&) override;
+    void update(const BaseMatrix&, const Window&) override;
 
     typename std::vector<SimpleCurve<D>>::iterator begin();
     typename std::vector<SimpleCurve<D>>::const_iterator begin() const;
@@ -65,6 +65,6 @@ class Curve : public Drawable {
     std::vector<SimpleCurve<D>> curves;
 };
 
-//#include "Curve.ipp"
+#include "Curve.ipp"
 
 #endif /* CURVE_HPP */

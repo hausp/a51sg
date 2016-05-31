@@ -3,7 +3,7 @@
 
 #include "Point.hpp"
 #include "BaseDrawer.hpp"
-#include "BaseTransformation.hpp"
+#include "BaseMatrix.hpp"
 #include "Matrix.hpp"
 #include "Window.hpp"
 
@@ -137,7 +137,7 @@ void Point<2>::clip(Window& window) {
     window.clip(*this);
 }
 
-void Point<2>::transform(const BaseTransformation& tr) {
+void Point<2>::transform(const BaseMatrix& tr) {
     ECHO("TODO");
     //*this *= matrix;
 }
@@ -156,7 +156,7 @@ std::vector<BaseVector> Point<2>::points() const {
     return {*this};
 }
 
-void Point<2>::update(const BaseTransformation& tr, const Window& window) {
+void Point<2>::update(const BaseMatrix& tr, const Window& window) {
     ECHO("TODO");
     // ndc() = window.parallelProjection(*this);
     // ndc() *= matrix;

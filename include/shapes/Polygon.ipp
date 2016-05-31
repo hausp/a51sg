@@ -4,7 +4,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include "BaseDrawer.hpp"
 #include "Window.hpp"
 #include "BaseVector.hpp"
-#include "BaseTransformation.hpp"
+#include "BaseMatrix.hpp"
 
 template<unsigned D>
 Polygon<D>::Polygon() : Drawable(DrawableType::Polygon) { }
@@ -51,7 +51,7 @@ void Polygon<D>::clip(Window& window) {
 }
 
 template<unsigned D>
-void Polygon<D>::transform(const BaseTransformation& matrix) {
+void Polygon<D>::transform(const BaseMatrix& matrix) {
     for (auto& vertex : vertices) {
         vertex.transform(matrix);
     }
@@ -76,7 +76,7 @@ std::vector<BaseVector> Polygon<D>::points() const {
 }
 
 template<unsigned D>
-void Polygon<D>::update(const BaseTransformation& matrix, const Window& window) {
+void Polygon<D>::update(const BaseMatrix& matrix, const Window& window) {
     ndcVertices.clear();
     for (auto& vertex : vertices) {
         vertex.update(matrix, window);

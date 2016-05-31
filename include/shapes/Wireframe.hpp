@@ -10,7 +10,7 @@
 #include "Point.hpp"
 
 class BaseVector;
-class BaseTransformation;
+class BaseMatrix;
 class Window;
 
 template<unsigned D>
@@ -32,10 +32,10 @@ class Wireframe : public Drawable {
 
     void draw(BaseDrawer&) override;
     void clip(Window&) override;
-    void transform(const BaseTransformation&) override;
+    void transform(const BaseMatrix&) override;
     BaseVector center() const override;
     std::vector<BaseVector> points() const override;
-    void update(const BaseTransformation&, const Window&) override;
+    void update(const BaseMatrix&, const Window&) override;
     std::vector<Line<D>>& edges();
     size_t numberOfPoints() const;
     Line<D>& operator[](size_t);
@@ -53,6 +53,6 @@ class Wireframe : public Drawable {
     void init(const Point<D>&) {}
 };
 
-//#include "Wireframe.ipp"
+#include "Wireframe.ipp"
 
 #endif /* WIREFRAME_HPP */

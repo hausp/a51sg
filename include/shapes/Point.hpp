@@ -13,7 +13,7 @@
 
 class Window;
 class BaseDrawer;
-class BaseTransformation;
+class BaseMatrix;
 
 #define double_if typename std::enable_if<sizeof...(Args)+1 == D, double>::type
 
@@ -65,11 +65,11 @@ class Point<2> : virtual public Drawable, virtual public BaseVector {
 
     void draw(BaseDrawer&) override;
     void clip(Window&) override;
-    void transform(const BaseTransformation&) override;
+    void transform(const BaseMatrix&) override;
     BaseVector center() const override;
     Point<2>& ndc();
     std::vector<BaseVector> points() const override;
-    void update(const BaseTransformation&, const Window& window) override;
+    void update(const BaseMatrix&, const Window& window) override;
 
     Point<2>& operator+=(const Point<2>&);
     Point<2>& operator-=(const Point<2>&);

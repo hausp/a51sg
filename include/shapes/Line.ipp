@@ -4,7 +4,7 @@
 #include "BaseDrawer.hpp"
 #include "Window.hpp"
 #include "BaseVector.hpp"
-#include "BaseTransformation.hpp"
+#include "BaseMatrix.hpp"
 
 template<unsigned D>
 Line<D>::Line() : Drawable(DrawableType::Line) { }
@@ -42,7 +42,7 @@ void Line<D>::clip(Window& window) {
 }
 
 template<unsigned D>
-void Line<D>::transform(const BaseTransformation& matrix) {
+void Line<D>::transform(const BaseMatrix& matrix) {
     ECHO("TODO");
     //(*this)[0] *= matrix;
     //(*this)[1] *= matrix;
@@ -60,7 +60,7 @@ std::vector<BaseVector> Line<D>::points() const {
 }
 
 template<unsigned D>
-void Line<D>::update(const BaseTransformation& matrix, const Window& window) {
+void Line<D>::update(const BaseMatrix& matrix, const Window& window) {
     ECHO("TODO");
     // (*this)[0].update(matrix, window);
     // (*this)[1].update(matrix, window);
