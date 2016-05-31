@@ -77,7 +77,7 @@ std::vector<Point<D>> Point<D>::points() const {
 
 template<unsigned D>
 void Point<D>::update(const Matrix<3,3>& matrix, const Window& window) {
-    ndc() = window.parallelProjection(*this);
+    ndc() = window.perspectiveProjection(*this);
     ndc() *= matrix;
 }
 

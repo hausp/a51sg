@@ -22,8 +22,7 @@ Window::Window(const Point<2>& min, const Point<2>& max)
 }
 
 Matrix<3,3> Window::normalizerMatrix() {
-    Point<2> center = (min + max)/-2;
-    Matrix<3,3> normalizer = utils::translationMatrix(center.toArray());
+    Matrix<3,3> normalizer = utils::translationMatrix((-center()).toArray());
     normalizer *= utils::rotationMatrix<2>(-angle);
     std::array<double, 2> s = {2/(max[0] - min[0]), 2/(max[1] - min[1])};
     normalizer *= utils::scalingMatrix(s);
@@ -59,14 +58,19 @@ Point<2> Window::toViewport(const Viewport& viewport, Point<2>& p) {
     return Point<2>(x, y);
 }
 
+Point<2> Window::center() const {
+    return (min + max)/2;
+}
+
+
 void Window::zoom(double zoomRate) {
     if (currentZoom + zoomRate > 0) {
         currentZoom += zoomRate;
         double factor = 1 / (2 * currentZoom);
         Point<2> delta(defaultWidth * factor, defaultHeight * factor);
-        Point<2> center = (min + max) / 2;
-        min = center - delta;
-        max = center + delta;
+        auto c = center();
+        min = c - delta;
+        max = c + delta;
     }
 }
 
@@ -86,7 +90,25 @@ Point<2> Window::parallelProjection(const Point<2>& p) const {
     return p;
 }
 
-Point<2> Window::parallelProjection(Point<3> p) const {
+Point<2> Window::parallelProjection(const Point<3>& p) const {
+    return projection(p);
+}
+
+Point<2> Window::perspectiveProjection(const Point<2>& p) const {
+    return p;
+}
+
+Point<2> Window::perspectiveProjection(const Point<3>& p) const {
+    auto projected = projection(p);
+    double d = (*vpn)[1].norm();
+    double correctionFactor = d / projected[2];
+    auto c = center();
+    projected[0] = (projected[0] - c[0]) * correctionFactor + c[0];
+    projected[1] = (projected[1] - c[1]) * correctionFactor + c[1];
+    return projected;
+}
+
+Point<3> Window::projection(Point<3> p) const {
     auto vrp = (*vpn)[0];
     auto transformation = utils::translationMatrix((-vrp).toArray());
 
@@ -100,7 +122,6 @@ Point<2> Window::parallelProjection(Point<3> p) const {
     p *= transformation;
     return p;
 }
-
 
 void Window::clip(Point<2>& p) {
     auto pn = p.ndc();

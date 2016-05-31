@@ -25,6 +25,7 @@ class Window {
     void moveVertical(double);
     void rotate(double);
     Point<2> toViewport(const Viewport&, Point<2>&);
+    Point<2> center() const;
     void zoom(double);
     double getAngle();
     double getZoomLevel();
@@ -52,7 +53,10 @@ class Window {
     void setClippingAlgorithm(int);
 
     Point<2> parallelProjection(const Point<2>& p) const;
-    Point<2> parallelProjection(Point<3> p) const;
+    Point<2> parallelProjection(const Point<3>& p) const;
+
+    Point<2> perspectiveProjection(const Point<2>& p) const;
+    Point<2> perspectiveProjection(const Point<3>& p) const;
 
  private:
     Point<2> min;
@@ -82,6 +86,8 @@ class Window {
         std::vector<Point<2>>&, std::vector<Point<2>>&, std::vector<Point<2>>&);
     void athertonStep(const std::vector<Point<2>>&, const std::vector<Point<2>>&,
         const std::vector<Point<2>>&, const Point<2>&, std::vector<Point<2>>&);
+
+    Point<3> projection(Point<3> p) const;
 };
 
 #endif /* WINDOW_HPP */

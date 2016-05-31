@@ -15,7 +15,7 @@ class Point;
 template<unsigned D>
 class Line;
 
-#define RECENT_COMPILER 0
+#define RECENT_COMPILER 1
 #define TRACE(x) std::cout << (#x) << " = " << (x) << std::endl
 #define TRACE_L(x,y) std::cout << (x) << " = " << (y) << std::endl
 #define TRACE_IT(x) \
