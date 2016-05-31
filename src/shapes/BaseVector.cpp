@@ -40,7 +40,8 @@ double BaseVector::norm() const {
 double& BaseVector::operator[](size_t index) {
     return coordinates[index];
 }
-const double& BaseVector::operator[](size_t index) const {
+
+double BaseVector::operator[](size_t index) const {
     return coordinates[index];
 }
 

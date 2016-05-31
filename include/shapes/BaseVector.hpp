@@ -21,7 +21,7 @@ class BaseVector {
     double norm() const;
 
     double& operator[](size_t);
-    const double& operator[](size_t) const;
+    double operator[](size_t) const;
     typename std::vector<double>::iterator begin();
     typename std::vector<double>::const_iterator begin() const;
     typename std::vector<double>::iterator end();

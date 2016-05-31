@@ -37,7 +37,7 @@ class BaseMatrix {
         const_row& operator--();
         const_row operator++(int);
         const_row operator--(int);
-        const double& operator[](size_t) const;
+        double operator[](size_t) const;
         const_vector_iterator begin() const;
         const_vector_iterator end() const;
         bool operator==(const const_row&);

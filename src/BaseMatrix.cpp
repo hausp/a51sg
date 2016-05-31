@@ -218,7 +218,7 @@ BaseMatrix::const_row BaseMatrix::const_row::operator--(int) {
     return old;
 }
 
-const double& BaseMatrix::const_row::operator[](size_t index) const {
+double BaseMatrix::const_row::operator[](size_t index) const {
     return *(iterator + index);
 }
 
