@@ -51,20 +51,20 @@ void BaseDrawer::removeShape(size_t index) {
 void BaseDrawer::rotate(size_t index, double angle, const BaseVector& axis) {
     if (index < displayFile.size()) {
         auto& shape = displayFile[index];
-        // auto m = utils::translationMatrix((axis * -1).toArray());
-        // m *= utils::rotationMatrix<D>(angle);
-        // m *= utils::translationMatrix(axis.toArray());
+        auto m = utils::translationMatrix(-axis);
+        m *= utils::rotationMatrix<3>(angle);
+        m *= utils::translationMatrix(axis);
         Point<3> xAxis(1, 0, 0);
         Point<3> yAxis(0, 1, 0);
-        //double tx = acos((xAxis * axis) / axis.norm()) * 180 / M_PI;
-        //double ty = acos((yAxis * axis) / axis.norm()) * 180 / M_PI;
-        // auto transformation = utils::rotationMatrix<3>(tx, utils::RotationPlane::X);
-        // transformation *= utils::rotationMatrix<3>(ty, utils::RotationPlane::Y);
+        double tx = acos((xAxis * axis) / axis.norm()) * 180 / M_PI;
+        double ty = acos((yAxis * axis) / axis.norm()) * 180 / M_PI;
+        auto transformation = utils::rotationMatrix<3>(tx, utils::RotationPlane::X);
+        transformation *= utils::rotationMatrix<3>(ty, utils::RotationPlane::Y);
 
-        // transformation *= utils::rotationMatrix<3>(angle, utils::RotationPlane::Z);
-        // transformation *= utils::rotationMatrix<3>(-ty, utils::RotationPlane::Y);        
-        // transformation *= utils::rotationMatrix<3>(-tx, utils::RotationPlane::X);
-        // shape->transform(transformation);
+        transformation *= utils::rotationMatrix<3>(angle, utils::RotationPlane::Z);
+        transformation *= utils::rotationMatrix<3>(-ty, utils::RotationPlane::Y);        
+        transformation *= utils::rotationMatrix<3>(-tx, utils::RotationPlane::X);
+        shape->transform(transformation);
     }
 }
 

@@ -39,9 +39,8 @@ class Drawable {
     virtual void draw(BaseDrawer&) = 0;
     virtual void clip(Window&) = 0;
     virtual void transform(const BaseMatrix&) = 0;
-    virtual BaseVector center() const = 0;
-    virtual std::vector<BaseVector> points() const = 0;
     virtual void update(const BaseMatrix&, const Window&) = 0;
+    virtual BaseVector center() const = 0;
 
     std::string getFormattedName() const {
         return types[type] + "(" + name + ")";

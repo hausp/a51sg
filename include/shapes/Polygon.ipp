@@ -67,8 +67,8 @@ BaseVector Polygon<D>::center() const {
 }
 
 template<unsigned D>
-std::vector<BaseVector> Polygon<D>::points() const {
-    std::vector<BaseVector> list;
+std::vector<Point<D>> Polygon<D>::points() const {
+    std::vector<Point<D>> list;
     for (auto& vertex : vertices) {
         list.push_back(vertex);
     }
@@ -132,7 +132,7 @@ void Polygon<D>::init(const Point<D>& p) {
 }
 
 template<unsigned D>
-std::vector<Point<D>>& Polygon<D>::ndc() {
+std::vector<Point<2>>& Polygon<D>::ndc() {
     return ndcVertices;
 }
 

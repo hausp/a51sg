@@ -6,9 +6,8 @@
 
 #include <list>
 #include <memory>
+#include "Point.hpp"
 
-template<unsigned D>
-class Point;
 template<unsigned D>
 class Line;
 template<unsigned D>
@@ -60,8 +59,8 @@ class Window {
     Point<2> parallelProjection(Point<3> p) const;
 
  private:
-    std::unique_ptr<Point<2>> min;
-    std::unique_ptr<Point<2>> max;
+    Point<2> min;
+    Point<2> max;
     double angle;
     double currentZoom;
     double defaultWidth;

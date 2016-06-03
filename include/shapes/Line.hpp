@@ -27,7 +27,7 @@ class Line : public Drawable {
     void clip(Window&) override;
     void transform(const BaseMatrix&) override;
     BaseVector center() const override;
-    std::vector<BaseVector> points() const override;
+    std::vector<Point<D>> points() const;
     void update(const BaseMatrix&, const Window&) override;
     Point<D>& operator[](size_t);
     const Point<D>& operator[](size_t) const;

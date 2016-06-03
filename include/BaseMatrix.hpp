@@ -7,6 +7,7 @@
 #include <functional>
 #include <vector>
 #include <ostream>
+#include "BaseVector.hpp"
 
 using vector_iterator = typename std::vector<double>::iterator;
 using const_vector_iterator = typename std::vector<double>::const_iterator;
@@ -62,6 +63,8 @@ class BaseMatrix {
     const_row begin() const;
     const_row end() const;
 
+    BaseVector toVector() const;
+
     BaseMatrix& operator+=(const BaseMatrix&);
     BaseMatrix& operator-=(const BaseMatrix&);
     BaseMatrix& operator*=(const BaseMatrix&);
@@ -76,6 +79,24 @@ class BaseMatrix {
 
     BaseMatrix& process(const BaseMatrix&,
                         const std::function<double(double,double)>&);
+
+ public:
+    template<unsigned N, unsigned M>
+    static BaseMatrix make_matrix(const std::vector<double>& list) {
+        BaseMatrix p;
+        p.matrix = list;
+        p.n_rows = N;
+        p.n_columns = M;
+        return p;
+    }
+    template<unsigned N>
+    static BaseMatrix make_matrix(const std::vector<double>& list) {
+        BaseMatrix p;
+        p.matrix = list;
+        p.n_rows = N;
+        p.n_columns = list.size() / N;
+        return p;
+    }
 };
 
 std::ostream& operator<<(std::ostream&, const BaseMatrix&);

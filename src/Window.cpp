@@ -16,19 +16,18 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #define XMAX 1
 #define YMAX 1
 
-Window::Window(const Point<2>& min, const Point<2>& max)
-: min(new Point<2>(min)), max(new Point<2>(max)),
-  angle(0), currentZoom(1), lcAlgorithm(2),
+Window::Window(const Point<2>& mn, const Point<2>& mx)
+: min(mn), max(mx), angle(0), currentZoom(1), lcAlgorithm(2),
   vpn(new Line<3>({0, 0, 0}, {0, 0, 1})) {
     defaultWidth  = max[0] - min[0];
     defaultHeight = max[1] - min[1];
 }
 
 Matrix<3,3> Window::normalizerMatrix() {
-    Point<2> center = ((*min) + (*max))/-2;
+    Point<2> center = (min + max)/-2;
     Matrix<3,3> normalizer = utils::translationMatrix(center.toArray());
     normalizer *= utils::rotationMatrix<2>(-angle);
-    std::array<double, 2> s = {2/((*max)[0] - (*min)[0]), 2/((*max)[1] - (*min)[1])};
+    std::array<double, 2> s = {2/(max[0] - min[0]), 2/(max[1] - min[1])};
     normalizer *= utils::scalingMatrix(s);
     return normalizer;
 }
@@ -37,16 +36,16 @@ void Window::moveHorizontal(double displacement) {
     auto m = utils::rotationMatrix<2>(-angle);
     m *= utils::translationMatrix(std::array<double, 2>{displacement, 0});
     m *= utils::rotationMatrix<2>(angle);
-    (*min) *= m;
-    (*max) *= m;
+    min *= m;
+    max *= m;
 }
 
 void Window::moveVertical(double displacement) {
     auto m = utils::rotationMatrix<2>(-angle);
     m *= utils::translationMatrix(std::array<double, 2>{0, displacement});
     m *= utils::rotationMatrix<2>(angle);
-    (*min) *= m;
-    (*max) *= m;
+    min *= m;
+    max *= m;
 }
 
 void Window::rotate(double _angle) {
@@ -67,9 +66,9 @@ void Window::zoom(double zoomRate) {
         currentZoom += zoomRate;
         double factor = 1 / (2 * currentZoom);
         Point<2> delta(defaultWidth * factor, defaultHeight * factor);
-        Point<2> center = ((*min) + (*max)) / 2;
-        (*min) = center - delta;
-        (*max) = center + delta;
+        Point<2> center = (min + max) / 2;
+        min = center - delta;
+        max = center + delta;
     }
 }
 
@@ -194,7 +193,7 @@ void Window::clip(Polygon<3>& p) {
     std::vector<Point<2>> newPoints;
     auto points = p.points();
     for (auto& point : points) {
-        //newPoints.push_back(point.ndc());
+        newPoints.push_back(point.ndc());
     }
     Polygon<2> flatPolygon(newPoints);
     flatPolygon.ndc() = newPoints;

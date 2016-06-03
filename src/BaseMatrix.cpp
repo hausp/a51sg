@@ -25,6 +25,10 @@ BaseMatrix::BaseMatrix(std::initializer_list<std::initializer_list<double>> l) {
     }
 }
 
+BaseVector BaseMatrix::toVector() const {
+    return BaseVector(matrix);
+}
+
 BaseMatrix::row BaseMatrix::operator[](size_t index) {
     return row{n_columns, matrix.begin() + (n_columns * index)};
 }

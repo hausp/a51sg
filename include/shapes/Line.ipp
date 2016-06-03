@@ -43,9 +43,8 @@ void Line<D>::clip(Window& window) {
 
 template<unsigned D>
 void Line<D>::transform(const BaseMatrix& matrix) {
-    ECHO("TODO");
-    //(*this)[0] *= matrix;
-    //(*this)[1] *= matrix;
+    (*this)[0] *= matrix;
+    (*this)[1] *= matrix;
 }
 
 template<unsigned D>
@@ -54,16 +53,14 @@ BaseVector Line<D>::center() const {
 }
 
 template<unsigned D>
-std::vector<BaseVector> Line<D>::points() const {
-    ECHO("TODO");
-    //return pointList;
+std::vector<Point<D>> Line<D>::points() const {
+    return pointList;
 }
 
 template<unsigned D>
 void Line<D>::update(const BaseMatrix& matrix, const Window& window) {
-    ECHO("TODO");
-    // (*this)[0].update(matrix, window);
-    // (*this)[1].update(matrix, window);
+    (*this)[0].update(matrix, window);
+    (*this)[1].update(matrix, window);
 }
 
 template<unsigned D>

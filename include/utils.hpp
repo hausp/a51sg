@@ -8,6 +8,8 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include <iostream>
 #include <regex>
 #include <cmath>
+#include "BaseVector.hpp"
+#include "BaseMatrix.hpp"
 #include "Matrix.hpp"
 
 template<unsigned D>
@@ -101,6 +103,17 @@ namespace utils {
         matrix[y][y] = c;
         matrix[x][y] = -s;
         matrix[y][x] = s;
+        return matrix;
+    }
+
+    inline BaseMatrix translationMatrix(const BaseVector& ds) {
+        BaseMatrix matrix;
+        for (unsigned i = 0; i < ds.dimension() + 1; i++) {
+            matrix[i][i] = 1;
+            if (i < ds.dimension()) {
+                matrix[ds.dimension()][i] = ds[i];
+            }
+        }
         return matrix;
     }
 

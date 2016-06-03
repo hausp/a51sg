@@ -31,8 +31,8 @@ BaseVector Curve<D>::center() const {
 }
 
 template<unsigned D>
-std::vector<BaseVector> Curve<D>::points() const {
-    std::vector<BaseVector> list;
+std::vector<Point<D>> Curve<D>::points() const {
+    std::vector<Point<D>> list;
     for (auto& c : curves) {
         auto cList = c.points();
         for (auto p : cList) {

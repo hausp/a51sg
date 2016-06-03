@@ -67,8 +67,8 @@ BaseVector Wireframe<D>::center() const {
 }
 
 template<unsigned D>
-std::vector<BaseVector> Wireframe<D>::points() const {
-    std::vector<BaseVector> list;
+std::vector<Point<D>> Wireframe<D>::points() const {
+    std::vector<Point<D>> list;
     for (auto& edge : edgeList) {
         list.push_back(edge[0]);
     }

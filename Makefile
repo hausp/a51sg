@@ -23,7 +23,8 @@ SRC       :=$(shell find $(SRCDIR) -name '*.cpp')
 # Test(s) source(s)
 TESTSRC   :=$(shell find $(TESTDIR) -name '*.cpp')
 # Dependencies
-DEP       :=$(SRC:.cpp=.d) $(TESTSRC:.cpp=.d)
+DEP       :=$(patsubst $(SRCDIR)/%.cpp,$(SRCDIR)/.%.d,$(SRC)) \
+$(patsubst $(TESTDIR)/%.cpp,$(TESTDIR)/.%.d,$(TESTSRC))
 # Objects
 OBJ       :=$(patsubst $(SRCDIR)/%.cpp,$(BUILDIR)/%.o,$(SRC))
 # Pure objects, without main
@@ -57,7 +58,7 @@ $(BINDIR) $(BUILDIR):
 # For each .cpp file, creates a .d file with all dependencies of .cpp,
 # including .d as target (to ensure updated dependencies, in case of
 # adding a new include or nested include)
-$(SRCDIR)/%.d: $(SRCDIR)/%.cpp
+$(SRCDIR)/.%.d: $(SRCDIR)/%.cpp
 	@echo "[makedep] $< -> .d"
 	@$(CXX) -MM -MP -MT "$(BUILDIR)/$*.o $@" -MF "$@" $< $(INCLUDE) $(CXXFLAGS)
 

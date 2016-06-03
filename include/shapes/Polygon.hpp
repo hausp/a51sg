@@ -33,7 +33,7 @@ class Polygon : public Drawable {
     void clip(Window&) override;
     void transform(const BaseMatrix&) override;
     BaseVector center() const override;
-    std::vector<BaseVector> points() const override;
+    std::vector<Point<D>> points() const;
     void update(const BaseMatrix&, const Window&) override;
     size_t numberOfPoints() const;
     Point<D>& operator[](size_t);
@@ -42,13 +42,13 @@ class Polygon : public Drawable {
     typename std::vector<Point<D>>::const_iterator begin() const;
     typename std::vector<Point<D>>::iterator end();
     typename std::vector<Point<D>>::const_iterator end() const;
-    std::vector<Point<D>>& ndc();
+    std::vector<Point<2>>& ndc();
     bool isFilled() { return filled; }
     void setFilled(bool f) { filled = f; }
 
  private:
     std::vector<Point<D>> vertices;
-    std::vector<Point<D>> ndcVertices;
+    std::vector<Point<2>> ndcVertices;
     bool filled = false;
 
     template<typename ...Args>

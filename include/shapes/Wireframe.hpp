@@ -34,7 +34,7 @@ class Wireframe : public Drawable {
     void clip(Window&) override;
     void transform(const BaseMatrix&) override;
     BaseVector center() const override;
-    std::vector<BaseVector> points() const override;
+    std::vector<Point<D>> points() const;
     void update(const BaseMatrix&, const Window&) override;
     std::vector<Line<D>>& edges();
     size_t numberOfPoints() const;

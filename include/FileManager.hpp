@@ -22,47 +22,47 @@ public:
 	} command;
 
 	std::string toObj(const std::vector<Drawable*>& shapes) {
-		std::vector<BaseVector> vertices;
-		std::stringstream definitions;
+		// std::vector<BaseVector> vertices;
+		// std::stringstream definitions;
 
-		for (auto& shape : shapes) {
-			auto pointList = shape->points();
-			std::vector<unsigned> vertexIndices;
-			vertexIndices.reserve(pointList.size());
-			for (auto point : pointList) {
-				unsigned numVertices = vertices.size();
-				bool found = false;
-				for (unsigned i = 0; i < numVertices; i++) {
-					if (vertices[i] == point) {
-						vertexIndices.push_back(i);
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					vertexIndices.push_back(numVertices);
-					vertices.push_back(point);
-				}
-			}
+		// for (auto& shape : shapes) {
+		// 	auto pointList = shape->points();
+		// 	std::vector<unsigned> vertexIndices;
+		// 	vertexIndices.reserve(pointList.size());
+		// 	for (auto point : pointList) {
+		// 		unsigned numVertices = vertices.size();
+		// 		bool found = false;
+		// 		for (unsigned i = 0; i < numVertices; i++) {
+		// 			if (vertices[i] == point) {
+		// 				vertexIndices.push_back(i);
+		// 				found = true;
+		// 				break;
+		// 			}
+		// 		}
+		// 		if (!found) {
+		// 			vertexIndices.push_back(numVertices);
+		// 			vertices.push_back(point);
+		// 		}
+		// 	}
 
-			definitions << "o " << shape->getName() << std::endl;
-			if (pointList.size() == 1) {
-				definitions << "p " << vertexIndices.back() + 1 << std::endl;
-			} else {
-				definitions << "l ";
-				for (auto index : vertexIndices) {
-					definitions << index + 1 << " ";
-				}
-				definitions << std::endl;
-			}
-		}
+		// 	definitions << "o " << shape->getName() << std::endl;
+		// 	if (pointList.size() == 1) {
+		// 		definitions << "p " << vertexIndices.back() + 1 << std::endl;
+		// 	} else {
+		// 		definitions << "l ";
+		// 		for (auto index : vertexIndices) {
+		// 			definitions << index + 1 << " ";
+		// 		}
+		// 		definitions << std::endl;
+		// 	}
+		// }
 
-		std::stringstream result;
-		for (auto vertex : vertices) {
-			result << "v " << vertex[0] << " " << vertex[1] << " " << vertex[2] << std::endl;
-		}
-		result << definitions.str();
-		return result.str();
+		// std::stringstream result;
+		// for (auto vertex : vertices) {
+		// 	result << "v " << vertex[0] << " " << vertex[1] << " " << vertex[2] << std::endl;
+		// }
+		// result << definitions.str();
+		// return result.str();
 	}
 
 	std::vector<Drawable*> fromObj2D(const std::string& filename) {

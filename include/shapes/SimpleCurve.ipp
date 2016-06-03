@@ -32,8 +32,8 @@ BaseVector SimpleCurve<D>::center() const {
 }
 
 template<unsigned D>
-std::vector<BaseVector> SimpleCurve<D>::points() const {
-    std::vector<BaseVector> points;
+std::vector<Point<D>> SimpleCurve<D>::points() const {
+    std::vector<Point<D>> points;
     points.reserve(lineList.size());
     for (auto line : lineList) {
         points.push_back(line[0]);

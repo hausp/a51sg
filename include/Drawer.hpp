@@ -30,7 +30,7 @@ using SuperDrawer = BaseDrawer;
 
 class Drawer : public BaseDrawer {
  public:
-    Drawer(const unsigned, const unsigned, const unsigned = 0);
+    Drawer(unsigned, unsigned, unsigned = 0);
 
     double getWindowAngle();
     double getZoomLevel();

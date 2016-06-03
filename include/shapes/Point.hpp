@@ -32,8 +32,8 @@ class Point : public Point<D-1> {
     template<typename ...Args>
     Point(const std::string& name, double_if, Args...);
 
-    template<unsigned Dn>
-    Point(const Point<Dn>&);
+    // template<unsigned Dn>
+    // Point(const Point<Dn>&);
 
     size_t dimension() const;
 
@@ -46,9 +46,9 @@ class Point : public Point<D-1> {
     Point<D> operator-() const;
     Point<D> operator*(double) const;
     Point<D> operator/(double) const;
-    double operator*(const Point<D>&) const;
     std::array<double, D> toArray() const;
 
+    using BaseVector::operator*=;
     using BaseVector::operator*;
 
  private:
@@ -70,7 +70,7 @@ class Point<2> : public virtual Drawable, public virtual BaseVector {
     void transform(const BaseMatrix&) override;
     BaseVector center() const override;
     Point<2>& ndc();
-    std::vector<BaseVector> points() const override;
+    std::vector<BaseVector> points() const;
     void update(const BaseMatrix&, const Window& window) override;
 
     size_t dimension() const;
@@ -87,6 +87,7 @@ class Point<2> : public virtual Drawable, public virtual BaseVector {
     double operator*(const Point<2>&) const;
     std::array<double, 2> toArray() const;
 
+    using BaseVector::operator*=;
     using BaseVector::operator*;
 
  private:

@@ -10,16 +10,16 @@
 #include "Curve.hpp"
 #include "Wireframe.hpp"
 
-Drawer::Drawer(const unsigned width, const unsigned height, const unsigned border)
-: window(Point2D(0,0), Point2D(width - 2 * border, height - 2 * border)) {
-    viewport = std::make_pair(Point2D(border, border),
-                              Point2D(width - border, height - border));
+Drawer::Drawer(unsigned width, unsigned height, unsigned border)
+: window(Point<2>(), Point<2>(width - 2 * border, height - 2 * border)) {
+    ECHO("Cabeça do retardado rolando3");
+    viewport = std::make_pair(Point<2>(border, border),
+                              Point<2>(width - border, height - border));
 
-    wview = {Point3D(0, 0, 1),
-             Point3D(0, height - 2 * border, 1),
-             Point3D(width - 2 * border, height - 2 * border, 1),
-             Point3D(width - 2 * border, 0, 1)};
-
+    wview = {Point<3>(0, 0, 1),
+             Point<3>(0, height - 2 * border, 1),
+             Point<3>(width - 2 * border, height - 2 * border, 1),
+             Point<3>(width - 2 * border, 0, 1)};
     wview.setVisible(true);
     wview.update(window.normalizerMatrix(), window);
     wview.setColor(177, 0, 0);
@@ -30,14 +30,14 @@ void Drawer::addShape(Drawable* d) {
     update(d);
 }
 
-void Drawer::draw(Point3D& p) {
+void Drawer::draw(Point<3>& p) {
     if (!p.isVisible()) return;
     cairo::set_color(p.getColor());
     auto pv = window.toViewport(viewport, p.ndc());
     cairo::point(pv[0], pv[1]);
 }
 
-void Drawer::draw(Line3D& ln) {
+void Drawer::draw(Line<3>& ln) {
     if (!ln.isVisible()) return;
     cairo::set_color(ln.getColor());
     auto p1 = window.toViewport(viewport, ln[0].ndc());
@@ -47,7 +47,7 @@ void Drawer::draw(Line3D& ln) {
     cairo::stroke();
 }
 
-void Drawer::draw(Polygon3D& p) {
+void Drawer::draw(Polygon<3>& p) {
     if (!p.isVisible()) return;
     cairo::set_color(p.getColor());
     auto& points = p.ndc();
@@ -63,12 +63,12 @@ void Drawer::draw(Polygon3D& p) {
     }
 }
 
-void Drawer::draw(SimpleCurve3D& c) {
+void Drawer::draw(SimpleCurve<3>& c) {
     if (!c.isVisible()) return;
     cairo::set_color(c.getColor());
-    Line3D* lastLine = nullptr;
+    Line<3>* lastLine = nullptr;
     for (auto& line : c) {
-        Point2D newPoint;
+        Point<2> newPoint;
         if (line.isVisible()) {
             newPoint = window.toViewport(viewport, line[0].ndc());
             lastLine = &line;
@@ -82,14 +82,14 @@ void Drawer::draw(SimpleCurve3D& c) {
     cairo::stroke();
 }
 
-void Drawer::draw(Curve3D& curve) {
+void Drawer::draw(Curve<3>& curve) {
     for (auto& c : curve) {
         c.setColor(curve.getColor());
         draw(c);
     }
 }
 
-void Drawer::draw(Wireframe3D& wireframe) {
+void Drawer::draw(Wireframe<3>& wireframe) {
     if (!wireframe.isVisible()) return;
     auto edges = wireframe.edges();
     for (auto& edge : edges) {
@@ -105,10 +105,10 @@ void Drawer::drawAll() {
 }
 
 // void Drawer::drawAxis() {
-//     Line2D x(Point2D(0, viewport.second[1]/2), 
-//              Point2D(viewport.second[0], viewport.second[1]/2));
-//     Line2D y(Point2D(viewport.second[0]/2, 0), 
-//              Point2D(viewport.second[0]/2, viewport.second[1]));
+//     Line2D x(Point<2>(0, viewport.second[1]/2), 
+//              Point<2>(viewport.second[0], viewport.second[1]/2));
+//     Line2D y(Point<2>(viewport.second[0]/2, 0), 
+//              Point<2>(viewport.second[0]/2, viewport.second[1]));
 //     draw(x);
 //     draw(y);
 // }
@@ -164,8 +164,8 @@ void Drawer::rotate(const unsigned long index, double angle,
             case 1:
                 break;
             case 2:
-                Point3D p1 = {stod(entries[0]), stod(entries[1]), stod(entries[2])};
-                Point3D p2 = {stod(entries[3]), stod(entries[4]), stod(entries[5])};
+                Point<3> p1 = {stod(entries[0]), stod(entries[1]), stod(entries[2])};
+                Point<3> p2 = {stod(entries[3]), stod(entries[4]), stod(entries[5])};
                 axis = p2 - p1;
                 break;
         }
@@ -185,7 +185,7 @@ void Drawer::setZoom(double rate) {
     zoomRate = rate;
 }
 
-void Drawer::setViewport(Point2D v1, Point2D v2) {
+void Drawer::setViewport(Point<2> v1, Point<2> v2) {
     viewport = std::make_pair(v1, v2);
 }
 
