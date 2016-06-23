@@ -10,6 +10,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include "Polygon.hpp"
 #include "Window.hpp"
 #include "Wireframe.hpp"
+#include "BicubicSurface.hpp"
 
 using Point2D = Point<2>;
 using Line2D = Line<2>;
@@ -44,6 +45,7 @@ class Drawer : public SuperDrawer {
     void draw(SimpleCurve3D&);
     void draw(Curve3D&);
     void draw(Wireframe3D&);
+    void draw(BicubicSurface&);
     void drawAll();
 
     void moveVertical(int);

@@ -19,8 +19,7 @@ public:
 	    Matrix<1,4> tExponents;
 	    tExponents[0][3] = 1;
 	    unsigned j = 0;
-	    double t;
-	    for (t = 0; t <= 1.001; t += accuracy) {
+	    for (double t = 0; t <= 1.001; t += accuracy) {
 	        tExponents[0][2] = t;
 	        tExponents[0][1] = t * t;
 	        tExponents[0][0] = tExponents[0][1] * t;

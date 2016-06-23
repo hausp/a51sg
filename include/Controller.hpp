@@ -37,6 +37,7 @@ class Controller {
 	void createPolygon();
 	void createCurve();
 	void createWireframe();
+	void createBicubicSurface();
 
 	void removeObject(long);
 	void translateObject(long);

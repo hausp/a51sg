@@ -93,6 +93,13 @@ void Drawer::draw(Wireframe3D& wireframe) {
     }
 }
 
+void Drawer::draw(BicubicSurface& surface) {
+    for (auto& c : surface) {
+        c.setColor(surface.getColor());
+        draw(c);
+    }
+}
+
 void Drawer::drawAll() {
     cairo::clear();
     SuperDrawer::drawAll();

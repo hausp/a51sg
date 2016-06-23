@@ -8,6 +8,8 @@
 #include "gtk.hpp"
 #include "BezierCurve.hpp"
 #include "BSplineCurve.hpp"
+#include "BezierSurface.hpp"
+#include "BSplineSurface.hpp"
 #include "Drawer.hpp"
 #include "FileManager.hpp"
 #include "ForwardDifferenceAlgorithm.hpp"
@@ -212,9 +214,6 @@ void Controller::createCurve() {
         // drawer.draw(*Curve<2>(curve));
         interface.queueDraw();
     }
-    // std::vector<Point<2>> points = {Point<2>(100, 100), Point<2>(200, 400), 
-    //                                 Point<2>(300, 400), Point<2>(400, 100)};
-    
 }
 
 void Controller::createWireframe() {
@@ -247,6 +246,46 @@ void Controller::createWireframe() {
         interface.addShape(wireframe->getFormattedName());
         interface.closeDialog();
         drawer.draw(*wireframe);
+        interface.queueDraw();
+    }
+}
+
+void Controller::createBicubicSurface() {
+    auto entries = interface.getEntries();
+    std::string name = interface.getShapeName();
+
+    for (auto entry : entries) {
+        if (!utils::regex_match(entry, utils::REGEX_INTEGER)) return;
+    }
+
+    if (name != "") {
+        std::vector<Point3D> surfacePoints;
+        #if !RECENT_COMPILER
+        try {
+        #endif
+        for (unsigned i = 0; i < entries.size() - 1; i += 3) {
+            surfacePoints.push_back(Point3D(stoi(entries[i]), stoi(entries[i + 1]), stoi(entries[i + 2])));
+        }
+        #if !RECENT_COMPILER
+        } catch(...) {
+            return;
+        }
+        #endif
+
+        BicubicSurface* surface;
+
+        if (interface.getSelectedRadio() == 0) {
+            // surface = new BezierSurface(ForwardDifferenceAlgorithm<3>(), 0.05, surfacePoints);
+            surface = new BezierSurface(IterativeAlgorithm<3>(), 0.05, 0.05, surfacePoints);
+        } else {
+            // surface = new BezierSurface(ForwardDifferenceAlgorithm<3>(), 0.05, surfacePoints);
+            surface = new BSplineSurface(IterativeAlgorithm<3>(), 0.05, 0.05, surfacePoints);
+        }
+        surface->setName(name);
+        drawer.addShape(surface);
+        interface.addShape(surface->getFormattedName());
+        interface.closeDialog();
+        drawer.draw(*surface);
         interface.queueDraw();
     }
 }

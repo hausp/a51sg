@@ -41,6 +41,7 @@ class Window {
     void clip(SimpleCurve<3>&);
     void clip(Curve<3>&);
     void clip(Wireframe<3>&);
+    void clip(BicubicSurface&);
 
     template<unsigned D>
     void clip(Point<D>&) {}

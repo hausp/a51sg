@@ -4,6 +4,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include <climits>
 #include <cmath>
 #include <unordered_map>
+#include "BicubicSurface.hpp"
 #include "Line.hpp"
 #include "Polygon.hpp"
 #include "Window.hpp"
@@ -245,6 +246,12 @@ void Window::clip(Wireframe<3>& wireframe) {
     auto& edges = wireframe.edges();
     for (auto& edge : edges) {
         clip(edge);
+    }
+}
+
+void Window::clip(BicubicSurface& surface) {
+    for (auto& c : surface) {
+        clip(c);
     }
 }
 

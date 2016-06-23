@@ -22,6 +22,9 @@ template<unsigned D>
 class Curve;
 template<unsigned D>
 class Wireframe;
+
+class BicubicSurface;
+
 template<unsigned R, unsigned C>
 class Matrix;
 
@@ -47,6 +50,7 @@ class BaseDrawer {
     virtual void draw(SimpleCurve<3>&) = 0;
     virtual void draw(Curve<3>&) = 0;
     virtual void draw(Wireframe<3>&) = 0;
+    virtual void draw(BicubicSurface&) = 0;
 
     void drawAll();
     void removeShape(size_t);
