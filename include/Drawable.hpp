@@ -22,6 +22,7 @@ enum class DrawableType {
     Polygon,
     Curve,
     Wireframe,
+    BicubicSurface,
     Undefined
 };
 
