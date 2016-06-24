@@ -53,7 +53,8 @@ void Window::rotate(double _angle) {
 Point<2> Window::toViewport(const Viewport& viewport, Point<2>& p) {
     double width  = viewport.second[0] - viewport.first[0];
     double height = viewport.second[1] - viewport.first[1];
-    auto& pn = p.ndc();
+    // auto& pn = p.ndc();
+    auto& pn = p;
     double x = (pn[0] + 1) / 2 * width + viewport.first[0];
     double y = (1 - (pn[1] + 1)/ 2) * height + viewport.first[1];
     return Point<2>(x, y);
@@ -62,7 +63,6 @@ Point<2> Window::toViewport(const Viewport& viewport, Point<2>& p) {
 Point<2> Window::center() const {
     return (min + max)/2;
 }
-
 
 void Window::zoom(double zoomRate) {
     if (currentZoom + zoomRate > 0) {
@@ -146,13 +146,13 @@ void Window::clip(Line<2>& ln) {
     }
 }
 
-void Window::clip(Polygon<2>& p) {
-    clockwiseSort(p);
+void Window::clip(Polygon<2>& polygon) {
+    clockwiseSort(polygon);
     std::list<Point<2>> win = {{-1, 1}, {1, 1}, {1, -1}, {-1, -1}};
     std::vector<Point<2>> incomingList;
     std::vector<Point<2>> auxList;
     std::vector<Point<2>> artifVert;
-    buildLists(p, win, incomingList, auxList, artifVert);
+    buildLists(polygon, win, incomingList, auxList, artifVert);
 
     std::vector<Point<2>> winVector;
     winVector.reserve(win.size());
@@ -171,14 +171,14 @@ void Window::clip(Polygon<2>& p) {
     }
 
     if (incomingList.size() > 0) {
-        p.ndc().clear();
+        polygon.ndc().clear();
         for (auto point : result) {
-            p.ndc().push_back(point);
+            polygon.ndc().push_back(point);
         }        
     } else {
-        auto point = p.ndc()[0];
+        auto point = polygon.ndc()[0];
         if (point[0] < -1 || point[0] > 1 || point[1] < -1 || point[1] > 1) {
-            p.ndc().clear();
+            polygon.ndc().clear();
         }
     }
 }

@@ -73,14 +73,14 @@ std::vector<Point<D>> Polygon<D>::points() const {
     return list;
 }
 
-template<unsigned D>
-void Polygon<D>::update(const Matrix<3,3>& matrix, const Window& window) {
-    ndcVertices.clear();
-    for (auto& vertex : vertices) {
-        vertex.update(matrix, window);
-        ndcVertices.push_back(vertex.ndc());
-    }
-}
+// template<unsigned D>
+// void Polygon<D>::update(const Matrix<3,3>& matrix, const Window& window) {
+//     ndcVertices.clear();
+//     for (auto& vertex : vertices) {
+//         vertex.update(matrix, window);
+//         ndcVertices.push_back(vertex.ndc());
+//     }
+// }
 
 template<unsigned D>
 size_t Polygon<D>::numberOfPoints() const {

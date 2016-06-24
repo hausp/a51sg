@@ -44,12 +44,12 @@ std::vector<Line<D>>& SimpleCurve<D>::lines() {
     return lineList;
 }
 
-template<unsigned D>
-void SimpleCurve<D>::update(const Matrix<3,3>& matrix, const Window& window) {
-    for (auto& line : lineList) {
-        line.update(matrix, window);
-    }
-}
+// template<unsigned D>
+// void SimpleCurve<D>::update(const Matrix<3,3>& matrix, const Window& window) {
+//     for (auto& line : lineList) {
+//         line.update(matrix, window);
+//     }
+// }
 
 template<unsigned D>
 typename std::vector<Line<D>>::iterator SimpleCurve<D>::begin() {

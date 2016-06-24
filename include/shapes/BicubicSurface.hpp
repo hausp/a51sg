@@ -52,7 +52,7 @@ class BicubicSurface : public Drawable<3> {
     void transform(const Matrix<4,4>&) override;
     Point<3> center() const override;
     std::vector<Point<3>> points() const override;
-    void update(const Matrix<3,3>&, const Window&) override;
+    // void update(const Matrix<3,3>&, const Window&) override;
 
     typename std::vector<SimpleCurve<3>>::iterator begin();
     typename std::vector<SimpleCurve<3>>::const_iterator begin() const;

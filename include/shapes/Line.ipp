@@ -55,11 +55,11 @@ std::vector<Point<D>> Line<D>::points() const {
     return pointList;
 }
 
-template<unsigned D>
-void Line<D>::update(const Matrix<3,3>& matrix, const Window& window) {
-    (*this)[0].update(matrix, window);
-    (*this)[1].update(matrix, window);
-}
+// template<unsigned D>
+// void Line<D>::update(const Matrix<3,3>& matrix, const Window& window) {
+//     (*this)[0].update(matrix, window);
+//     (*this)[1].update(matrix, window);
+// }
 
 template<unsigned D>
 Point<D>& Line<D>::operator[](size_t index) {

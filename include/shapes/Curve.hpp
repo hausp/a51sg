@@ -51,7 +51,7 @@ class Curve : public Drawable<D> {
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;
     std::vector<Point<D>> points() const override;
-    void update(const Matrix<3,3>&, const Window&) override;
+    // void update(const Matrix<3,3>&, const Window&) override;
 
     typename std::vector<SimpleCurve<D>>::iterator begin();
     typename std::vector<SimpleCurve<D>>::const_iterator begin() const;

@@ -59,7 +59,7 @@ class Drawable {
     virtual void transform(const Matrix<D+1,D+1>&) = 0;
     virtual Point<D> center() const = 0;
     virtual std::vector<Point<D>> points() const = 0;
-    virtual void update(const Matrix<3,3>&, const Window&) = 0;
+    virtual void update(const Matrix<3,3>&, const Window&) { throw 666; }
 
     void setName(const std::string& name) { this->name = name; }
     const std::string& getName() const { return name; }

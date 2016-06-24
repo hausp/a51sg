@@ -62,7 +62,8 @@ class BaseDrawer {
 
  protected:
     std::vector<Drawable<D>*> displayFile;
-    std::vector<Drawable<2>*> normalizedDisplayFile;
+    std::unordered_map<Drawable<D>*, Drawable<2>*> ndc;
+
  private:
     long highlighted = -1;
 };

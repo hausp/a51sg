@@ -31,7 +31,7 @@ using SuperDrawer = BaseDrawer<3>;
 
 class Drawer : public SuperDrawer {
  public:
-    Drawer(const unsigned, const unsigned, const unsigned = 0);
+    Drawer(unsigned, unsigned, unsigned = 0);
 
     double getWindowAngle();
     double getZoomLevel();
@@ -51,16 +51,24 @@ class Drawer : public SuperDrawer {
     void moveVertical(int);
     void moveHorizontal(int);
     void resizeViewport(double, double);
-    void rotate(const unsigned long, double, int,
+    void rotate(unsigned long, double, int,
                 const std::vector<std::string>&);
     void rotateWindow(long);
-    void scale(const unsigned long, const std::array<double, 3>&);
+    void scale(unsigned long, const std::array<double, 3>&);
     void setClippingAlgorithm(int);
     void swap(const std::vector<Drawable3D*>&);
-    void translate(const unsigned long, const std::array<double, 3>&);
+    void translate(unsigned long, const std::array<double, 3>&);
     void update(Drawable3D*);
     void updateAll();
     void zoom(int);
+
+    void updateShape(Point3D*, const Matrix<3,3>&);
+    void updateShape(Line3D*, const Matrix<3,3>&);
+    void updateShape(Polygon3D*, const Matrix<3,3>&);
+    void updateShape(SimpleCurve3D*, const Matrix<3,3>&);
+    void updateShape(Curve3D*, const Matrix<3,3>&);
+    void updateShape(Wireframe3D*, const Matrix<3,3>&);
+    void updateShape(BicubicSurface*, const Matrix<3,3>&);
 
  private:
     Window window;

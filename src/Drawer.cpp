@@ -5,7 +5,7 @@
 #include "Drawer.hpp"
 #include "cairo.hpp"
 
-Drawer::Drawer(const unsigned width, const unsigned height, const unsigned border)
+Drawer::Drawer(unsigned width, unsigned height, unsigned border)
 : window(Point2D(0,0), Point2D(width - 2 * border, height - 2 * border)) {
     viewport = std::make_pair(Point2D(border, border),
                               Point2D(width - border, height - border));
@@ -28,15 +28,15 @@ void Drawer::addShape(Drawable3D* d) {
 void Drawer::draw(Point3D& p) {
     if (!p.isVisible()) return;
     cairo::set_color(p.getColor());
-    auto pv = window.toViewport(viewport, p.ndc());
+    auto pv = window.toViewport(viewport, ndc[p]);
     cairo::point(pv[0], pv[1]);
 }
 
 void Drawer::draw(Line3D& ln) {
     if (!ln.isVisible()) return;
     cairo::set_color(ln.getColor());
-    auto p1 = window.toViewport(viewport, ln[0].ndc());
-    auto p2 = window.toViewport(viewport, ln[1].ndc());
+    auto p1 = window.toViewport(viewport, ndc[ln[0]]);
+    auto p2 = window.toViewport(viewport, ndc[ln[1]]);
     cairo::move_to(p1[0], p1[1]);
     cairo::line_to(p2[0], p2[1]);
     cairo::stroke();
@@ -45,9 +45,9 @@ void Drawer::draw(Line3D& ln) {
 void Drawer::draw(Polygon3D& p) {
     if (!p.isVisible()) return;
     cairo::set_color(p.getColor());
-    auto& points = p.ndc();
+    auto& points = ndc[p];
     for (auto& point : points) {
-        auto newPoint = window.toViewport(viewport, point.ndc());
+        auto newPoint = window.toViewport(viewport, ndc[point]);
         cairo::line_to(newPoint[0], newPoint[1]);
     }
     cairo::close_path();
@@ -65,11 +65,11 @@ void Drawer::draw(SimpleCurve3D& c) {
     for (auto& line : c) {
         Point2D newPoint;
         if (line.isVisible()) {
-            newPoint = window.toViewport(viewport, line[0].ndc());
+            newPoint = window.toViewport(viewport, ndc[line[0]]);
             lastLine = &line;
             cairo::line_to(newPoint[0], newPoint[1]);                
         } else if (lastLine != nullptr) {
-            newPoint = window.toViewport(viewport, (*lastLine)[1].ndc());
+            newPoint = window.toViewport(viewport, ndc[(*lastLine)[1]]);
             lastLine = nullptr;
             cairo::line_to(newPoint[0], newPoint[1]);
         }
@@ -138,7 +138,7 @@ void Drawer::rotateWindow(long direction) {
     updateAll();
 }
 
-void Drawer::translate(const unsigned long index, const std::array<double, 3>& ds) {
+void Drawer::translate(unsigned long index, const std::array<double, 3>& ds) {
     if (index < displayFile.size()) {
         SuperDrawer::translate(index, ds);
         update(displayFile[index]);
@@ -146,7 +146,7 @@ void Drawer::translate(const unsigned long index, const std::array<double, 3>& d
     }
 }
 
-void Drawer::scale(const unsigned long index, const std::array<double, 3>& ss) {
+void Drawer::scale(unsigned long index, const std::array<double, 3>& ss) {
     if (index < displayFile.size()) {
         SuperDrawer::scale(index, ss);
         update(displayFile[index]);
@@ -154,7 +154,7 @@ void Drawer::scale(const unsigned long index, const std::array<double, 3>& ss) {
     }
 }
 
-void Drawer::rotate(const unsigned long index, double angle,
+void Drawer::rotate(unsigned long index, double angle,
                     int type, const std::vector<std::string>& entries) {
     if (index < displayFile.size()) {
         Point3D axis;
@@ -201,14 +201,16 @@ void Drawer::swap(const std::vector<Drawable3D*>& newDisplayFile) {
 }
 
 void Drawer::update(Drawable3D* shape) {
-    shape->update(window.normalizerMatrix(), window);
+    // shape->update(window.normalizerMatrix(), window);
+    updateShape(shape, window.normalizerMatrix());
     shape->clip(window);
 }
 
 void Drawer::updateAll() {
     auto normalizer = window.normalizerMatrix();
     for (auto shape : displayFile) {
-        shape->update(normalizer, window);
+        // shape->update(normalizer, window);
+        updateShape(shape, normalizer);
         shape->clip(window);
     }
 }
@@ -216,4 +218,46 @@ void Drawer::updateAll() {
 void Drawer::zoom(int d) {
     window.zoom(d * zoomRate);
     updateAll();
+}
+
+void Drawer::updateShape(Point3D* point, const Matrix<3,3>& matrix) {
+    ndc[point] = window.perspectiveProjection(*point);
+    ndc[point] *= matrix;
+}
+
+void Drawer::updateShape(Line3D* line, const Matrix<3,3>& matrix) {
+    updateShape(&(*line)[0], matrix);
+    updateShape(&(*line)[1], matrix);
+}
+
+void Drawer::updateShape(Polygon3D* polygon, const Matrix<3,3>& matrix) {
+    polygon->ndc().clear();
+    for (auto& vertex : *polygon) {
+        updateShape(&vertex, matrix);
+        polygon->ndc().push_back(ndc[vertex]);
+    }
+}
+
+void Drawer::updateShape(SimpleCurve3D* curve, const Matrix<3,3>& matrix) {
+    for (auto& line : *curve) {
+        updateShape(&line, matrix);
+    }
+}
+
+void Drawer::updateShape(Curve3D* curve, const Matrix<3,3>& matrix) {
+    for (auto& c : *curve) {
+        updateShape(&c, matrix);
+    }
+}
+
+void Drawer::updateShape(WireFrame3D* wireframe, const Matrix<3,3>& matrix) {
+    for (auto& edge : *wireframe) {
+        updateShape(&edge, matrix);
+    }
+}
+
+void Drawer::updateShape(BicubicSurface* surface, const Matrix<3,3>& matrix) {
+    for (auto& c : *surface) {
+        updateShape(&c, matrix);
+    }
 }

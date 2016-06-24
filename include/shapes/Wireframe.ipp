@@ -73,12 +73,12 @@ std::vector<Point<D>> Wireframe<D>::points() const {
     return list;
 }
 
-template<unsigned D>
-void Wireframe<D>::update(const Matrix<3,3>& matrix, const Window& window) {
-    for (auto& edge : edgeList) {
-        edge.update(matrix, window);
-    }
-}
+// template<unsigned D>
+// void Wireframe<D>::update(const Matrix<3,3>& matrix, const Window& window) {
+//     for (auto& edge : edgeList) {
+//         edge.update(matrix, window);
+//     }
+// }
 
 template<unsigned D>
 std::vector<Line<D>>& Wireframe<D>::edges() {
