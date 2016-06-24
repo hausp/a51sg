@@ -58,17 +58,23 @@ class Drawer : public SuperDrawer {
     void setClippingAlgorithm(int);
     void swap(const std::vector<Drawable3D*>&);
     void translate(unsigned long, const std::array<double, 3>&);
-    void update(Drawable3D*);
+    void update(Drawable3D&, const Matrix<3,3>&);
+    void update(Drawable3D&);
     void updateAll();
     void zoom(int);
 
-    void updateShape(Point3D*, const Matrix<3,3>&);
-    void updateShape(Line3D*, const Matrix<3,3>&);
-    void updateShape(Polygon3D*, const Matrix<3,3>&);
-    void updateShape(SimpleCurve3D*, const Matrix<3,3>&);
-    void updateShape(Curve3D*, const Matrix<3,3>&);
-    void updateShape(Wireframe3D*, const Matrix<3,3>&);
-    void updateShape(BicubicSurface*, const Matrix<3,3>&);
+    void updateShape(Drawable3D&, const Matrix<3,3>&) {
+        ECHO("HOW ABOUT NO");
+        throw 666;
+    }
+
+    void updateShape(Point3D&, const Matrix<3,3>&);
+    void updateShape(Line3D&, const Matrix<3,3>&);
+    void updateShape(Polygon3D&, const Matrix<3,3>&);
+    void updateShape(SimpleCurve3D&, const Matrix<3,3>&);
+    void updateShape(Curve3D&, const Matrix<3,3>&);
+    void updateShape(Wireframe3D&, const Matrix<3,3>&);
+    void updateShape(BicubicSurface&, const Matrix<3,3>&);
 
  private:
     Window window;

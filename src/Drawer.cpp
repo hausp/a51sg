@@ -10,48 +10,50 @@ Drawer::Drawer(unsigned width, unsigned height, unsigned border)
     viewport = std::make_pair(Point2D(border, border),
                               Point2D(width - border, height - border));
 
+    window.setDrawer(*this);
     wview = {Point3D(0, 0, 1),
              Point3D(0, height - 2 * border, 1),
              Point3D(width - 2 * border, height - 2 * border, 1),
              Point3D(width - 2 * border, 0, 1)};
 
     wview.setVisible(true);
-    wview.update(window.normalizerMatrix(), window);
+    // wview.update(window.normalizerMatrix(), window);
+    updateShape(wview, window.normalizerMatrix());
     wview.setColor(177, 0, 0);
 }
 
 void Drawer::addShape(Drawable3D* d) {
     SuperDrawer::addShape(d);
-    update(d);
+    update(*d);
 }
 
 void Drawer::draw(Point3D& p) {
     if (!p.isVisible()) return;
     cairo::set_color(p.getColor());
-    auto pv = window.toViewport(viewport, ndc[p]);
+    auto pv = window.toViewport(viewport, getNDC(p));
     cairo::point(pv[0], pv[1]);
 }
 
 void Drawer::draw(Line3D& ln) {
     if (!ln.isVisible()) return;
     cairo::set_color(ln.getColor());
-    auto p1 = window.toViewport(viewport, ndc[ln[0]]);
-    auto p2 = window.toViewport(viewport, ndc[ln[1]]);
+    auto p1 = window.toViewport(viewport, getNDC(ln[0]));
+    auto p2 = window.toViewport(viewport, getNDC(ln[1]));
     cairo::move_to(p1[0], p1[1]);
     cairo::line_to(p2[0], p2[1]);
     cairo::stroke();
 }
 
-void Drawer::draw(Polygon3D& p) {
-    if (!p.isVisible()) return;
-    cairo::set_color(p.getColor());
-    auto& points = ndc[p];
+void Drawer::draw(Polygon3D& polygon) {
+    if (!polygon.isVisible()) return;
+    cairo::set_color(polygon.getColor());
+    auto& points = polygon.ndc();
     for (auto& point : points) {
-        auto newPoint = window.toViewport(viewport, ndc[point]);
+        auto newPoint = window.toViewport(viewport, getNDC(point));
         cairo::line_to(newPoint[0], newPoint[1]);
     }
     cairo::close_path();
-    if (p.isFilled()) {
+    if (polygon.isFilled()) {
         cairo::fill();
     } else {
         cairo::stroke();
@@ -65,11 +67,11 @@ void Drawer::draw(SimpleCurve3D& c) {
     for (auto& line : c) {
         Point2D newPoint;
         if (line.isVisible()) {
-            newPoint = window.toViewport(viewport, ndc[line[0]]);
+            newPoint = window.toViewport(viewport, getNDC(line[0]));
             lastLine = &line;
             cairo::line_to(newPoint[0], newPoint[1]);                
         } else if (lastLine != nullptr) {
-            newPoint = window.toViewport(viewport, ndc[(*lastLine)[1]]);
+            newPoint = window.toViewport(viewport, getNDC((*lastLine)[1]));
             lastLine = nullptr;
             cairo::line_to(newPoint[0], newPoint[1]);
         }
@@ -141,7 +143,7 @@ void Drawer::rotateWindow(long direction) {
 void Drawer::translate(unsigned long index, const std::array<double, 3>& ds) {
     if (index < displayFile.size()) {
         SuperDrawer::translate(index, ds);
-        update(displayFile[index]);
+        update(*displayFile[index]);
         drawAll();
     }
 }
@@ -149,7 +151,7 @@ void Drawer::translate(unsigned long index, const std::array<double, 3>& ds) {
 void Drawer::scale(unsigned long index, const std::array<double, 3>& ss) {
     if (index < displayFile.size()) {
         SuperDrawer::scale(index, ss);
-        update(displayFile[index]);
+        update(*displayFile[index]);
         drawAll();
     }
 }
@@ -172,7 +174,7 @@ void Drawer::rotate(unsigned long index, double angle,
                 break;
         }
         SuperDrawer::rotate(index, angle, axis);
-        update(displayFile[index]);
+        update(*displayFile[index]);
         drawAll();
     }
 }
@@ -200,17 +202,20 @@ void Drawer::swap(const std::vector<Drawable3D*>& newDisplayFile) {
     updateAll();
 }
 
-void Drawer::update(Drawable3D* shape) {
-    // shape->update(window.normalizerMatrix(), window);
-    updateShape(shape, window.normalizerMatrix());
-    shape->clip(window);
+void Drawer::update(Drawable3D& shape, const Matrix<3,3>& matrix) {
+    updateShape(shape, matrix);
+    shape.clip(window);
+}
+
+void Drawer::update(Drawable3D& shape) {
+    update(shape, window.normalizerMatrix());
 }
 
 void Drawer::updateAll() {
     auto normalizer = window.normalizerMatrix();
     for (auto shape : displayFile) {
         // shape->update(normalizer, window);
-        updateShape(shape, normalizer);
+        update(*shape, normalizer);
         shape->clip(window);
     }
 }
@@ -220,44 +225,44 @@ void Drawer::zoom(int d) {
     updateAll();
 }
 
-void Drawer::updateShape(Point3D* point, const Matrix<3,3>& matrix) {
-    ndc[point] = window.perspectiveProjection(*point);
-    ndc[point] *= matrix;
+void Drawer::updateShape(Point3D& point, const Matrix<3,3>& matrix) {
+    getNDC(point) = window.perspectiveProjection(point);
+    getNDC(point) *= matrix;
 }
 
-void Drawer::updateShape(Line3D* line, const Matrix<3,3>& matrix) {
-    updateShape(&(*line)[0], matrix);
-    updateShape(&(*line)[1], matrix);
+void Drawer::updateShape(Line3D& line, const Matrix<3,3>& matrix) {
+    updateShape(line[0], matrix);
+    updateShape(line[1], matrix);
 }
 
-void Drawer::updateShape(Polygon3D* polygon, const Matrix<3,3>& matrix) {
-    polygon->ndc().clear();
-    for (auto& vertex : *polygon) {
-        updateShape(&vertex, matrix);
-        polygon->ndc().push_back(ndc[vertex]);
+void Drawer::updateShape(Polygon3D& polygon, const Matrix<3,3>& matrix) {
+    polygon.ndc().clear();
+    for (auto& vertex : polygon) {
+        updateShape(vertex, matrix);
+        polygon.ndc().push_back(getNDC(vertex));
     }
 }
 
-void Drawer::updateShape(SimpleCurve3D* curve, const Matrix<3,3>& matrix) {
-    for (auto& line : *curve) {
-        updateShape(&line, matrix);
+void Drawer::updateShape(SimpleCurve3D& curve, const Matrix<3,3>& matrix) {
+    for (auto& line : curve) {
+        updateShape(line, matrix);
     }
 }
 
-void Drawer::updateShape(Curve3D* curve, const Matrix<3,3>& matrix) {
-    for (auto& c : *curve) {
-        updateShape(&c, matrix);
+void Drawer::updateShape(Curve3D& curve, const Matrix<3,3>& matrix) {
+    for (auto& c : curve) {
+        updateShape(c, matrix);
     }
 }
 
-void Drawer::updateShape(WireFrame3D* wireframe, const Matrix<3,3>& matrix) {
-    for (auto& edge : *wireframe) {
-        updateShape(&edge, matrix);
+void Drawer::updateShape(Wireframe3D& wireframe, const Matrix<3,3>& matrix) {
+    for (auto& edge : wireframe) {
+        updateShape(edge, matrix);
     }
 }
 
-void Drawer::updateShape(BicubicSurface* surface, const Matrix<3,3>& matrix) {
-    for (auto& c : *surface) {
-        updateShape(&c, matrix);
+void Drawer::updateShape(BicubicSurface& surface, const Matrix<3,3>& matrix) {
+    for (auto& c : surface) {
+        updateShape(c, matrix);
     }
 }

@@ -4,6 +4,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include <climits>
 #include <cmath>
 #include <unordered_map>
+#include "BaseDrawer.hpp"
 #include "BicubicSurface.hpp"
 #include "Line.hpp"
 #include "Polygon.hpp"
@@ -53,10 +54,12 @@ void Window::rotate(double _angle) {
 Point<2> Window::toViewport(const Viewport& viewport, Point<2>& p) {
     double width  = viewport.second[0] - viewport.first[0];
     double height = viewport.second[1] - viewport.first[1];
-    // auto& pn = p.ndc();
-    auto& pn = p;
+    auto& pn = drawer->getNDC(p);
+    // auto& pn = p;
     double x = (pn[0] + 1) / 2 * width + viewport.first[0];
     double y = (1 - (pn[1] + 1)/ 2) * height + viewport.first[1];
+    TRACE(x);
+    TRACE(y);
     return Point<2>(x, y);
 }
 
@@ -125,7 +128,7 @@ Point<3> Window::projection(Point<3> p) const {
 }
 
 void Window::clip(Point<2>& p) {
-    auto pn = p.ndc();
+    auto pn = drawer->getNDC(p);
     p.setVisible(pn[0] >= -1 && pn[0] <= 1 && pn[1] >= -1 && pn[1] <= 1);
 }
 
@@ -144,6 +147,11 @@ void Window::clip(Line<2>& ln) {
             clipNLN(ln);
             break;
     }
+}
+
+void Window::setDrawer(BaseDrawer<3>& _drawer) {
+    ECHO("Drawer set.");
+    drawer = &_drawer;
 }
 
 void Window::clip(Polygon<2>& polygon) {
@@ -196,36 +204,36 @@ void Window::clip(Curve<2>& curve) {
 }
 
 void Window::clip(Point<3>& p) {
-    Point<2> flatPoint(p.ndc());
+    Point<2> flatPoint(drawer->getNDC(p));
     clip(flatPoint);
     p.setVisible(flatPoint.isVisible() && p[2] >= 1 && p[2] <= 1000);
 }
 
 void Window::clip(Line<3>& ln) {
-    Line<2> flatLine(ln[0].ndc(), ln[1].ndc());
+    Line<2> flatLine(drawer->getNDC(ln[0]), drawer->getNDC(ln[1]));
     clip(flatLine);
     ln.setVisible(flatLine.isVisible());
-    ln[0].ndc() = flatLine[0];
-    ln[1].ndc() = flatLine[1];
+    drawer->getNDC(ln[0]) = flatLine[0];
+    drawer->getNDC(ln[1]) = flatLine[1];
 }
 
-void Window::clip(Polygon<3>& p) {
+void Window::clip(Polygon<3>& polygon) {
     std::vector<Point<2>> newPoints;
-    auto points = p.points();
+    auto points = polygon.points();
     for (auto& point : points) {
-        newPoints.push_back(point.ndc());
+        newPoints.push_back(drawer->getNDC(point));
     }
     Polygon<2> flatPolygon(newPoints);
     flatPolygon.ndc() = newPoints;
     clip(flatPolygon);
-    p.setVisible(flatPolygon.isVisible());
+    polygon.setVisible(flatPolygon.isVisible());
     for (unsigned i = 0; i < points.size(); i++) {
-        p[i].ndc() = flatPolygon[i];
+        drawer->getNDC(polygon[i]) = flatPolygon[i];
     }
 
-    p.ndc().clear();
+    polygon.ndc().clear();
     for (auto& point : flatPolygon.ndc()) {
-        p.ndc().push_back(point);
+        polygon.ndc().push_back(point);
     }
 }
 
@@ -337,12 +345,12 @@ void Window::athertonStep(const std::vector<Point<2>>& win,
     }
 }
 
-void Window::buildLists(Polygon<2>& p, std::list<Point<2>>& win,
+void Window::buildLists(Polygon<2>& polygon, std::list<Point<2>>& win,
     std::vector<Point<2>>& incomingList, std::vector<Point<2>>& auxList,
     std::vector<Point<2>>& artificialVertices) {
-    unsigned size = p.numberOfPoints();
+    unsigned size = polygon.numberOfPoints();
     int INVALID_VALUE = 2;
-    std::vector<Point<2>> pn = p.ndc();
+    std::vector<Point<2>> pn = polygon.ndc();
     for (unsigned i = 0; i < size; i++) {
         auto& previous = pn[(i - 1 + size) % size];
         auto& current = pn[i];
@@ -556,8 +564,8 @@ void Window::clockwiseSort(Polygon<2>& p) {
 }
 
 void Window::clipCS(Line<2>& ln) {
-    auto& p1 = ln[0].ndc();
-    auto& p2 = ln[1].ndc();
+    auto& p1 = drawer->getNDC(ln[0]);
+    auto& p2 = drawer->getNDC(ln[1]);
     int rc1 = 0;
     int rc2 = 0;
 
@@ -610,8 +618,8 @@ void Window::clipCS(Line<2>& ln) {
 }
 
 void Window::clipLB(Line<2>& ln) {
-    auto& p1 = ln[0].ndc();
-    auto& p2 = ln[1].ndc();
+    auto& p1 = drawer->getNDC(ln[0]);
+    auto& p2 = drawer->getNDC(ln[1]);
     double dx = p2[0] - p1[0];
     double dy = p2[1] - p1[1];
     double u1 = 0;
@@ -659,8 +667,8 @@ void Window::clipLB(Line<2>& ln) {
 }
 
 void Window::clipNLN(Line<2>& ln) {
-    auto& p1 = ln[0].ndc();
-    auto& p2 = ln[1].ndc();
+    auto& p1 = drawer->getNDC(ln[0]);
+    auto& p2 = drawer->getNDC(ln[1]);
 
     if (p1[0] < XMIN) {
         // P1 in left column

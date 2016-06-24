@@ -8,6 +8,9 @@
 #include <memory>
 #include "Point.hpp"
 
+template<unsigned D>
+class BaseDrawer;
+
 // template<unsigned D>
 // class Line;
 template<unsigned D>
@@ -52,6 +55,7 @@ class Window {
     template<unsigned D>
     void clip(Curve<D>&) {}
     void setClippingAlgorithm(int);
+    void setDrawer(BaseDrawer<3>&);
 
     Point<2> parallelProjection(const Point<2>& p) const;
     Point<2> parallelProjection(const Point<3>& p) const;
@@ -68,6 +72,7 @@ class Window {
     double defaultHeight;
     unsigned lcAlgorithm;
     std::unique_ptr<Line<3>> vpn;
+    BaseDrawer<3>* drawer;
 
     void clipCS(Line<2>&);
     void clipLB(Line<2>&);

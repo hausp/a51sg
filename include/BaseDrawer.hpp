@@ -6,6 +6,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 #include <array>
 #include <cstdlib>
+#include <unordered_map>
 #include <vector>
 
 template<unsigned D>
@@ -60,9 +61,13 @@ class BaseDrawer {
     void highlightObject(long);
     void swap(const std::vector<Drawable<D>*>&);
 
+    Point<2>& getNDC(Point<2>&);
+    Point<2>& getNDC(Point<3>&);
+
  protected:
     std::vector<Drawable<D>*> displayFile;
-    std::unordered_map<Drawable<D>*, Drawable<2>*> ndc;
+    std::unordered_map<Point<2>*, Point<2>*> ndc2D;
+    std::unordered_map<Point<3>*, Point<2>*> ndc3D;
 
  private:
     long highlighted = -1;

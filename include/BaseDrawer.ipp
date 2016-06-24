@@ -104,3 +104,19 @@ void BaseDrawer<D>::highlightObject(long index) {
     displayFile[index]->setColor(48, 160, 255);
     highlighted = index;
 }
+
+template<unsigned D>
+Point<2>& BaseDrawer<D>::getNDC(Point<2>& shape) {
+    if (ndc2D.count(&shape) == 0) {
+        ndc2D[&shape] = new Point<2>();
+    }
+    return *ndc2D[&shape];
+}
+
+template<unsigned D>
+Point<2>& BaseDrawer<D>::getNDC(Point<3>& shape) {
+    if (ndc3D.count(&shape) == 0) {
+        ndc3D[&shape] = new Point<2>();
+    }
+    return *ndc3D[&shape];
+}
