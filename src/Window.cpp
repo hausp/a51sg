@@ -51,18 +51,13 @@ void Window::rotate(double _angle) {
     angle = fmod(angle + _angle + 360, 360);
 }
 
-Point<2> Window::toViewport(const Viewport& viewport, Point<2>& p) {
-    // ECHO("-------------------");
-    // TRACE(p);
+Point<2> Window::toViewport(const Viewport& viewport, const Point<2>& p) {
     double width  = viewport.second[0] - viewport.first[0];
     double height = viewport.second[1] - viewport.first[1];
-    auto& pn = drawer->getNDC(p);
-    // TRACE(pn);
-    // auto& pn = p;
+    // auto& pn = drawer->getNDC(p);
+    auto& pn = p;
     double x = (pn[0] + 1) / 2 * width + viewport.first[0];
     double y = (1 - (pn[1] + 1)/ 2) * height + viewport.first[1];
-    // TRACE(x);
-    // TRACE(y);
     return Point<2>(x, y);
 }
 
@@ -223,7 +218,7 @@ void Window::clip(Polygon<3>& polygon) {
     std::unordered_map<double, std::unordered_map<double, double>> coordinateMap;
     std::vector<Point<2>> flatPoints;
     auto points = polygon.points();
-    for (auto& point : points) {
+    for (auto& point : polygon) {
         coordinateMap[point[0]][point[1]] = point[2];
         flatPoints.push_back(drawer->getNDC(point));
     }
@@ -231,6 +226,7 @@ void Window::clip(Polygon<3>& polygon) {
     Polygon<2> flatPolygon(flatPoints);
     drawer->getNDC(flatPolygon) = flatPoints;
     clip(flatPolygon);
+
     polygon.setVisible(flatPolygon.isVisible());
     for (unsigned i = 0; i < points.size(); i++) {
         drawer->getNDC(polygon[i]) = flatPolygon[i];

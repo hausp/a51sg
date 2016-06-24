@@ -27,7 +27,7 @@ class Window {
     void moveHorizontal(double);
     void moveVertical(double);
     void rotate(double);
-    Point<2> toViewport(const Viewport&, Point<2>&);
+    Point<2> toViewport(const Viewport&, const Point<2>&);
     Point<2> center() const;
     void zoom(double);
     double getAngle();

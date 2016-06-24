@@ -5,6 +5,7 @@
 #define MATRIX_HPP
 
 #include <functional>
+#include <ostream>
 #include <vector>
 
 template<unsigned N = 3, unsigned M = 3>
@@ -111,5 +112,15 @@ private:
 		return *this;
 	}
 };
+
+template<unsigned R, unsigned C>
+std::ostream& operator<<(std::ostream& stream, const Matrix<R,C>& matrix) {
+	for (unsigned i = 0; i < R; i++) {
+		for (unsigned j = 0; j < C; j++) {
+			stream << "m[" << i << "][" << j << "] = " << matrix[i][j] << std::endl;
+		}
+	}
+	return stream;
+}
 
 #endif

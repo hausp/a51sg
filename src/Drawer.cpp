@@ -45,15 +45,12 @@ void Drawer::draw(Line3D& ln) {
 }
 
 void Drawer::draw(Polygon3D& polygon) {
-    ECHO("They see me drawin', they hatin'");
-    TRACE(getNDC(polygon).size());
-    TRACE_IT(getNDC(polygon));
-    ECHO("-------------------------");
     if (!polygon.isVisible()) return;
     cairo::set_color(polygon.getColor());
     auto& points = getNDC(polygon);
     for (auto& point : points) {
-        auto newPoint = window.toViewport(viewport, getNDC(point));
+        // auto newPoint = window.toViewport(viewport, getNDC(point));
+        auto newPoint = window.toViewport(viewport, point);
         cairo::line_to(newPoint[0], newPoint[1]);
     }
     cairo::close_path();
