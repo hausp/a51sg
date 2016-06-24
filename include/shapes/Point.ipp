@@ -35,7 +35,7 @@ Point<D>::Point(const std::string& name,
 }
 
 template<unsigned D>
-template<unsigned Dn>
+template<unsigned Dn, typename>
 Point<D>::Point(const Point<Dn>& p)
 : Drawable<D>("", DrawableType::Point) {
     for (unsigned i = 0; i < D; i++) {

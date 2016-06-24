@@ -121,10 +121,10 @@ void Polygon<D>::init(const Point<D>& p) {
     vertices.push_back(p);
 }
 
-template<unsigned D>
-std::vector<Point<D>>& Polygon<D>::ndc() {
-    return ndcVertices;
-}
+// template<unsigned D>
+// std::vector<Point<D>>& Polygon<D>::ndc() {
+//     return ndcVertices;
+// }
 
 template<unsigned D>
 std::ostream& operator<<(std::ostream& stream, const Polygon<D>& polygon) {

@@ -63,11 +63,15 @@ class BaseDrawer {
 
     Point<2>& getNDC(Point<2>&);
     Point<2>& getNDC(Point<3>&);
+    std::vector<Point<2>>& getNDC(Polygon<2>&);
+    std::vector<Point<3>>& getNDC(Polygon<3>&);
 
  protected:
     std::vector<Drawable<D>*> displayFile;
     std::unordered_map<Point<2>*, Point<2>*> ndc2D;
     std::unordered_map<Point<3>*, Point<2>*> ndc3D;
+    std::unordered_map<Polygon<2>*, std::vector<Point<2>>> ndc2DPolygons;
+    std::unordered_map<Polygon<3>*, std::vector<Point<3>>> ndc3DPolygons;
 
  private:
     long highlighted = -1;

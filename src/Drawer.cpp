@@ -45,9 +45,13 @@ void Drawer::draw(Line3D& ln) {
 }
 
 void Drawer::draw(Polygon3D& polygon) {
+    ECHO("They see me drawin', they hatin'");
+    TRACE(getNDC(polygon).size());
+    TRACE_IT(getNDC(polygon));
+    ECHO("-------------------------");
     if (!polygon.isVisible()) return;
     cairo::set_color(polygon.getColor());
-    auto& points = polygon.ndc();
+    auto& points = getNDC(polygon);
     for (auto& point : points) {
         auto newPoint = window.toViewport(viewport, getNDC(point));
         cairo::line_to(newPoint[0], newPoint[1]);
@@ -263,10 +267,12 @@ void Drawer::updateShape(Line3D& line, const Matrix<3,3>& matrix) {
 }
 
 void Drawer::updateShape(Polygon3D& polygon, const Matrix<3,3>& matrix) {
-    polygon.ndc().clear();
+    getNDC(polygon).clear();
     for (auto& vertex : polygon) {
         updateShape(vertex, matrix);
-        polygon.ndc().push_back(getNDC(vertex));
+        auto ndc = getNDC(vertex);
+        getNDC(polygon).push_back(Point<3>(ndc[0], ndc[1], 0));
+        // getNDC(polygon).push_back(vertex);
     }
 }
 

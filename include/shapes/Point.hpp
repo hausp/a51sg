@@ -35,7 +35,7 @@ class Point : public Drawable<D> {
           double>::type,
           Args...);
 
-    template<unsigned Dn>
+    template<unsigned Dn, typename = typename std::enable_if<D <= Dn>::type>
     Point(const Point<Dn>&);
 
     void draw(BaseDrawer<D>&) override;

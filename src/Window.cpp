@@ -181,14 +181,14 @@ void Window::clip(Polygon<2>& polygon) {
     }
 
     if (incomingList.size() > 0) {
-        polygon.ndc().clear();
+        drawer->getNDC(polygon).clear();
         for (auto point : result) {
-            polygon.ndc().push_back(point);
+            drawer->getNDC(polygon).push_back(point);
         }        
     } else {
-        auto point = polygon.ndc()[0];
+        auto point = drawer->getNDC(polygon)[0];
         if (point[0] < -1 || point[0] > 1 || point[1] < -1 || point[1] > 1) {
-            polygon.ndc().clear();
+            drawer->getNDC(polygon).clear();
         }
     }
 }
@@ -220,23 +220,48 @@ void Window::clip(Line<3>& ln) {
 }
 
 void Window::clip(Polygon<3>& polygon) {
-    std::vector<Point<2>> newPoints;
+    std::unordered_map<double, std::unordered_map<double, double>> coordinateMap;
+    std::vector<Point<2>> flatPoints;
     auto points = polygon.points();
     for (auto& point : points) {
-        newPoints.push_back(drawer->getNDC(point));
+        coordinateMap[point[0]][point[1]] = point[2];
+        flatPoints.push_back(drawer->getNDC(point));
     }
-    Polygon<2> flatPolygon(newPoints);
-    flatPolygon.ndc() = newPoints;
+
+    Polygon<2> flatPolygon(flatPoints);
+    drawer->getNDC(flatPolygon) = flatPoints;
     clip(flatPolygon);
     polygon.setVisible(flatPolygon.isVisible());
     for (unsigned i = 0; i < points.size(); i++) {
         drawer->getNDC(polygon[i]) = flatPolygon[i];
     }
 
-    polygon.ndc().clear();
-    for (auto& point : flatPolygon.ndc()) {
-        polygon.ndc().push_back(point);
+    drawer->getNDC(polygon).clear();
+    for (auto& flatPoint : drawer->getNDC(flatPolygon)) {
+        double x = flatPoint[0];
+        double y = flatPoint[1];
+        Point<3> point(x, y, coordinateMap[x][y]);
+        drawer->getNDC(polygon).push_back(point);
     }
+
+    // std::vector<Point<2>> newPoints;
+    // auto points = polygon.points();
+    // for (auto& point : points) {
+    //     newPoints.push_back(drawer->getNDC(point));
+    // }
+    // Polygon<2> flatPolygon(newPoints);
+    // drawer->getNDC(flatPolygon) = newPoints;
+    // clip(flatPolygon);
+    // polygon.setVisible(flatPolygon.isVisible());
+    // for (unsigned i = 0; i < points.size(); i++) {
+    //     drawer->getNDC(polygon[i]) = flatPolygon[i];
+    // }
+
+    // drawer->getNDC(polygon).clear();
+    // for (auto& flatPoint : drawer->getNDC(flatPolygon)) {
+    //     Point<3> point(flatPoint[0], flatPoint[1], 1);
+    //     drawer->getNDC(polygon).push_back(point);
+    // }
 }
 
 void Window::clip(SimpleCurve<3>& c) {
@@ -352,7 +377,7 @@ void Window::buildLists(Polygon<2>& polygon, std::list<Point<2>>& win,
     std::vector<Point<2>>& artificialVertices) {
     unsigned size = polygon.numberOfPoints();
     int INVALID_VALUE = 2;
-    std::vector<Point<2>> pn = polygon.ndc();
+    std::vector<Point<2>> pn = drawer->getNDC(polygon);
     for (unsigned i = 0; i < size; i++) {
         auto& previous = pn[(i - 1 + size) % size];
         auto& current = pn[i];
