@@ -125,8 +125,6 @@ Point<2>& BaseDrawer<D>::getNDC(Point<3>& shape) {
 template<unsigned D>
 std::vector<Point<2>>& BaseDrawer<D>::getNDC(Polygon<2>& polygon) {
     if (ndc2DPolygons.count(&polygon) == 0) {
-        std::cout << "[2D] &polygon = " << &polygon << std::endl;
-        // TRACE(&polygon);
         ndc2DPolygons[&polygon] = polygon.points();
     }
     return ndc2DPolygons[&polygon];
@@ -135,8 +133,6 @@ std::vector<Point<2>>& BaseDrawer<D>::getNDC(Polygon<2>& polygon) {
 template<unsigned D>
 std::vector<Point<3>>& BaseDrawer<D>::getNDC(Polygon<3>& polygon) {
     if (ndc3DPolygons.count(&polygon) == 0) {
-        std::cout << "[3D] &polygon = " << &polygon << std::endl;
-        // TRACE(&polygon);
         ndc3DPolygons[&polygon] = polygon.points();
     }
     return ndc3DPolygons[&polygon];

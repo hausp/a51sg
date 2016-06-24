@@ -89,8 +89,7 @@ void Drawer::draw(Curve3D& curve) {
 
 void Drawer::draw(Wireframe3D& wireframe) {
     if (!wireframe.isVisible()) return;
-    auto edges = wireframe.edges();
-    for (auto& edge : edges) {
+    for (auto& edge : wireframe) {
         edge.setColor(wireframe.getColor());
         draw(edge);
     }
