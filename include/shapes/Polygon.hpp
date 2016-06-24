@@ -24,9 +24,6 @@ class Polygon : public Drawable<D> {
 
     Polygon(const std::vector<Point<D>>&);
 
-    template<unsigned Dn>
-    Polygon(const Polygon<Dn>&);
-
     void draw(BaseDrawer<D>&) override;
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;

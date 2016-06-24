@@ -153,7 +153,6 @@ void Window::clip(Line<2>& ln) {
 }
 
 void Window::setDrawer(BaseDrawer<3>& _drawer) {
-    ECHO("Drawer set.");
     drawer = &_drawer;
 }
 

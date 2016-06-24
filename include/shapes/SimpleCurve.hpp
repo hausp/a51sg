@@ -42,13 +42,6 @@ class SimpleCurve : public Drawable<D> {
         lineList = updater.update(accuracy, coefficients);
     }
 
-    template<unsigned Dn>
-    SimpleCurve(const SimpleCurve<Dn>& c) : Drawable<D>("", DrawableType::Curve) {
-        for (auto& line : c) {
-            lineList.push_back(line);
-        }
-    }
-
     void draw(BaseDrawer<D>&) override;
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;

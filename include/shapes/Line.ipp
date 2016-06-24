@@ -22,14 +22,6 @@ Line<D>::Line(const Point<D>& p1, const Point<D>& p2)
 }
 
 template<unsigned D>
-template<unsigned Dn>
-Line<D>::Line(const Line<Dn>& line) : Drawable<D>("", DrawableType::Line) {
-    for (auto& p : line) {
-        pointList.push_back(Point<D>(p));
-    }
-}
-
-template<unsigned D>
 void Line<D>::draw(BaseDrawer<D>& drawer) {
     drawer.draw(*this);
 }

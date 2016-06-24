@@ -19,9 +19,6 @@ class Line : public Drawable<D> {
     Line(const std::string&, const Point<D>&, const Point<D>&);
     Line(const Point<D>&, const Point<D>&);
 
-    template<unsigned Dn>
-    Line(const Line<Dn>&);
-
     void draw(BaseDrawer<D>&) override;
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;

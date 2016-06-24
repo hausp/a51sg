@@ -25,9 +25,6 @@ class Wireframe : public Drawable<D> {
 
     Wireframe(const std::vector<Line<D>>&);
 
-    template<unsigned Dn>
-    Wireframe(const Wireframe<Dn>&);
-
     void draw(BaseDrawer<D>&) override;
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;

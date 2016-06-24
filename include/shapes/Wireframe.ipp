@@ -31,14 +31,6 @@ Wireframe<D>::Wireframe(const std::vector<Line<D>>& lines)
 }
 
 template<unsigned D>
-template<unsigned Dn>
-Wireframe<D>::Wireframe(const Wireframe<Dn>& wireframe) : Drawable<D>("", DrawableType::Wireframe) {
-    for (auto& ln : wireframe) {
-        edgeList.push_back(Line<D>(ln));
-    }
-}
-
-template<unsigned D>
 void Wireframe<D>::draw(BaseDrawer<D>& drawer) {
     drawer.draw(*this);
 }

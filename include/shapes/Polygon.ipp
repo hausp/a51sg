@@ -31,14 +31,6 @@ Polygon<D>::Polygon(const std::vector<Point<D>>& points)
 }
 
 template<unsigned D>
-template<unsigned Dn>
-Polygon<D>::Polygon(const Polygon<Dn>& polygon) : Drawable<D>("", DrawableType::Polygon) {
-    for (auto& p : polygon) {
-        vertices.push_back(Point<D>(p));
-    }
-}
-
-template<unsigned D>
 void Polygon<D>::draw(BaseDrawer<D>& drawer) {
     drawer.draw(*this);
 }
