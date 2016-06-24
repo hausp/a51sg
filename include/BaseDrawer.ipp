@@ -108,7 +108,7 @@ void BaseDrawer<D>::highlightObject(long index) {
 template<unsigned D>
 Point<2>& BaseDrawer<D>::getNDC(Point<2>& shape) {
     if (ndc2D.count(&shape) == 0) {
-        ndc2D[&shape] = new Point<2>();
+        ndc2D[&shape] = new Point<2>(shape);
     }
     return *ndc2D[&shape];
 }
@@ -116,7 +116,7 @@ Point<2>& BaseDrawer<D>::getNDC(Point<2>& shape) {
 template<unsigned D>
 Point<2>& BaseDrawer<D>::getNDC(Point<3>& shape) {
     if (ndc3D.count(&shape) == 0) {
-        ndc3D[&shape] = new Point<2>();
+        ndc3D[&shape] = new Point<2>(shape);
     }
     return *ndc3D[&shape];
 }

@@ -52,14 +52,17 @@ void Window::rotate(double _angle) {
 }
 
 Point<2> Window::toViewport(const Viewport& viewport, Point<2>& p) {
+    // ECHO("-------------------");
+    // TRACE(p);
     double width  = viewport.second[0] - viewport.first[0];
     double height = viewport.second[1] - viewport.first[1];
     auto& pn = drawer->getNDC(p);
+    // TRACE(pn);
     // auto& pn = p;
     double x = (pn[0] + 1) / 2 * width + viewport.first[0];
     double y = (1 - (pn[1] + 1)/ 2) * height + viewport.first[1];
-    TRACE(x);
-    TRACE(y);
+    // TRACE(x);
+    // TRACE(y);
     return Point<2>(x, y);
 }
 
