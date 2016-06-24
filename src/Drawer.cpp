@@ -225,6 +225,33 @@ void Drawer::zoom(int d) {
     updateAll();
 }
 
+void Drawer::updateShape(Drawable3D& shape, const Matrix<3,3>& matrix) {
+    auto type = shape.getType();
+    switch (type) {
+        case DrawableType::Point:
+            updateShape(static_cast<Point3D&>(shape), matrix);
+            break;
+        case DrawableType::Line:
+            updateShape(static_cast<Line3D&>(shape), matrix);
+            break;
+        case DrawableType::Polygon:
+            updateShape(static_cast<Polygon3D&>(shape), matrix);
+            break;
+        case DrawableType::Curve:
+            updateShape(static_cast<Curve3D&>(shape), matrix);
+            break;
+        case DrawableType::Wireframe:
+            updateShape(static_cast<Wireframe3D&>(shape), matrix);
+            break;
+        case DrawableType::BicubicSurface:
+            updateShape(static_cast<BicubicSurface&>(shape), matrix);
+            break;
+        default:
+            ECHO("dafuq is this?");
+            throw 666;
+    }
+}
+
 void Drawer::updateShape(Point3D& point, const Matrix<3,3>& matrix) {
     getNDC(point) = window.perspectiveProjection(point);
     getNDC(point) *= matrix;

@@ -63,11 +63,7 @@ class Drawer : public SuperDrawer {
     void updateAll();
     void zoom(int);
 
-    void updateShape(Drawable3D&, const Matrix<3,3>&) {
-        ECHO("HOW ABOUT NO");
-        throw 666;
-    }
-
+    void updateShape(Drawable3D&, const Matrix<3,3>&);
     void updateShape(Point3D&, const Matrix<3,3>&);
     void updateShape(Line3D&, const Matrix<3,3>&);
     void updateShape(Polygon3D&, const Matrix<3,3>&);
