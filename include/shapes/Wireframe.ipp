@@ -83,6 +83,11 @@ size_t Wireframe<D>::numberOfPoints() const {
 }
 
 template<unsigned D>
+void Wireframe<D>::addEdge(const Point<D>& p0, const Point<D>& p1) {
+    edgeList.push_back(Line<D>(p0, p1));
+}
+
+template<unsigned D>
 Line<D>& Wireframe<D>::operator[](size_t index) {
     return edgeList[index];
 }

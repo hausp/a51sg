@@ -33,6 +33,7 @@ class Wireframe : public Drawable<D> {
     // void update(const Matrix<3,3>&, const Window&) override;
     std::vector<Line<D>>& edges();
     size_t numberOfPoints() const;
+    void addEdge(const Point<D>&, const Point<D>&);
     Line<D>& operator[](size_t);
     const Line<D>& operator[](size_t) const;
     typename std::vector<Line<D>>::iterator begin();
