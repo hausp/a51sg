@@ -11,14 +11,18 @@ Drawer::Drawer(unsigned width, unsigned height, unsigned border)
                               Point2D(width - border, height - border));
 
     window.setDrawer(*this);
-    wview = {Point3D(0, 0, 1),
-             Point3D(0, height - 2 * border, 1),
-             Point3D(width - 2 * border, height - 2 * border, 1),
-             Point3D(width - 2 * border, 0, 1)};
+    // wview = {Point3D(0, 0, 1),
+    //          Point3D(0, height - 2 * border, 1),
+    //          Point3D(width - 2 * border, height - 2 * border, 1),
+    //          Point3D(width - 2 * border, 0, 1)};
+    wview = {Point3D(-1, -1, 1),
+             Point3D(-1, 1, 1),
+             Point3D(1, 1, 1),
+             Point3D(1, -1, 1)};
 
     wview.setVisible(true);
     // wview.update(window.normalizerMatrix(), window);
-    updateShape(wview, window.normalizerMatrix());
+    // updateShape(wview, window.normalizerMatrix());
     wview.setColor(177, 0, 0);
 }
 
