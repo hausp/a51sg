@@ -76,6 +76,10 @@ void Controller::wireframePressed() {
     interface.buildWireframeSetup();
 }
 
+void Controller::surfacePressed() {
+    interface.buildSurfaceSetup();
+}
+
 void Controller::vertexOk(bool filled) {
     filledPolygon = filled;
     interface.buildPolygonWindow();
@@ -87,6 +91,10 @@ void Controller::curveVertexOk() {
 
 void Controller::wireframeSetupOk() {
     interface.buildWireframeWindow();
+}
+
+void Controller::surfaceSetupOk() {
+    interface.buildSurfaceWindow();
 }
 
 void Controller::createPoint() {

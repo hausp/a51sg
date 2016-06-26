@@ -52,9 +52,11 @@ class Interface {
     void buildPolygonWindow();
     void buildCurveWindow();
     void buildWireframeWindow();
+    void buildSurfaceWindow();
     void buildWireframeCreationWindow(int);
     void buildVertexWindow(const char*, bool = true);
     void buildWireframeSetup();
+    void buildSurfaceSetup();
     void buildTranslationWindow();
     void buildScalingWindow();
     void buildRotationWindow();

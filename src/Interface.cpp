@@ -62,10 +62,11 @@ GtkWidget* Interface::buildSidebar() {
     auto zoomIn    = gtk::new_button("+", NULL, signals::zoom_in);
     auto zoomOut   = gtk::new_button("-", NULL, signals::zoom_out);
     auto point     = gtk::new_button("\u26AB", NULL, signals::point_pressed);
-    auto line      = gtk::new_button("\u2571", NULL, signals::line_pressed);
+    auto line      = gtk::new_button("⎮", NULL, signals::line_pressed);
     auto polygon   = gtk::new_button("\u25B2", NULL, signals::polygon_pressed);
     auto curve     = gtk::new_button("C", NULL, signals::curve_pressed);
     auto wireframe = gtk::new_button("W", NULL, signals::wireframe_pressed);
+    auto surface   = gtk::new_button("S", NULL, signals::surface_pressed);
     auto up        = gtk::new_button("\u25B2", NULL, signals::up);
     auto left      = gtk::new_button("\u25C0", NULL, signals::left);
     auto right     = gtk::new_button("\u25B6", NULL, signals::right);
@@ -80,13 +81,13 @@ GtkWidget* Interface::buildSidebar() {
     auto config    = pango_font_description_from_string("Sans");
     pango_font_description_set_size(config, 12 * PANGO_SCALE);
 
-    gtk_widget_modify_font(point, config);
-    gtk_widget_modify_font(line, config);
-    gtk_widget_modify_font(polygon, config);
-    gtk_widget_modify_font(curve, config);
-    gtk_widget_modify_font(wireframe, config);
-    gtk_widget_modify_font(rotateA, config);
-    gtk_widget_modify_font(rotateC, config);
+    // gtk_widget_modify_font(point, config);
+    // gtk_widget_modify_font(line, config);
+    // gtk_widget_modify_font(polygon, config);
+    // gtk_widget_modify_font(curve, config);
+    // gtk_widget_modify_font(wireframe, config);
+    // gtk_widget_modify_font(rotateA, config);
+    // gtk_widget_modify_font(rotateC, config);
 
     gtk::set_margins(sidebar, 10, 0, 0, 10);
 
@@ -115,6 +116,7 @@ GtkWidget* Interface::buildSidebar() {
     gtk_grid_attach(GTK_GRID(objgrid), polygon, 2, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(objgrid), curve, 0, 1, 1, 1);
     gtk_grid_attach(GTK_GRID(objgrid), wireframe, 1, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(objgrid), surface, 2, 1, 1, 1);
 
     gtk_grid_attach(GTK_GRID(navGrid), up, 1, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(navGrid), left, 0, 1, 1, 1);
@@ -189,6 +191,17 @@ void Interface::buildWireframeWindow() {
     buildWireframeCreationWindow(n);
 }
 
+void Interface::buildSurfaceWindow() {
+    std::string value = gtk_entry_get_text(GTK_ENTRY(numVertices));
+    int n = 0;
+    if (utils::regex_match(value, "^\\d+")) {
+        n = stoi(value);
+    }
+    if (n < 1) return;
+    gtk_widget_destroy(dialog);
+    buildCreationWindow("Create Surface", n*16, 4, signals::surface_ok);
+}
+
 void Interface::buildVertexWindow(const char* title, bool isPolygon) {
     dialog         = gtk::new_dialog(window, title, 10);
     auto mainbox   = gtk::new_box(GTK_ORIENTATION_VERTICAL, dialog, 10);
@@ -211,11 +224,8 @@ void Interface::buildVertexWindow(const char* title, bool isPolygon) {
     }
 
     gtk::box_push_back(mainbox, buttonbox);
-
     gtk::box_push_back(vertexbox, numVertices);
-
     gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
-
     gtk_widget_show_all(dialog);
 }
 
@@ -229,13 +239,27 @@ void Interface::buildWireframeSetup() {
     gtk::box_push_back(mainbox, vertexbox);
     gtk::new_button("Ok", buttonbox, signals::wsetup_ok);
     gtk::box_push_back(vertexbox, gtk_label_new("Number of lines:"));
-
     gtk::box_push_back(mainbox, buttonbox);
-
     gtk::box_push_back(vertexbox, numVertices);
-
     gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
+    gtk_widget_show_all(dialog);
+}
 
+void Interface::buildSurfaceSetup() {
+    dialog         = gtk::new_dialog(window, "Create Surface", 10);
+    auto mainbox   = gtk::new_box(GTK_ORIENTATION_VERTICAL, dialog, 10);
+    auto vertexbox = gtk::new_box(GTK_ORIENTATION_HORIZONTAL, NULL, 3);
+    auto buttonbox = gtk::new_button_box();
+    numVertices    = gtk::new_entry("", 0, 3, 3);
+    radioButtons = gtk::new_radio_group("Bézier surface", "Spline surface");
+    
+    gtk::box_push_back(mainbox, vertexbox);
+    gtk::box_push_back(mainbox, radioButtons[0], radioButtons[1]);
+    gtk::new_button("Ok", buttonbox, signals::sursetup_ok);
+    gtk::box_push_back(vertexbox, gtk_label_new("Number of surfaces:"));
+    gtk::box_push_back(mainbox, buttonbox);
+    gtk::box_push_back(vertexbox, numVertices);
+    gtk::new_button("Cancel", buttonbox, gtk_widget_destroy, dialog);
     gtk_widget_show_all(dialog);
 }
 

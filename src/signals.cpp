@@ -70,6 +70,10 @@ namespace signals {
         receiver->wireframePressed();
     }
 
+    void surface_pressed() {
+        receiver->surfacePressed();
+    }
+
     void point_ok() {
         receiver->createPoint();
     }
@@ -90,6 +94,10 @@ namespace signals {
         receiver->createWireframe();
     }
 
+    void surface_ok() {
+        receiver->createBicubicSurface();
+    }
+
     void vertex_ok(GtkWidget* button) {
         bool filled = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
         receiver->vertexOk(filled);
@@ -101,6 +109,10 @@ namespace signals {
 
     void wsetup_ok() {
         receiver->wireframeSetupOk();
+    }
+
+    void sursetup_ok() {
+        receiver->surfaceSetupOk();
     }
 
     void remove_object(long index) {

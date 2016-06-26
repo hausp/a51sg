@@ -29,14 +29,17 @@ namespace signals {
     void polygon_pressed();
     void curve_pressed();
     void wireframe_pressed();
+    void surface_pressed();
     void point_ok();
     void line_ok();
     void polygon_ok();
     void curve_ok();
     void wireframe_ok();
+    void surface_ok();
     void vertex_ok(GtkWidget*);
     void curve_vertex_ok();
     void wsetup_ok();
+    void sursetup_ok();
 
     void remove_object(long);
     void translate_object(long);

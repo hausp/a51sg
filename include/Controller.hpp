@@ -32,6 +32,7 @@ class Controller {
 	void polygonPressed();
 	void curvePressed();
 	void wireframePressed();
+	void surfacePressed();
 	void createPoint();
 	void createLine();
 	void createPolygon();
@@ -54,6 +55,7 @@ class Controller {
 	void vertexOk(bool);
 	void curveVertexOk();
 	void wireframeSetupOk();
+	void surfaceSetupOk();
 	void rowSelected(GtkListBox* const, GtkListBoxRow* const);
 	void openFileDialog();
 	void saveFileDialog();
