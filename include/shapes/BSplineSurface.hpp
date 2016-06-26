@@ -17,20 +17,24 @@ class BSplineSurface : public BicubicSurface {
     }
 
     std::vector<std::vector<Point<3>>> parseParams(const std::vector<Point<3>>& params) override {
-        // std::vector<std::vector<Point<D>>> paramGroups;
-        // for (unsigned i = 0; i < params.size() - 3; i++) {
-        //     std::vector<Point<D>> points = {
-        //         params[i], params[i+1],
-        //         params[i+2], params[i+3]
-        //     };
-        //     paramGroups.push_back(points);
-        //     for (auto p : points) {
-        //         std::cout << "(" << p[0] << "," << p[1] << ") ";
-        //     }
-        //     std::cout << std::endl;
+        std::vector<std::vector<Point<3>>> paramGroups;
+        for (unsigned i = 0; i < params.size(); i += 16) {
+            // std::vector<Point<3>> points = {
+            //     params[i], params[i+1],
+            //     params[i+2], params[i+3]
+            // };
+            std::vector<Point<3>> points;
+            for (unsigned j = 0; j < 16; j++) {
+                points.push_back(params[i + j]);
+            }
+            paramGroups.push_back(points);
+        }
+        // for (auto& group : paramGroups) {
+        //     ECHO("##############");
+        //     TRACE_IT(group);
+        //     ECHO("##############");
         // }
-        // return paramGroups;
-        return std::vector<std::vector<Point<3>>>();
+        return paramGroups;
     }
 };
 

@@ -24,10 +24,6 @@ class BSplineCurve : public Curve<D> {
                 params[i+2], params[i+3]
             };
             paramGroups.push_back(points);
-            for (auto p : points) {
-                std::cout << "(" << p[0] << "," << p[1] << ") ";
-            }
-            std::cout << std::endl;
         }
         return paramGroups;
     }

@@ -98,40 +98,6 @@ void Controller::surfaceSetupOk() {
 }
 
 void Controller::createPoint() {
-    std::vector<Point3D> surfacePoints;
-    surfacePoints.push_back({100, 100, 1});
-    surfacePoints.push_back({150, 200, 1});
-    surfacePoints.push_back({200, 200, 1});
-    surfacePoints.push_back({250, 100, 1});
-
-    surfacePoints.push_back({100, 100, 2});
-    surfacePoints.push_back({150, 200, 2});
-    surfacePoints.push_back({200, 200, 2});
-    surfacePoints.push_back({250, 100, 2});
-
-    surfacePoints.push_back({100, 100, 3});
-    surfacePoints.push_back({150, 200, 3});
-    surfacePoints.push_back({200, 200, 3});
-    surfacePoints.push_back({250, 100, 3});
-
-    surfacePoints.push_back({100, 100, 4});
-    surfacePoints.push_back({150, 200, 4});
-    surfacePoints.push_back({200, 200, 4});
-    surfacePoints.push_back({250, 100, 4});
-    
-    BicubicSurface* surface;
-    surface = new BezierSurface(IterativeAlgorithm<3>(), 0.05, 0.05, surfacePoints);
-    // surface = new BSplineSurface(IterativeAlgorithm<3>(), 0.05, 0.05, surfacePoints);
-    surface->setName("surface");
-    drawer.addShape(surface);
-    interface.addShape(surface->getFormattedName());
-    interface.closeDialog();
-    drawer.draw(*surface);
-    interface.queueDraw();
-    return;
-    // --------------------------------------------------------
-
-
     auto entries = interface.getEntries();
     std::string name = interface.getShapeName();
 

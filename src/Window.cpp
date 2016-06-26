@@ -645,8 +645,6 @@ void Window::clipCS(Line<2>& ln) {
 void Window::clipLB(Line<2>& ln) {
     auto& p1 = drawer->getNDC(ln[0]);
     auto& p2 = drawer->getNDC(ln[1]);
-    TRACE(p1);
-    TRACE(p2);
     double dx = p2[0] - p1[0];
     double dy = p2[1] - p1[1];
     double u1 = 0;

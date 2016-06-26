@@ -40,7 +40,7 @@ class SimpleCurve : public Drawable<D> {
         for (unsigned i = 0; i < D; i++) {
             coefficients[i] = methodMatrix * geometryVectors[i];
         }
-        lineList = updater.update(accuracy, coefficients);            
+        lineList = updater.update(accuracy, coefficients);
     }
 
     template<typename Iterable>
