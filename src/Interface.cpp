@@ -198,6 +198,7 @@ void Interface::buildSurfaceWindow() {
         n = stoi(value);
     }
     if (n < 1) return;
+    getSelectedRadio();
     gtk_widget_destroy(dialog);
     buildCreationWindow("Create Surface", n*16, 4, signals::surface_ok);
 }
