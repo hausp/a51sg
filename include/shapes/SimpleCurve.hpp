@@ -24,8 +24,9 @@ class SimpleCurve : public Drawable<D> {
 
     template<typename Iterable>
     SimpleCurve(const Matrix<4,4>& matrix, const CurveAlgorithm<D>& updater,
-        double accuracy,const Iterable& params)
-    : Drawable<D>("", DrawableType::Curve), accuracy(accuracy), methodMatrix(matrix) {
+        double accuracy, const Iterable& params)
+    : Drawable<D>("", DrawableType::Curve), methodMatrix(matrix) {
+        std::vector<Matrix<4,1>> geometryVectors;
         geometryVectors.resize(D);
         unsigned j = 0;
         for (Point<D> p : params) {
@@ -39,7 +40,28 @@ class SimpleCurve : public Drawable<D> {
         for (unsigned i = 0; i < D; i++) {
             coefficients[i] = methodMatrix * geometryVectors[i];
         }
-        lineList = updater.update(accuracy, coefficients);
+        lineList = updater.update(accuracy, coefficients);            
+    }
+
+    template<typename Iterable>
+    SimpleCurve(const Matrix<4,4>& matrix, const CurveAlgorithm<D>& updater,
+        double accuracyS, double accuracyT, const Iterable& params)
+    : Drawable<D>("", DrawableType::Curve), methodMatrix(matrix) {
+        std::vector<Matrix<4,4>> geometryVectors;
+        geometryVectors.resize(D);
+        unsigned j = 0;
+        for (Point<D> p : params) {
+            for (unsigned i = 0; i < D; i++) {
+                geometryVectors[i][j/4][j%4] = p[i];
+            }
+            j++;
+        }
+
+        std::vector<Matrix<4,4>> coefficients(D);
+        for (unsigned i = 0; i < D; i++) {
+            coefficients[i] = methodMatrix * geometryVectors[i] * methodMatrix.transpose();
+        }
+        lineList = updater.update(accuracyS, accuracyT, coefficients);
     }
 
     void draw(BaseDrawer<D>&) override;
@@ -56,9 +78,7 @@ class SimpleCurve : public Drawable<D> {
     typename std::vector<Line<D>>::const_iterator end() const;
 
  private:
-    double accuracy;
     Matrix<4,4> methodMatrix;
-    std::vector<Matrix<4,1>> geometryVectors;
     std::vector<Line<D>> lineList;
 };
 

@@ -33,6 +33,7 @@ namespace {
     {DrawableType::Polygon, "Polygon"},
     {DrawableType::Curve, "Curve"},
     {DrawableType::Wireframe, "Wireframe"},
+    {DrawableType::BicubicSurface, "Surface"},
     {DrawableType::Undefined, "Undefined"}};
 }
 

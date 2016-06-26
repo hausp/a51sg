@@ -48,6 +48,14 @@ public:
 	    }
 	    return lines;
 	}
+
+    std::vector<Line<D>> update(double accuracyS, double accuracyT,
+    	const std::vector<Matrix<4,4>>& coefs) const override {
+
+    	// TODO
+    	std::vector<Line<D>> lines;
+    	return lines;
+    }
 };
 
 #endif /* FORWARD_DIFFERENCE_ALGORITHM_HPP */

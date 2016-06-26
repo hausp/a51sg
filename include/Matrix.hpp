@@ -28,6 +28,16 @@ public:
     	}
     }
 
+    Matrix<M,N> transpose() const {
+    	Matrix<M,N> result;
+    	for (unsigned i = 0; i < N; i++) {
+    		for (unsigned j = 0; j < M; j++) {
+    			result[j][i] = (*this)[i][j];
+    		}
+    	}
+    	return result;
+    }
+
 	std::vector<double>& operator[](unsigned index) {
 		return data.at(index);
 	}

@@ -36,13 +36,11 @@ class BicubicSurface : public Drawable<3> {
 
     template<typename Iterable>
     void build(const Iterable& params) {
-        // auto paramGroups = parseParams(params);
-        // for (auto& group : paramGroups) {
-        //     for (double s = 0; s <= 1.001; s += accuracyS) {
-        //         SimpleCurve<3> curve(methodMatrix, updater, accuracyT, group);
-        //         curves.push_back(curve);
-        //     }
-        // }
+        auto paramGroups = parseParams(params);
+        for (auto& group : paramGroups) {
+            SimpleCurve<3> curve(methodMatrix, updater, accuracyS, accuracyT, group);
+            curves.push_back(curve);
+        }
     }
 
     virtual std::vector<std::vector<Point<3>>> parseParams(const std::vector<Point<3>>&) = 0;
