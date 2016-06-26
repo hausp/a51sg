@@ -60,7 +60,7 @@ public:
 	}
 
 	template<unsigned P>
-	Matrix<N,P> operator*(const Matrix<M,P>& m) {
+	Matrix<N,P> operator*(const Matrix<M,P>& m) const {
 		Matrix<N,P> r;
 		for (unsigned i = 0; i < N; i++) {
 			for (unsigned j = 0; j < P; j++) {

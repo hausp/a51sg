@@ -208,10 +208,12 @@ void Window::clip(Point<3>& p) {
 
 void Window::clip(Line<3>& ln) {
     Line<2> flatLine(drawer->getNDC(ln[0]), drawer->getNDC(ln[1]));
+    drawer->getNDC(flatLine[0]) = flatLine[0];
+    drawer->getNDC(flatLine[1]) = flatLine[1];
     clip(flatLine);
     ln.setVisible(flatLine.isVisible());
-    drawer->getNDC(ln[0]) = flatLine[0];
-    drawer->getNDC(ln[1]) = flatLine[1];
+    drawer->getNDC(ln[0]) = drawer->getNDC(flatLine[0]);
+    drawer->getNDC(ln[1]) = drawer->getNDC(flatLine[1]);
 }
 
 void Window::clip(Polygon<3>& polygon) {
@@ -643,6 +645,8 @@ void Window::clipCS(Line<2>& ln) {
 void Window::clipLB(Line<2>& ln) {
     auto& p1 = drawer->getNDC(ln[0]);
     auto& p2 = drawer->getNDC(ln[1]);
+    TRACE(p1);
+    TRACE(p2);
     double dx = p2[0] - p1[0];
     double dy = p2[1] - p1[1];
     double u1 = 0;

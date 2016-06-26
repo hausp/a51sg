@@ -46,6 +46,7 @@ public:
 	            lines[i - 1][1] = p;
 	        }
 	    }
+	    lines.pop_back();
 	    return lines;
 	}
 

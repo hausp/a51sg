@@ -18,6 +18,14 @@ BaseDrawer<D>::~BaseDrawer<D>() {
     for (auto shape : displayFile) {
         delete shape;
     }
+
+    for (auto pair : ndc2D) {
+        delete pair.second;
+    }
+
+    for (auto pair : ndc3D) {
+        delete pair.second;
+    }
 }
 
 template<unsigned D>

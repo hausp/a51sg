@@ -68,18 +68,22 @@ void Drawer::draw(Polygon3D& polygon) {
 void Drawer::draw(SimpleCurve3D& c) {
     if (!c.isVisible()) return;
     cairo::set_color(c.getColor());
-    Line3D* lastLine = nullptr;
+    // Line3D* lastLine = nullptr;
     for (auto& line : c) {
-        Point2D newPoint;
+        Point2D origin;
+        Point2D destination;
         if (line.isVisible()) {
-            newPoint = window.toViewport(viewport, getNDC(line[0]));
-            lastLine = &line;
-            cairo::line_to(newPoint[0], newPoint[1]);                
-        } else if (lastLine != nullptr) {
-            newPoint = window.toViewport(viewport, getNDC((*lastLine)[1]));
-            lastLine = nullptr;
-            cairo::line_to(newPoint[0], newPoint[1]);
+            origin = window.toViewport(viewport, getNDC(line[0]));
+            destination = window.toViewport(viewport, getNDC(line[1]));
+            cairo::move_to(origin[0], origin[1]);
+            cairo::line_to(destination[0], destination[1]);
         }
+        //     lastLine = &line;
+        // } else if (lastLine != nullptr) {
+        //     newPoint = window.toViewport(viewport, getNDC((*lastLine)[1]));
+        //     lastLine = nullptr;
+        //     cairo::line_to(newPoint[0], newPoint[1]);
+        // }
     }
     cairo::stroke();
 }
