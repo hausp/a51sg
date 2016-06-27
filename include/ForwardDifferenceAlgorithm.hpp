@@ -14,7 +14,7 @@ public:
         const std::vector<Matrix<4,1>>& coefs) const override {
 
         auto e = generateEDelta(accuracy);
-       	std::vector<Matrix<4,1>> params;
+        std::vector<Matrix<4,1>> params;
         for (unsigned i = 0; i < D; i++) {
             params.push_back(e * coefs[i]);
         }

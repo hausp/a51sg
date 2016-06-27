@@ -13,7 +13,7 @@
 #include "Wireframe.hpp"
 
 int main(int argc, char** argv) {
- 	// Init GTK+ with command line options
+     // Init GTK+ with command line options
     gtk::init(argc, argv);
 
     unsigned canvasWidth = 500;
@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
 
     // Set controller to receive GTK+ signals
     signals::set_receiver(&controller);
-	
+
     // Build graphical environment
     gui.build();
 

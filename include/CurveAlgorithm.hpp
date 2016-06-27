@@ -17,7 +17,7 @@ class CurveAlgorithm {
 public:
     virtual std::vector<Line<D>> update(double accuracy, const std::vector<Matrix<4,1>>&) const = 0;
     virtual std::vector<Line<D>> update(double accuracyS, double accuracyT,
-    	const std::vector<Matrix<4,4>>&) const = 0;
+        const std::vector<Matrix<4,4>>&) const = 0;
 };
 
 #endif /* CURVE_ALGORITHM_HPP */

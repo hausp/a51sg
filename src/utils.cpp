@@ -35,17 +35,17 @@ void utils::nln_reflect_xaxis(Point<2>& p) {
 
 
 bool utils::regex_match(const std::string& text, const std::string& regexp) {
-	#if RECENT_COMPILER
-	if (regexp != currentRegex) {
-		currentRegex = regexp;
-		regex = std::regex(regexp);
-	}
-	return std::regex_match(text, regex);
-	#else
-	return true;
-	#endif
+    #if RECENT_COMPILER
+    if (regexp != currentRegex) {
+        currentRegex = regexp;
+        regex = std::regex(regexp);
+    }
+    return std::regex_match(text, regex);
+    #else
+    return true;
+    #endif
 }
 
 double utils::slope(const Line<2>& line) {
-	return (line[1][1] - line[0][1]) / (line[1][0] - line[0][0]);
+    return (line[1][1] - line[0][1]) / (line[1][0] - line[0][0]);
 }
