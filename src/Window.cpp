@@ -4,7 +4,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include <climits>
 #include <cmath>
 #include <unordered_map>
-#include "BaseDrawer.hpp"
+#include "Drawer.hpp"
 #include "BicubicSurface.hpp"
 #include "Line.hpp"
 #include "Polygon.hpp"
@@ -18,7 +18,9 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 Window::Window(const Point<2>& min, const Point<2>& max)
 : min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2),
-  vpn(new Line<3>({0, 0, 0}, {0, 1, 10})) {
+  vpn(new Line<3>({0, 0, 5}, {0, 0, 10})) {
+    auto c = center();
+    cop = Point<3>{c[0], c[1], -1};
     defaultWidth  = max[0] - min[0];
     defaultHeight = max[1] - min[1];
 }
@@ -111,8 +113,8 @@ Point<2> Window::perspectiveProjection(const Point<3>& p) const {
 }
 
 Point<3> Window::projection(Point<3> p) const {
-    auto vrp = (*vpn)[0];
-    auto transformation = utils::translationMatrix((-vrp).toArray());
+    // auto vrp = (*vpn)[0];
+    auto transformation = utils::translationMatrix((-cop).toArray());
 
     Point<3> xAxis(1, 0, 0);
     Point<3> yAxis(0, 1, 0);
@@ -121,8 +123,22 @@ Point<3> Window::projection(Point<3> p) const {
     double ty = acos((yAxis * vector) / vector.norm()) * 180 / M_PI;
     transformation *= utils::rotationMatrix<3>(90 - tx, utils::RotationPlane::X);
     transformation *= utils::rotationMatrix<3>(90 - ty, utils::RotationPlane::Y);
+    ECHO("##################");
+    TRACE(p);
     p *= transformation;
+    TRACE(p);
+    ECHO("##################");
     return p;
+}
+
+void Window::doStuff() {
+    auto transformation = utils::rotationMatrix<3>(15, utils::RotationPlane::X);
+    auto vector = (*vpn)[1] - (*vpn)[0];
+    cop *= transformation;
+    (*vpn)[0] *= transformation;
+    (*vpn)[1] = (*vpn)[0] + vector;
+    drawer->updateAll();
+    drawer->drawAll();
 }
 
 void Window::clip(Point<2>& p) {
@@ -147,7 +163,7 @@ void Window::clip(Line<2>& ln) {
     }
 }
 
-void Window::setDrawer(BaseDrawer<3>& _drawer) {
+void Window::setDrawer(Drawer& _drawer) {
     drawer = &_drawer;
 }
 

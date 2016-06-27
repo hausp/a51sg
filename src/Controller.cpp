@@ -30,9 +30,11 @@ Controller::~Controller() { }
 // -------------------------- Window Navigation --------------------------- //
 
 void Controller::moveVertical(int direction) {
-    drawer.moveVertical(direction);
-    drawer.drawAll();
-    interface.queueDraw();
+    // drawer.moveVertical(direction);
+    // drawer.drawAll();
+    // interface.queueDraw();
+
+    drawer.doStuff();
 }
 
 void Controller::moveHorizontal(int direction) {
