@@ -202,8 +202,9 @@ void Window::clip(Curve<2>& curve) {
 
 void Window::clip(Point<3>& p) {
     Point<2> flatPoint(drawer->getNDC(p));
+    drawer->getNDC(flatPoint) = flatPoint;
     clip(flatPoint);
-    p.setVisible(flatPoint.isVisible() && p[2] >= 1 && p[2] <= 1000);
+    p.setVisible(flatPoint.isVisible() && p[2] >= 1 && p[2] <= 100);
 }
 
 void Window::clip(Line<3>& ln) {
