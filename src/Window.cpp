@@ -18,7 +18,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 Window::Window(const Point<2>& min, const Point<2>& max)
 : min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2),
-  vpn(new Line<3>({0, 0, 0}, {0, 0, 1})) {
+  vpn(new Line<3>({0, 0, 0}, {0, 1, 10})) {
     defaultWidth  = max[0] - min[0];
     defaultHeight = max[1] - min[1];
 }
@@ -204,7 +204,7 @@ void Window::clip(Point<3>& p) {
     Point<2> flatPoint(drawer->getNDC(p));
     drawer->getNDC(flatPoint) = flatPoint;
     clip(flatPoint);
-    p.setVisible(flatPoint.isVisible() && p[2] >= 1 && p[2] <= 100);
+    p.setVisible(flatPoint.isVisible() && p[2] >= 1 && p[2] <= 1000);
 }
 
 void Window::clip(Line<3>& ln) {

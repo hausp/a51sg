@@ -98,35 +98,62 @@ void Controller::surfaceSetupOk() {
 }
 
 void Controller::createPoint() {
-    std::vector<Point3D> surfacePoints;
-    surfacePoints.push_back({100, 20, 0.6});
-    surfacePoints.push_back({150, 300, 0.6});
-    surfacePoints.push_back({200, 300, 0.6});
-    surfacePoints.push_back({350, 20, 0.6});
+    // std::vector<Point3D> surfacePoints;
+    // unsigned factor = 20;
+    // surfacePoints.push_back({100, 20, 0.6 * factor});
+    // surfacePoints.push_back({150, 300, 0.6 * factor});
+    // surfacePoints.push_back({200, 300, 0.6 * factor});
+    // surfacePoints.push_back({350, 20, 0.6 * factor});
 
-    surfacePoints.push_back({100, 20, 0.85});
-    surfacePoints.push_back({150, 300, 0.85});
-    surfacePoints.push_back({200, 300, 0.85});
-    surfacePoints.push_back({350, 20, 0.85});
+    // surfacePoints.push_back({100, 20, 0.85 * factor});
+    // surfacePoints.push_back({150, 300, 0.85 * factor});
+    // surfacePoints.push_back({200, 300, 0.85 * factor});
+    // surfacePoints.push_back({350, 20, 0.85 * factor});
 
-    surfacePoints.push_back({100, 20, 1.1});
-    surfacePoints.push_back({150, 300, 1.1});
-    surfacePoints.push_back({200, 300, 1.1});
-    surfacePoints.push_back({350, 20, 1.1});
+    // surfacePoints.push_back({100, 20, 1.1 * factor});
+    // surfacePoints.push_back({150, 300, 1.1 * factor});
+    // surfacePoints.push_back({200, 300, 1.1 * factor});
+    // surfacePoints.push_back({350, 20, 1.1 * factor});
 
-    surfacePoints.push_back({100, 20, 1.35});
-    surfacePoints.push_back({150, 300, 1.35});
-    surfacePoints.push_back({200, 300, 1.35});
-    surfacePoints.push_back({350, 20, 1.35});
+    // surfacePoints.push_back({100, 20, 1.35 * factor});
+    // surfacePoints.push_back({150, 300, 1.35 * factor});
+    // surfacePoints.push_back({200, 300, 1.35 * factor});
+    // surfacePoints.push_back({350, 20, 1.35 * factor});
     
-    BicubicSurface* surface;
-    surface = new BezierSurface(ForwardDifferenceAlgorithm<3>(), 0.05, 0.05, surfacePoints);
-    // surface = new BSplineSurface(ForwardDifferenceAlgorithm<3>(), 0.05, 0.05, surfacePoints);
-    surface->setName("surface");
-    drawer.addShape(surface);
-    interface.addShape(surface->getFormattedName());
+    // BicubicSurface* surface;
+    // surface = new BezierSurface(ForwardDifferenceAlgorithm<3>(), 0.05, 0.05, surfacePoints);
+    // // surface = new BSplineSurface(ForwardDifferenceAlgorithm<3>(), 0.05, 0.05, surfacePoints);
+    // surface->setName("surface");
+    // drawer.addShape(surface);
+    // interface.addShape(surface->getFormattedName());
+    // interface.closeDialog();
+    // drawer.draw(*surface);
+    // interface.queueDraw();
+    // return;
+
+
+    std::vector<Line3D> wireframeEdges;
+    wireframeEdges.push_back(Line<3>({100, 100, 10}, {200, 100, 10}));
+    wireframeEdges.push_back(Line<3>({200, 100, 10}, {200, 200, 10}));
+    wireframeEdges.push_back(Line<3>({200, 200, 10}, {100, 200, 10}));
+    wireframeEdges.push_back(Line<3>({100, 200, 10}, {100, 100, 10}));
+
+    wireframeEdges.push_back(Line<3>({125, 100, 15}, {225, 100, 15}));
+    wireframeEdges.push_back(Line<3>({225, 100, 15}, {225, 200, 15}));
+    wireframeEdges.push_back(Line<3>({225, 200, 15}, {125, 200, 15}));
+    wireframeEdges.push_back(Line<3>({125, 200, 15}, {125, 100, 15}));
+
+    wireframeEdges.push_back(Line<3>({100, 100, 10}, {125, 100, 15}));
+    wireframeEdges.push_back(Line<3>({200, 100, 10}, {225, 100, 15}));
+    wireframeEdges.push_back(Line<3>({200, 200, 10}, {225, 200, 15}));
+    wireframeEdges.push_back(Line<3>({100, 200, 10}, {125, 200, 15}));
+
+    auto wireframe = new Wireframe<3>(wireframeEdges);
+    wireframe->setName("wireframe");
+    drawer.addShape(wireframe);
+    interface.addShape(wireframe->getFormattedName());
     interface.closeDialog();
-    drawer.draw(*surface);
+    drawer.draw(*wireframe);
     interface.queueDraw();
     return;
     // --------------------------------------------------------
@@ -253,7 +280,6 @@ void Controller::createCurve() {
         interface.addShape(curve->getFormattedName());
         interface.closeDialog();
         drawer.draw(*curve);
-        // drawer.draw(*Curve<2>(curve));
         interface.queueDraw();
     }
 }
@@ -317,11 +343,11 @@ void Controller::createBicubicSurface() {
         BicubicSurface* surface;
 
         if (interface.getSelectedRadio() == 0) {
-            // surface = new BezierSurface(ForwardDifferenceAlgorithm<3>(), 0.05, surfacePoints);
-            surface = new BezierSurface(IterativeAlgorithm<3>(), 0.05, 0.05, surfacePoints);
+            surface = new BezierSurface(ForwardDifferenceAlgorithm<3>(), 0.05, 0.05, surfacePoints);
+            // surface = new BezierSurface(IterativeAlgorithm<3>(), 0.05, 0.05, surfacePoints);
         } else {
-            // surface = new BezierSurface(ForwardDifferenceAlgorithm<3>(), 0.05, surfacePoints);
-            surface = new BSplineSurface(IterativeAlgorithm<3>(), 0.05, 0.05, surfacePoints);
+            surface = new BezierSurface(ForwardDifferenceAlgorithm<3>(), 0.05, 0.05, surfacePoints);
+            // surface = new BSplineSurface(IterativeAlgorithm<3>(), 0.05, 0.05, surfacePoints);
         }
         surface->setName(name);
         drawer.addShape(surface);
