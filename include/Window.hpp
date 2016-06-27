@@ -29,6 +29,7 @@ class Window {
     void rotate(double);
     Point<2> toViewport(const Viewport&, const Point<2>&);
     Point<2> center() const;
+    Point<3> center3D() const;
     void zoom(double);
     double getAngle();
     double getZoomLevel();
@@ -74,7 +75,8 @@ class Window {
     double defaultWidth;
     double defaultHeight;
     unsigned lcAlgorithm;
-    std::unique_ptr<Line<3>> vpn;
+    std::vector<double> windowAngles;
+    double distance;
     Drawer* drawer;
 
     void clipCS(Line<2>&);

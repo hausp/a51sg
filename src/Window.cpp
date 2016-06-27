@@ -18,7 +18,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 
 Window::Window(const Point<2>& min, const Point<2>& max)
 : min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2),
-  vpn(new Line<3>({0, 0, 5}, {0, 0, 10})) {
+  windowAngles({90, 90, 0}), distance(5) {
     auto c = center();
     cop = Point<3>{c[0], c[1], -1};
     defaultWidth  = max[0] - min[0];
@@ -67,6 +67,11 @@ Point<2> Window::center() const {
     return (min + max)/2;
 }
 
+Point<3> Window::center3D() const {
+    auto c = center();
+    return {c[0], c[1], -distance};
+}
+
 void Window::zoom(double zoomRate) {
     if (currentZoom + zoomRate > 0) {
         currentZoom += zoomRate;
@@ -104,39 +109,49 @@ Point<2> Window::perspectiveProjection(const Point<2>& p) const {
 
 Point<2> Window::perspectiveProjection(const Point<3>& p) const {
     auto projected = projection(p);
-    double d = (*vpn)[1].norm();
-    double correctionFactor = d / projected[2];
+    double correctionFactor = distance / projected[2];
     auto c = center();
     projected[0] = (projected[0] - c[0]) * correctionFactor + c[0];
     projected[1] = (projected[1] - c[1]) * correctionFactor + c[1];
-    return projected;
+
+    return projection(p);
 }
 
 Point<3> Window::projection(Point<3> p) const {
-    // auto vrp = (*vpn)[0];
-    auto transformation = utils::translationMatrix((-cop).toArray());
+    // std::vector<double> theta = {
 
-    Point<3> xAxis(1, 0, 0);
-    Point<3> yAxis(0, 1, 0);
-    auto vector = (*vpn)[1] - (*vpn)[0];
-    double tx = acos((xAxis * vector) / vector.norm()) * 180 / M_PI;
-    double ty = acos((yAxis * vector) / vector.norm()) * 180 / M_PI;
-    transformation *= utils::rotationMatrix<3>(90 - tx, utils::RotationPlane::X);
-    transformation *= utils::rotationMatrix<3>(90 - ty, utils::RotationPlane::Y);
-    ECHO("##################");
-    TRACE(p);
+    // };
+
+    auto transformation = utils::translationMatrix((-center3D()).toArray());
+    double tx = windowAngles[0];
+    double ty = windowAngles[1];
+    double tz = windowAngles[2];
+    transformation *= utils::rotationMatrix<3>(-tx, utils::RotationPlane::X);
+    transformation *= utils::rotationMatrix<3>(-ty, utils::RotationPlane::Y);
+    transformation *= utils::rotationMatrix<3>(-tz, utils::RotationPlane::Z);
     p *= transformation;
-    TRACE(p);
-    ECHO("##################");
-    return p;
+
+    double bx = (cop[2] / p[2]) * p[0] - cop[0];
+    double by = (cop[2] / p[2]) * p[1] - cop[1];
+
+
+    // ECHO("##################");
+    // TRACE(p);
+    // p *= transformation;
+    // TRACE(p);
+    // ECHO("##################");
+
+    // p - center3D()
+    return {bx, by, 1};
 }
 
 void Window::doStuff() {
-    auto transformation = utils::rotationMatrix<3>(15, utils::RotationPlane::X);
-    auto vector = (*vpn)[1] - (*vpn)[0];
-    cop *= transformation;
-    (*vpn)[0] *= transformation;
-    (*vpn)[1] = (*vpn)[0] + vector;
+    // auto transformation = utils::rotationMatrix<3>(15, utils::RotationPlane::X);
+    // auto vector = (*vpn)[1] - (*vpn)[0];
+    // cop *= transformation;
+    // (*vpn)[0] *= transformation;
+    // (*vpn)[1] = (*vpn)[0] + vector;
+    windowAngles[0] += 15;
     drawer->updateAll();
     drawer->drawAll();
 }
