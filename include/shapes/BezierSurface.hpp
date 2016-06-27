@@ -21,14 +21,6 @@ class BezierSurface : public BicubicSurface {
         unsigned i = 0;
         while(i < params.size()) {
             std::vector<Point<3>> points;
-            // bool copyLast = (i >= 16);
-            // if (copyLast) {
-            //     points.push_back(params[i-4]);
-            //     points.push_back(params[i-3]);
-            //     points.push_back(params[i-2]);
-            //     points.push_back(params[i-1]);
-            // }
-            // int numPointsCopied = (copyLast) ? 12 : 16;
             int numPointsCopied = 16;
             for (int j = 0; j < numPointsCopied; j++) {
                 points.push_back(params[i + j]);

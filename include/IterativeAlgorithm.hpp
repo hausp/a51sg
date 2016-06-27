@@ -84,11 +84,6 @@ public:
             }
             lines.pop_back();
         }
-
-        // for (auto& line : lines) {
-        //     TRACE_IT(line);
-        //     ECHO("----------------------");
-        // }
         return lines;
     }
 
