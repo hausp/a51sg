@@ -76,6 +76,7 @@ class Window {
     double defaultHeight;
     unsigned lcAlgorithm;
     std::unique_ptr<Line<3>> vpn;
+    std::vector<double> angles;
     Drawer* drawer;
 
     void clipCS(Line<2>&);

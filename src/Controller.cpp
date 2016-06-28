@@ -135,20 +135,27 @@ void Controller::createPoint() {
 
 
     std::vector<Line3D> wireframeEdges;
-    wireframeEdges.push_back(Line<3>({100, 100, 10}, {200, 100, 10}));
-    wireframeEdges.push_back(Line<3>({200, 100, 10}, {200, 200, 10}));
-    wireframeEdges.push_back(Line<3>({200, 200, 10}, {100, 200, 10}));
-    wireframeEdges.push_back(Line<3>({100, 200, 10}, {100, 100, 10}));
+    wireframeEdges.push_back(Line<3>({100, 100, 100}, {200, 100, 100}));
+    wireframeEdges.push_back(Line<3>({200, 100, 100}, {200, 200, 100}));
+    wireframeEdges.push_back(Line<3>({200, 200, 100}, {100, 200, 100}));
+    wireframeEdges.push_back(Line<3>({100, 200, 100}, {100, 100, 100}));
 
-    wireframeEdges.push_back(Line<3>({125, 100, 15}, {225, 100, 15}));
-    wireframeEdges.push_back(Line<3>({225, 100, 15}, {225, 200, 15}));
-    wireframeEdges.push_back(Line<3>({225, 200, 15}, {125, 200, 15}));
-    wireframeEdges.push_back(Line<3>({125, 200, 15}, {125, 100, 15}));
+    wireframeEdges.push_back(Line<3>({100, 100, 100}, {100, 100, 200}));
+    wireframeEdges.push_back(Line<3>({100, 100, 200}, {200, 100, 200}));
+    wireframeEdges.push_back(Line<3>({200, 100, 200}, {200, 100, 100}));
+    //wireframeEdges.push_back(Line<3>({200, 100, 100}, {100, 100, 100}));
 
-    wireframeEdges.push_back(Line<3>({100, 100, 10}, {125, 100, 15}));
-    wireframeEdges.push_back(Line<3>({200, 100, 10}, {225, 100, 15}));
-    wireframeEdges.push_back(Line<3>({200, 200, 10}, {225, 200, 15}));
-    wireframeEdges.push_back(Line<3>({100, 200, 10}, {125, 200, 15}));
+    wireframeEdges.push_back(Line<3>({200, 200, 100}, {200, 200, 200}));
+    wireframeEdges.push_back(Line<3>({200, 200, 200}, {200, 100, 200}));
+
+    wireframeEdges.push_back(Line<3>({100, 200, 100}, {100, 200, 200}));
+    wireframeEdges.push_back(Line<3>({100, 200, 200}, {100, 100, 200}));
+    wireframeEdges.push_back(Line<3>({100, 200, 200}, {200, 200, 200}));
+    
+    // wireframeEdges.push_back(Line<3>({100, 100, 10}, {125, 100, 15}));
+    // wireframeEdges.push_back(Line<3>({200, 100, 10}, {225, 100, 15}));
+    // wireframeEdges.push_back(Line<3>({200, 200, 10}, {225, 200, 15}));
+    // wireframeEdges.push_back(Line<3>({100, 200, 10}, {125, 200, 15}));
 
     auto wireframe = new Wireframe<3>(wireframeEdges);
     wireframe->setName("wireframe");
