@@ -17,10 +17,10 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #define YMAX 1
 
 Window::Window(const Point<2>& min, const Point<2>& max)
-: min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2) {
-  //vpn(new Line<3>({0, 0, 0}, {0, 0, -1})) {
+: min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2),
+  vpn(new Line<3>({0, 0, 0}, {0, 0, -1})) {
     auto c = center3D();
-    vpn.reset(new Line<3>(center3D(), center3D() + Point<3>(0,0,1)));
+    //vpn.reset(new Line<3>(center3D(), center3D() + Point<3>(0,0,1)));
     cop = {c[0], c[1], -200};
     defaultWidth  = max[0] - min[0];
     defaultHeight = max[1] - min[1];
@@ -145,21 +145,9 @@ Point<3> Window::projection(Point<3> p) const {
     double ty = acos((yAxis * vector) / vector.norm()) * 180 / M_PI;
     transformation *= utils::rotationMatrix<3>(90 - tx, utils::RotationPlane::X);
     transformation *= utils::rotationMatrix<3>(90 - ty, utils::RotationPlane::Y);
-
     p *= transformation;
 
-    double bx = (cop[2] / p[2]) * p[0] - cop[0];
-    double by = (cop[2] / p[2]) * p[1] - cop[1];
-
-
-    // ECHO("##################");
-    // TRACE(p);
-    // p *= transformation;
-    // TRACE(p);
-    // ECHO("##################");
-
-    // p - center3D()
-    return {bx, by, 1};
+    return p;
 }
 
 void Window::doStuff() {
@@ -168,9 +156,9 @@ void Window::doStuff() {
     // cop *= transformation;
     // (*vpn)[0] *= transformation;
     // (*vpn)[1] = (*vpn)[0] + vector;
-    windowAngles[0] += 15;
-    drawer->updateAll();
-    drawer->drawAll();
+    // windowAngles[0] += 15;
+    // drawer->updateAll();
+    // drawer->drawAll();
 }
 
 void Window::clip(Point<2>& p) {

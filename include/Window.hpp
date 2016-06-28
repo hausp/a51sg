@@ -11,8 +11,8 @@
 // template<unsigned D>
 class Drawer;
 
-// template<unsigned D>
-// class Line;
+template<unsigned D>
+class Line;
 template<unsigned D>
 class Polygon;
 template<unsigned D>
@@ -75,6 +75,7 @@ class Window {
     double defaultWidth;
     double defaultHeight;
     unsigned lcAlgorithm;
+    std::unique_ptr<Line<3>> vpn;
     Drawer* drawer;
 
     void clipCS(Line<2>&);
