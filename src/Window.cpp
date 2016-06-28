@@ -17,8 +17,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #define YMAX 1
 
 Window::Window(const Point<2>& min, const Point<2>& max)
-: min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2),// {
-  angles{0, 0, 0} {
+: min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2) {
   //vpn(new Line<3>({0, 0, 0}, {0, 0, 10})) {
     auto c = center3D();
     vpn.reset(new Line<3>(center3D(), center3D() + Point<3>(0,0,1)));
@@ -122,13 +121,8 @@ Point<2> Window::perspectiveProjection(const Point<2>& p) const {
 
 Point<2> Window::perspectiveProjection(const Point<3>& p) const {
     auto projected = projection(p);
-    //double d = (*vpn)[1].norm();
-    double d = cop[2];
-    //double correctionFactor = d / projected[2];
+    double d = projected[2] - cop[2];
     double correctionFactor = projected[2] / d;
-    //auto c = center();
-    //projected[0] = (projected[0] - c[0]) * correctionFactor + c[0];
-    //projected[1] = (projected[1] - c[1]) * correctionFactor + c[1];
     projected[0] /= correctionFactor;
     projected[1] /= correctionFactor;
 
