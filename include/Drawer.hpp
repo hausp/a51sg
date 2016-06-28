@@ -72,6 +72,8 @@ class Drawer : public SuperDrawer {
     void updateShape(Wireframe3D&, const Matrix<3,3>&);
     void updateShape(BicubicSurface&, const Matrix<3,3>&);
 
+    void doStuff() { window.doStuff(); }
+
  private:
     Window window;
     std::pair<Point2D, Point2D> viewport;

@@ -4,7 +4,7 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #include <climits>
 #include <cmath>
 #include <unordered_map>
-#include "BaseDrawer.hpp"
+#include "Drawer.hpp"
 #include "BicubicSurface.hpp"
 #include "Line.hpp"
 #include "Polygon.hpp"
@@ -145,8 +145,32 @@ Point<3> Window::projection(Point<3> p) const {
     double ty = acos((yAxis * vector) / vector.norm()) * 180 / M_PI;
     transformation *= utils::rotationMatrix<3>(90 - tx, utils::RotationPlane::X);
     transformation *= utils::rotationMatrix<3>(90 - ty, utils::RotationPlane::Y);
+
     p *= transformation;
-    return p;
+
+    double bx = (cop[2] / p[2]) * p[0] - cop[0];
+    double by = (cop[2] / p[2]) * p[1] - cop[1];
+
+
+    // ECHO("##################");
+    // TRACE(p);
+    // p *= transformation;
+    // TRACE(p);
+    // ECHO("##################");
+
+    // p - center3D()
+    return {bx, by, 1};
+}
+
+void Window::doStuff() {
+    // auto transformation = utils::rotationMatrix<3>(15, utils::RotationPlane::X);
+    // auto vector = (*vpn)[1] - (*vpn)[0];
+    // cop *= transformation;
+    // (*vpn)[0] *= transformation;
+    // (*vpn)[1] = (*vpn)[0] + vector;
+    windowAngles[0] += 15;
+    drawer->updateAll();
+    drawer->drawAll();
 }
 
 void Window::clip(Point<2>& p) {
@@ -171,7 +195,7 @@ void Window::clip(Line<2>& ln) {
     }
 }
 
-void Window::setDrawer(BaseDrawer<3>& _drawer) {
+void Window::setDrawer(Drawer& _drawer) {
     drawer = &_drawer;
 }
 
