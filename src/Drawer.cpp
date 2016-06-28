@@ -11,18 +11,12 @@ Drawer::Drawer(unsigned width, unsigned height, unsigned border)
                               Point2D(width - border, height - border));
 
     window.setDrawer(*this);
-    // wview = {Point3D(0, 0, 1),
-    //          Point3D(0, height - 2 * border, 1),
-    //          Point3D(width - 2 * border, height - 2 * border, 1),
-    //          Point3D(width - 2 * border, 0, 1)};
     wview = {Point3D(-1, -1, 1),
              Point3D(-1, 1, 1),
              Point3D(1, 1, 1),
              Point3D(1, -1, 1)};
 
     wview.setVisible(true);
-    // wview.update(window.normalizerMatrix(), window);
-    // updateShape(wview, window.normalizerMatrix());
     wview.setColor(177, 0, 0);
 }
 
@@ -53,7 +47,6 @@ void Drawer::draw(Polygon3D& polygon) {
     cairo::set_color(polygon.getColor());
     auto& points = getNDC(polygon);
     for (auto& point : points) {
-        // auto newPoint = window.toViewport(viewport, getNDC(point));
         auto newPoint = window.toViewport(viewport, point);
         cairo::line_to(newPoint[0], newPoint[1]);
     }
@@ -108,15 +101,6 @@ void Drawer::drawAll() {
     SuperDrawer::drawAll();
     draw(wview);
 }
-
-// void Drawer::drawAxis() {
-//     Line2D x(Point2D(0, viewport.second[1]/2), 
-//              Point2D(viewport.second[0], viewport.second[1]/2));
-//     Line2D y(Point2D(viewport.second[0]/2, 0), 
-//              Point2D(viewport.second[0]/2, viewport.second[1]));
-//     draw(x);
-//     draw(y);
-// }
 
 double Drawer::getWindowAngle() {
     return window.getAngle();
@@ -215,7 +199,6 @@ void Drawer::update(Drawable3D& shape) {
 void Drawer::updateAll() {
     auto normalizer = window.normalizerMatrix();
     for (auto shape : displayFile) {
-        // shape->update(normalizer, window);
         update(*shape, normalizer);
         shape->clip(window);
     }
@@ -247,9 +230,8 @@ void Drawer::updateShape(Drawable3D& shape, const Matrix<3,3>& matrix) {
         case DrawableType::BicubicSurface:
             updateShape(static_cast<BicubicSurface&>(shape), matrix);
             break;
-        default:
-            ECHO("dafuq is this?");
-            throw 666;
+        case DrawableType::Undefined:
+            break;
     }
 }
 
@@ -269,7 +251,6 @@ void Drawer::updateShape(Polygon3D& polygon, const Matrix<3,3>& matrix) {
         updateShape(vertex, matrix);
         auto ndc = getNDC(vertex);
         getNDC(polygon).push_back(Point<3>(ndc[0], ndc[1], 0));
-        // getNDC(polygon).push_back(vertex);
     }
 }
 

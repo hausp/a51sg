@@ -88,9 +88,6 @@ template<unsigned D>
 void BaseDrawer<D>::rotate(size_t index, double angle, const Point<D>& axis) {
     if (index < displayFile.size()) {
         auto& shape = displayFile[index];
-        // auto m = utils::translationMatrix((axis * -1).toArray());
-        // m *= utils::rotationMatrix<D>(angle);
-        // m *= utils::translationMatrix(axis.toArray());
         Point<3> xAxis(1, 0, 0);
         Point<3> yAxis(0, 1, 0);
         double tx = acos((xAxis * axis) / axis.norm()) * 180 / M_PI;

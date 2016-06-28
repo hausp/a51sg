@@ -40,13 +40,6 @@ std::vector<Point<D>> Curve<D>::points() const {
     return list;
 }
 
-// template<unsigned D>
-// void Curve<D>::update(const Matrix<3,3>& matrix, const Window& window) {
-//     for (auto& c : curves) {
-//         c.update(matrix, window);
-//     }
-// }
-
 template<unsigned D>
 typename std::vector<SimpleCurve<D>>::iterator Curve<D>::begin() {
     return curves.begin();

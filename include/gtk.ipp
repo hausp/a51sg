@@ -103,16 +103,6 @@ namespace {
     }
 }
 
-// template<typename... Args>
-// GtkWidget* gtk::new_dialog(const char* name, GtkWindow* parent, bool modal, Args... args) {
-//     auto dialog = gtk_dialog_new();
-//     gtk_window_set_title(GTK_WINDOW(dialog), name);
-//     gtk_window_set_modal(GTK_WINDOW(dialog), modal);
-//     gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
-//     add_button(GTK_DIALOG(dialog), args...);
-//     return dialog;
-// }
-
 template<typename... Args>
 void gtk::box_push_back(const GtkWidget* parent, Args... args) {
     _box_push_back(parent, args...);
