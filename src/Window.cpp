@@ -17,8 +17,11 @@ and Marleson Graf<aszdrick@gmail.com> [2016] */
 #define YMAX 1
 
 Window::Window(const Point<2>& min, const Point<2>& max)
-: min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2),
-  vpn(new Line<3>({0, 0, 0}, {0, 1, 10})) {
+: min(min), max(max), angle(0), currentZoom(1), lcAlgorithm(2) {
+  //vpn(new Line<3>({0, 0, 0}, {0, 0, -1})) {
+    auto c = center3D();
+    vpn.reset(new Line<3>(center3D(), center3D() + Point<3>(0,0,1)));
+    cop = {c[0], c[1], -200};
     defaultWidth  = max[0] - min[0];
     defaultHeight = max[1] - min[1];
 }
@@ -32,19 +35,29 @@ Matrix<3,3> Window::normalizerMatrix() {
 }
 
 void Window::moveHorizontal(double displacement) {
-    auto m = utils::rotationMatrix<2>(-angle);
-    m *= utils::translationMatrix(std::array<double, 2>{displacement, 0});
-    m *= utils::rotationMatrix<2>(angle);
-    min *= m;
-    max *= m;
+    // auto m = utils::rotationMatrix<2>(-angle);
+    // m *= utils::translationMatrix(std::array<double, 2>{displacement, 0});
+    // m *= utils::rotationMatrix<2>(angle);
+    // min *= m;
+    // max *= m;
+    // auto c = center3D();
+    // cop = {c[0], c[1], -50};
+    min[0] += displacement;
+    max[0] += displacement;
+    cop[0] += displacement;
 }
 
 void Window::moveVertical(double displacement) {
-    auto m = utils::rotationMatrix<2>(-angle);
-    m *= utils::translationMatrix(std::array<double, 2>{0, displacement});
-    m *= utils::rotationMatrix<2>(angle);
-    min *= m;
-    max *= m;
+    // auto m = utils::rotationMatrix<2>(-angle);
+    // m *= utils::translationMatrix(std::array<double, 2>{0, displacement});
+    // m *= utils::rotationMatrix<2>(angle);
+    // min *= m;
+    // max *= m;
+    // auto c = center3D();
+    // cop = {c[0], c[1], -50};
+    min[1] += displacement;
+    max[1] += displacement;
+    cop[1] += displacement;
 }
 
 void Window::rotate(double _angle) {
@@ -63,6 +76,11 @@ Point<2> Window::toViewport(const Viewport& viewport, const Point<2>& p) {
 
 Point<2> Window::center() const {
     return (min + max)/2;
+}
+
+Point<3> Window::center3D() const {
+    auto c = center();
+    return {c[0], c[1], 0};
 }
 
 void Window::zoom(double zoomRate) {
@@ -102,17 +120,23 @@ Point<2> Window::perspectiveProjection(const Point<2>& p) const {
 
 Point<2> Window::perspectiveProjection(const Point<3>& p) const {
     auto projected = projection(p);
-    double d = (*vpn)[1].norm();
-    double correctionFactor = d / projected[2];
+    //double d = (*vpn)[1].norm();
+    double d = cop[2];
+    //double correctionFactor = d / projected[2];
+    double correctionFactor = projected[2] / d;
     auto c = center();
-    projected[0] = (projected[0] - c[0]) * correctionFactor + c[0];
-    projected[1] = (projected[1] - c[1]) * correctionFactor + c[1];
+    //projected[0] = (projected[0] - c[0]) * correctionFactor + c[0];
+    //projected[1] = (projected[1] - c[1]) * correctionFactor + c[1];
+    projected[0] /= correctionFactor;
+    projected[1] /= correctionFactor;
+
     return projected;
 }
 
 Point<3> Window::projection(Point<3> p) const {
-    auto vrp = (*vpn)[0];
-    auto transformation = utils::translationMatrix((-vrp).toArray());
+    //auto vrp = (*vpn)[0];
+    //auto transformation = utils::translationMatrix((-vrp).toArray());
+    auto transformation = utils::translationMatrix((-cop).toArray());
 
     Point<3> xAxis(1, 0, 0);
     Point<3> yAxis(0, 1, 0);

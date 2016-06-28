@@ -29,6 +29,7 @@ class Window {
     void rotate(double);
     Point<2> toViewport(const Viewport&, const Point<2>&);
     Point<2> center() const;
+    Point<3> center3D() const;
     void zoom(double);
     double getAngle();
     double getZoomLevel();
@@ -66,6 +67,7 @@ class Window {
  private:
     Point<2> min;
     Point<2> max;
+    Point<3> cop;
     double angle;
     double currentZoom;
     double defaultWidth;
