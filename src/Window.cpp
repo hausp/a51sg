@@ -22,7 +22,7 @@ Window::Window(const Point<2>& min, const Point<2>& max)
   //vpn(new Line<3>({0, 0, 0}, {0, 0, 10})) {
     auto c = center3D();
     vpn.reset(new Line<3>(center3D(), center3D() + Point<3>(0,0,1)));
-    cop = {c[0], c[1], -200};
+    cop = {c[0], c[1], -100};
     TRACE(cop);
     defaultWidth  = max[0] - min[0];
     defaultHeight = max[1] - min[1];
@@ -136,37 +136,18 @@ Point<2> Window::perspectiveProjection(const Point<3>& p) const {
 }
 
 Point<3> Window::projection(Point<3> p) const {
-    //auto vrp = (*vpn)[0];
-    //auto transformation = utils::translationMatrix((-vrp).toArray());
     auto transformation = utils::translationMatrix((-cop).toArray());
 
     Point<3> xAxis(1, 0, 0);
     Point<3> yAxis(0, 1, 0);
-    // auto vector = (*vpn)[1] - (*vpn)[0];
-    // double tx = acos((xAxis * vector) / vector.norm()) * 180 / M_PI;
-    // double ty = acos((yAxis * vector) / vector.norm()) * 180 / M_PI;
-    // TRACE(tx);
-    // TRACE(ty);
-    // transformation *= utils::rotationMatrix<3>(90 - tx, utils::RotationPlane::X);
-    // transformation *= utils::rotationMatrix<3>(90 - ty, utils::RotationPlane::Y);
-    //transformation *= utils::scalingMatrix(Point<3>(1/(max[0] - min[1]), 1/(max[1] - min[1]), 1/(max[1] - min[1])).toArray());
-    transformation *= utils::rotationMatrix<3>(angles[0], utils::RotationPlane::X);
-    transformation *= utils::rotationMatrix<3>(angles[1], utils::RotationPlane::Y);
-    transformation *= utils::rotationMatrix<3>(angles[2], utils::RotationPlane::Z);
+    auto vector = (*vpn)[1] - (*vpn)[0];
+    double tx = acos((xAxis * vector) / vector.norm()) * 180 / M_PI;
+    double ty = acos((yAxis * vector) / vector.norm()) * 180 / M_PI;
+    transformation *= utils::rotationMatrix<3>(90 - tx, utils::RotationPlane::X);
+    transformation *= utils::rotationMatrix<3>(90 - ty, utils::RotationPlane::Y);
     p *= transformation;
 
     return p;
-}
-
-void Window::doStuff() {
-    // auto transformation = utils::rotationMatrix<3>(15, utils::RotationPlane::X);
-    // auto vector = (*vpn)[1] - (*vpn)[0];
-    // cop *= transformation;
-    // (*vpn)[0] *= transformation;
-    // (*vpn)[1] = (*vpn)[0] + vector;
-    // windowAngles[0] += 15;
-    // drawer->updateAll();
-    // drawer->drawAll();
 }
 
 void Window::clip(Point<2>& p) {

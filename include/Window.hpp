@@ -64,8 +64,6 @@ class Window {
     Point<2> perspectiveProjection(const Point<2>& p) const;
     Point<2> perspectiveProjection(const Point<3>& p) const;
 
-    void doStuff();
-
  private:
     Point<2> min;
     Point<2> max;
