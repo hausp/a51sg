@@ -36,12 +36,6 @@ std::vector<Point<3>> BicubicSurface::points() const {
     return list;
 }
 
-// void BicubicSurface::update(const Matrix<3,3>& matrix, const Window& window) {
-//     for (auto& c : curves) {
-//         c.update(matrix, window);
-//     }
-// }
-
 typename std::vector<SimpleCurve<3>>::iterator BicubicSurface::begin() {
     return curves.begin();
 }

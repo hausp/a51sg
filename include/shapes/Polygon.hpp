@@ -29,7 +29,6 @@ class Polygon : public Drawable<D> {
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;
     std::vector<Point<D>> points() const override;
-    // void update(const Matrix<3,3>&, const Window&) override;
     size_t numberOfPoints() const;
     Point<D>& operator[](size_t);
     const Point<D>& operator[](size_t) const;
@@ -37,7 +36,6 @@ class Polygon : public Drawable<D> {
     typename std::vector<Point<D>>::const_iterator begin() const;
     typename std::vector<Point<D>>::iterator end();
     typename std::vector<Point<D>>::const_iterator end() const;
-    // std::vector<Point<D>>& ndc();
     bool isFilled() { return filled; }
     void setFilled(bool f) { filled = f; }
 

@@ -30,7 +30,6 @@ class Wireframe : public Drawable<D> {
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;
     std::vector<Point<D>> points() const override;
-    // void update(const Matrix<3,3>&, const Window&) override;
     std::vector<Line<D>>& edges();
     size_t numberOfPoints() const;
     void addEdge(const Point<D>&, const Point<D>&);

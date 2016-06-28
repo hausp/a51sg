@@ -43,8 +43,6 @@ public:
     std::vector<Line<D>> update(double accuracyS, double accuracyT,
         const std::vector<Matrix<4,4>>& coefs) const override {
 
-        // unsigned numCurves = 1/accuracyS + 1;
-        // unsigned numLines = 1/accuracyS + 1;
         std::vector<Line<D>> lines;
 
         Matrix<1,4> sExponents;
@@ -55,13 +53,11 @@ public:
             sExponents[0][2] = s;
             sExponents[0][1] = s * s;
             sExponents[0][0] = sExponents[0][1] * s;
-            // TRACE(s);
             bool finishLastPoint = false; 
             for (double t = 0; t <= 1.001; t += accuracyT) {
                 tExponents[2][0] = t;
                 tExponents[1][0] = t * t;
                 tExponents[0][0] = tExponents[1][0] * t;
-                // TRACE(t);
 
                 fillLineList(lines, coefs, sExponents, tExponents, finishLastPoint);
                 finishLastPoint = true;

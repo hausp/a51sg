@@ -70,7 +70,6 @@ class SimpleCurve : public Drawable<D> {
     Point<D> center() const override;
     std::vector<Point<D>> points() const override;
     std::vector<Line<D>>& lines();
-    // void update(const Matrix<3,3>&, const Window&) override;
 
     typename std::vector<Line<D>>::iterator begin();
     typename std::vector<Line<D>>::const_iterator begin() const;

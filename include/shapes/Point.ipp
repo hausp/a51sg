@@ -63,23 +63,10 @@ Point<D> Point<D>::center() const {
     return *this;
 }
 
-// template<unsigned D>
-// Point<2>& Point<D>::ndc() {
-//     if (!normalized_point)
-//         normalized_point = std::make_shared<Point<2>>(*this);
-//     return *normalized_point;
-// }
-
 template<unsigned D>
 std::vector<Point<D>> Point<D>::points() const {
     return {*this};
 }
-
-// template<unsigned D>
-// void Point<D>::update(const Matrix<3,3>& matrix, const Window& window) {
-//     ndc() = window.perspectiveProjection(*this);
-//     ndc() *= matrix;
-// }
 
 template<unsigned D>
 size_t Point<D>::dimension() const {

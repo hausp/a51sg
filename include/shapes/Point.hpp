@@ -42,9 +42,7 @@ class Point : public Drawable<D> {
     void clip(Window&) override;
     void transform(const Matrix<D+1,D+1>&) override;
     Point<D> center() const override;
-    // Point<2>& ndc();
     std::vector<Point<D>> points() const override;
-    // void update(const Matrix<3,3>&, const Window& window) override;
     size_t dimension() const;
     double norm() const;
 
